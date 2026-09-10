@@ -1,9 +1,12 @@
 "use client";
 
+import type { Product } from "@prisma/client";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ProductFormModal, { ProductFormData } from "./ProductFormModal";
 
-export function EditProductSection({ product }: { product: ProductFormData }) {
+export function EditProductSection({ product }: { product: Product }) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleUpdateProduct = async (updatedProduct: ProductFormData) => {
@@ -15,12 +18,12 @@ export function EditProductSection({ product }: { product: ProductFormData }) {
     body: JSON.stringify(updatedProduct),
   });
 
+  const result = await response.json();
   if (!response.ok) {
-    throw new Error("Failed to update product");
+    throw new Error(result.message || "Failed to update product");
   }
 
-  console.log("Product updated successfully");
-    console.log("Updating product:", updatedProduct);
+  router.refresh();
   };
 
   return (
@@ -38,7 +41,14 @@ export function EditProductSection({ product }: { product: ProductFormData }) {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleUpdateProduct}
-        initialData={product}
+        initialData={{
+          ...product,
+          description: product.description ?? "",
+          imageUrl: product.imageUrl ?? "",
+          sku: product.sku ?? "",
+          category: product.category ?? "",
+          lowStockAt: product.lowStockAt ?? undefined,
+        }}
       />
     </div>
   );

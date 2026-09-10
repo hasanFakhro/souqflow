@@ -10,7 +10,8 @@ type SearchBarProps = {
 const SearchBar = ({ value, onChange }: SearchBarProps) => {
   return (
     <input
-      type="text"
+      type="search"
+      aria-label="Search products"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Search products..."

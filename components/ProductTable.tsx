@@ -2,18 +2,8 @@
 
 import { useRouter } from "next/navigation";
 
-type Product = {
-  id: string;
-  name: string;
-  description: string | null;
-  imageUrl: string | null;
-  sku: string | null;
-  category: string | null;
-  costPrice: number;
-  sellPrice: number;
-  quantity: number;
-  lowStockAt: number | null;
-};
+import type { Product } from "@prisma/client";
+import { EditProductSection } from "./EditProductButton";
 
 type ProductTableProps = {
   products: Product[];
@@ -104,14 +94,7 @@ export default function ProductTable({
 
               <td className="px-4 py-4">
                 <div className="flex gap-2">
-                  <button
-                    onClick={() =>
-                      router.push(`/products/${product.id}`)
-                    }
-                    className="rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
-                  >
-                    Edit
-                  </button>
+                  <EditProductSection product={product} />
 
                   <button
                     onClick={() => handleDelete(product.id)}

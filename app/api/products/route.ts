@@ -1,3 +1,6 @@
+import { productSchema } from "@/lib/validations/product";
+import { Prisma } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import {NextRequest, NextResponse} from 'next/server';
 import {prisma} from '@/lib/prisma';
 
@@ -24,52 +27,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const {
-      name,
-      description,
-      imageUrl,
-      sku,
-      category,
-      costPrice,
-      sellPrice,
-      quantity,
-      lowStockAt,
-    } = body;
-
-  if (!name || name.trim() === '') {
-    return NextResponse.json(
-      {message: 'Product name is required'},
-      {status: 400}
-    );
-  }
-
-  if (costPrice === undefined || Number(costPrice) <= 0) {
-    return NextResponse.json(
-      { message: "Cost price must be 0 or greater" },
-      { status: 400 }
-    );
-  }
-
-  if (sellPrice === undefined || Number(sellPrice) < 0) {
-    return NextResponse.json(
-      { message: "Sell price must be 0 or greater" },
-      { status: 400 }
-    );
-  }
-
-  if (quantity === undefined || Number(quantity) < 0) {
-    return NextResponse.json(
-      { message: "Quantity must be 0 or greater" },
-      { status: 400 }
-    );
-  }
-
-  if (lowStockAt !== undefined && Number(lowStockAt) < 0) {
-    return NextResponse.json(
-      { message: "Low stock level cannot be negative" },
-      { status: 400 }
-    );
-  }
+    const parsed = productSchema.safeParse(body);
+    if (!parsed.success) {
+      return NextResponse.json({ message: parsed.error.issues[0].message }, { status: 400 });
+    }
+    const { name, description, imageUrl, sku, category, costPrice, sellPrice, quantity, lowStockAt } = parsed.data;
 
   const product = await prisma.product.create({
     data: {
@@ -88,6 +50,9 @@ export async function POST(request: NextRequest) {
     }
   });
 
+  revalidatePath("/inventory");
+  revalidatePath("/products", "layout");
+  revalidatePath("/dashboard");
   return NextResponse.json(
       {
         message: "Product added successfully",
@@ -96,6 +61,9 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return NextResponse.json({ message: "A product with this SKU already exists." }, { status: 409 });
+    }
     console.error("Error creating product:", error);
 
     return NextResponse.json(

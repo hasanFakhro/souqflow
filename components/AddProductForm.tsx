@@ -2,19 +2,28 @@
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
 import {
   productSchema,
   ProductFormData,
+  ProductFormInput,
 } from "@/lib/validations/product";
 
-export default function AddProductPage() {
+type Props = {
+  initialData?: ProductFormData;
+  onSave?: (data: ProductFormData) => Promise<void> | void;
+  onCancel?: () => void;
+};
+
+export default function AddProductForm({ initialData, onSave, onCancel }: Props) {
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
-  } = useForm<ProductFormData>({
+  } = useForm<ProductFormInput, unknown, ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
@@ -26,11 +35,16 @@ export default function AddProductPage() {
       sellPrice: 0,
       quantity: 0,
       lowStockAt: 0,
+      ...initialData,
     },
   });
 
   const onSubmit = async (data: ProductFormData) => {
     try {
+      if (onSave) {
+        await onSave(data);
+        return;
+      }
       const response = await fetch("/api/products", {
         method: "POST",
         headers: {
@@ -42,13 +56,12 @@ export default function AddProductPage() {
       const result = await response.json();
 
       if (!response.ok) {
-        alert(result.message || "Failed to add product");
-        return;
+        throw new Error(result.message || "Failed to add product");
       }
 
       alert("Product added successfully!");
-
       reset();
+      router.refresh();
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
@@ -56,8 +69,7 @@ export default function AddProductPage() {
   };
 
   return (
-    <main className="min-h-screen bg-gray-100 px-4 py-10">
-      <div className="mx-auto max-w-2xl rounded-xl bg-white p-8 shadow-md">
+    <div>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -285,15 +297,15 @@ export default function AddProductPage() {
           </div>
 
           {/* Submit */}
+          {onCancel && <button type="button" disabled={isSubmitting} onClick={onCancel} className="rounded-lg border px-4 py-2">Cancel</button>}
           <button
             type="submit"
             disabled={isSubmitting}
             className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
           >
-            {isSubmitting ? "Adding..." : "Add Product"}
+            {isSubmitting ? "Saving..." : initialData ? "Update Product" : "Add Product"}
           </button>
         </form>
-      </div>
-    </main>
+    </div>
   );
 }

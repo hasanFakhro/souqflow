@@ -1,14 +1,22 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ProductFormModal, { ProductFormData } from "./ProductFormModal";
 
 export function AddProductSection() {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleCreateProduct = async (newProduct: ProductFormData) => {
-    // API call will connect here
-    console.log("Creating product:", newProduct);
+    const response = await fetch("/api/products", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProduct),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || "Failed to create product");
+    router.refresh();
   };
 
   return (
