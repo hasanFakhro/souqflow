@@ -1,9 +1,5 @@
-import React from 'react'
+import { redirect } from "next/navigation";
 
-const page = () => {
-  return (
-    <div>Hellow</div>
-  )
+export default function HomePage() {
+  redirect("/dashboard");
 }
-
-export default page
