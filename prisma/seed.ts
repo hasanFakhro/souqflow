@@ -25,6 +25,8 @@ async function main() {
         password: hashPassword,
         role: Role.ADMIN,
         name: "Admin",
+        phone: "+96170000000",
+
       },
     });
 
@@ -50,6 +52,8 @@ async function main() {
         password: hashPassword,
         role: Role.USER,
         name: "User",
+        phone: "+96171000000",
+
         subscription: {
           create: {
             isActive: true,

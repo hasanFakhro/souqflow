@@ -13,12 +13,14 @@ type ProductCardProps = {
 
 const ProductCard = ({ product }: ProductCardProps) => {
     return (
-        <div className="rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden cursor-pointer flex flex-col">
+        <div className="rounded-lg shadow-sm hover:shadow-md transition-shadow overflow-hidden flex flex-col">
             <div className="relative w-full h-24 sm:h-32 lg:h-40 bg-gray-100">
                 {product.imageUrl ?
                     <Image
                         src={product.imageUrl}
                         alt={product.name}
+                        unoptimized
+                        sizes="(max-width: 640px) 50vw, 25vw"
                         fill
                         className="object-contain"
                     />
