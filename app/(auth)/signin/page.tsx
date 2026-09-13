@@ -1,8 +1,7 @@
-
 "use client";
 
 import React, { useState } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -28,13 +27,26 @@ export default function SignInPage() {
                 redirect: false,
             });
 
-
             if (result?.error) {
                 setError("Invalid Email or Password");
                 return;
             }
 
-            router.push("/");
+            const session = await getSession();
+
+            const user = session?.user as { role?: string; subscriptionActive?: boolean };
+
+            if (!user) {
+                setError("Unable to get your session. Please try again.");
+                return;
+            }
+
+            if (user.role === "ADMIN" || user.subscriptionActive === true) {
+                router.push("/dashboard");
+            } else {
+                router.push("/subscription");
+            }
+
             router.refresh();
         } catch {
             setError("Something went wrong. Please try again.");
@@ -45,7 +57,6 @@ export default function SignInPage() {
 
     return (
         <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center px-4 py-12">
-
             <div className="w-full max-w-md">
 
                 <div className="text-center mb-8">
@@ -71,13 +82,14 @@ export default function SignInPage() {
                             Sign in to continue to your SouqFlow account.
                         </p>
                     </div>
-              {error && (
-               <div className="rounded-md bg-red-50 border border-red-200 p-2 mb-4">
-               <p className="text-sm text-red-800">
-               {error}
-                      </p>
-                   </div>
-                      )}
+
+                    {error && (
+                        <div className="rounded-md bg-red-50 border border-red-200 p-2 mb-4">
+                            <p className="text-sm text-red-800">
+                                {error}
+                            </p>
+                        </div>
+                    )}
 
                     <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -151,7 +163,7 @@ export default function SignInPage() {
 
                     <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                         <p className="text-sm text-gray-500">
-                            Dont have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link
                                 href="/register"
                                 className="font-semibold text-blue-600 hover:text-purple-600 transition"
