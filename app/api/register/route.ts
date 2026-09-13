@@ -6,6 +6,7 @@ type RegistrationInput = {
   name?: unknown;
   email?: unknown;
   password?: unknown;
+  phone?: unknown;
 };
 
 function readRegistrationInput(input: unknown) {
@@ -16,6 +17,7 @@ function readRegistrationInput(input: unknown) {
   const name = typeof values.name === "string" ? values.name.trim() : "";
   const email = typeof values.email === "string" ? values.email.trim().toLowerCase() : "";
   const password = typeof values.password === "string" ? values.password : "";
+  const phone = typeof values.phone === "string" ? values.phone.replace(/\s/g, "") : "";
 
   if (name.length < 2) {
     return { error: "Please enter a name with at least 2 characters." };
@@ -29,7 +31,11 @@ function readRegistrationInput(input: unknown) {
     return { error: "Password must be at least 8 characters." };
   }
 
-  return { name, email, password };
+  if (!/^\+961\d{8}$/.test(phone)) {
+    return { error: "Phone number must start with +961 and contain 8 digits." };
+  }
+
+  return { name, email, password, phone };
 }
 
 export async function POST(request: Request) {
@@ -66,6 +72,7 @@ export async function POST(request: Request) {
       data: {
         name: input.name,
         email: input.email,
+        phone: input.phone,
         password,
         subscription: { create: { isActive: false } },
       },
@@ -81,7 +88,7 @@ export async function POST(request: Request) {
       error.code === "P2002"
     ) {
       return NextResponse.json(
-        { error: "An account with this email already exists." },
+        { error: "An account with this email or phone number already exists." },
         { status: 409 }
       );
     }
