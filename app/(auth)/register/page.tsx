@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -30,26 +30,40 @@ export default function RegisterPage() {
             return;
         }
 
-
-          const phoneRegex = /^\+961\d{8}$/;
+        // Phone number validation from review-auth branch
+        const phoneRegex = /^\+961\d{8}$/;
         const cleanPhone = phone.replace(/\s/g, "");
 
-    if (!phoneRegex.test(cleanPhone)) {
-        setError("Phone number must start with +961 and contain 8 digits.");
-        setIsLoading(false);
-        return;
-    }
+        if (!phoneRegex.test(cleanPhone)) {
+            setError("Phone number must start with +961 and contain 8 digits.");
+            setIsLoading(false);
+            return;
+        }
 
         try {
-            const response = await axios.post("/api/auth/register", {
-                name,
-                email,
-                password,
-                phone: cleanPhone,
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, password, phone: cleanPhone }),
             });
 
-            if (response.status === 201) {
-                router.push("/signin?registered=true");
+            const data = (await response.json()) as { error?: string };
+
+            if (!response.ok) {
+                setError(data.error ?? "Unable to create your account. Please try again.");
+                setIsLoading(false);
+                return;
+            }
+            const result = await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+            });
+
+            if (result?.error) {
+                setError(result.error);
+            } else {
+                router.push("/dashboard");
             }
         } catch {
             setError("An error occurred while registering. Please try again.");
@@ -194,30 +208,20 @@ export default function RegisterPage() {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="w-full mt-2 rounded-xl bg-blue-600 py-3 text-sm font-semibold text-white shadow-md hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-100 transition disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                             {isLoading ? "Creating account..." : "Create account"}
                         </button>
                     </form>
 
-                    <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-                        <p className="text-sm text-gray-500">
-                            Already have an account?{" "}
-                            <Link
-                                href="/signin"
-                                className="font-semibold text-blue-600 hover:text-purple-600 transition"
-                            >
-                                Sign in
-                            </Link>
-                        </p>
-                    </div>
+                    <p className="mt-6 text-center text-sm text-gray-500">
+                        Already have an account?{" "}
+                        <Link href="/signin" className="font-semibold text-blue-600 hover:text-blue-500">
+                            Sign in
+                        </Link>
+                    </p>
                 </div>
-
-                <p className="mt-6 text-center text-xs text-gray-400">
-                    © {new Date().getFullYear()} SouqFlow. All rights reserved.
-                </p>
             </div>
         </main>
     );
 }
-

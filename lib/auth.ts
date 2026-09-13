@@ -1,4 +1,3 @@
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -13,7 +12,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             name: "Credentials",
 
             credentials: {
-                email: { label: "Email",type: "text"}, password: {label: "Password", type: "password",},
+                email: { label: "Email", type: "text" },
+                password: { label: "Password", type: "password" },
             },
 
             async authorize(credentials) {
@@ -60,10 +60,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 token.id = user.id;
                 token.email = user.email;
                 token.name = user.name;
-
                 token.role = (user as { role?: string }).role;
-
-                token.subscriptionActive = ( user as {subscriptionActive?: boolean }).subscriptionActive;
+                token.subscriptionActive = (user as { subscriptionActive?: boolean }).subscriptionActive;
             }
 
             return token;
@@ -75,7 +73,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 session.user.email = token.email as string;
                 session.user.name = token.name as string;
                 (session.user as { role?: string }).role = token.role as string;
-                (session.user as { subscriptionActive?: boolean }).subscriptionActive = token.subscriptionActive as boolean;}
+                (session.user as { subscriptionActive?: boolean }).subscriptionActive = token.subscriptionActive as boolean;
+            }
 
             return session;
         },
@@ -89,6 +88,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     session: {
         strategy: "jwt",
-        maxAge: 24 * 60 * 60,    },
+        maxAge: 24 * 60 * 60,
+    },
 });
-
