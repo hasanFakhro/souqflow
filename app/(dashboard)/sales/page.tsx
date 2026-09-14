@@ -1,3 +1,40 @@
-export default function SalesPage() {
-  return <h1 className="text-2xl font-bold text-gray-900">Sales</h1>;
+import prisma from "@/lib/prisma";
+import SalesAnalytics from "./SalesAnalytics";
+
+export const dynamic = "force-dynamic";
+
+export default async function SalesPage() {
+  const orders = await prisma.order.findMany({
+    where: { status: "COMPLETED" },
+    orderBy: { orderedAt: "asc" },
+    select: {
+      id: true,
+      orderedAt: true,
+      items: {
+        select: {
+          category: true,
+          productName: true,
+          quantity: true,
+          unitCost: true,
+          unitPrice: true,
+        },
+      },
+    },
+  });
+
+  return (
+    <section className="space-y-6">
+      <div>
+        <p className="text-sm font-semibold text-blue-600">Business intelligence</p>
+        <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">Sales analytics</h1>
+        <p className="mt-2 max-w-2xl text-slate-600">Track revenue, costs, profit, and the products driving your sales.</p>
+      </div>
+      <SalesAnalytics
+        orders={orders.map((order) => ({
+          ...order,
+          orderedAt: order.orderedAt.toISOString(),
+        }))}
+      />
+    </section>
+  );
 }

@@ -12,6 +12,12 @@ enum Role {
   ADMIN
 }
 
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELED
+}
 model User {
   id        String   @id @default(cuid())
   name      String?
@@ -61,4 +67,37 @@ model Product {
   updatedAt   DateTime @updatedAt
   
   @@map("products")
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  orderNumber  String      @unique
+  customerName String?
+  status       OrderStatus @default(COMPLETED)
+  orderedAt    DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  items OrderItem[]
+
+  @@index([orderedAt, status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id @default(cuid())
+  orderId     String
+  productId   String?
+  productName String
+  category    String?
+  quantity    Int
+  unitCost    Float
+  unitPrice   Float
+  createdAt   DateTime @default(now())
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+  @@index([category])
+  @@map("order_items")
 }
