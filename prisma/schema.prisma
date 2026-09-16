@@ -12,6 +12,13 @@ enum Role {
   ADMIN
 }
 
+
+enum OrderStatus {
+  PENDING
+  DELIVERING
+  DONE       @map("COMPLETED")
+  PROBLEM    @map("CANCELED")
+}
 model User {
   id        String   @id @default(cuid())
   name      String?
@@ -63,15 +70,8 @@ model Product {
   @@map("products")
 }
 
-enum OrderStatus {
-  PENDING
-  DELIVERING
-  DONE       @map("COMPLETED")
-  PROBLEM    @map("CANCELED")
-}
-
 model Order {
-  id           String      @id
+  id           String      @id @default(cuid())
   orderNumber  String      @unique
   customerName String?
   status       OrderStatus @default(DONE)
@@ -85,7 +85,7 @@ model Order {
 }
 
 model OrderItem {
-  id          String   @id
+  id          String   @id @default(cuid())
   orderId     String
   productId   String?
   productName String
