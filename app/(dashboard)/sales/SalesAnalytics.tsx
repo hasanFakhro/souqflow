@@ -1,6 +1,286 @@
 "use client";
 
 import { useMemo, useState } from "react";
+
+type OrderItem = {
+  productId?: string | null;
+  category: string;
+  productName: string;
+  quantity: number;
+  unitCost: number;
+  unitPrice: number;
+};
+
+type Order = {
+  id: string;
+  orderedAt: string;
+  items: OrderItem[];
+};
+
+type Product = {
+  id: string;
+  sku: string;
+  name: string;
+  category: string;
+  costPrice: number;
+  sellPrice: number;
+};
+
+type Props = {
+  orders: Order[];
+  products: Product[];
+};
+
+function formatCurrency(amount: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+  }).format(amount);
+}
+
+export default function SalesAnalytics({ orders, products }: Props) {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
+
+  // --- Task 1: Top-level KPI Aggregations ---
+  const kpis = useMemo(() => {
+    let totalSales = 0;
+    let totalCost = 0;
+    let itemsSold = 0;
+
+    for (const order of orders) {
+      for (const item of order.items) {
+        totalSales += item.unitPrice * item.quantity;
+        totalCost += item.unitCost * item.quantity;
+        itemsSold += item.quantity;
+      }
+    }
+
+    const grossProfit = totalSales - totalCost;
+    return { totalSales, totalCost, grossProfit, itemsSold };
+  }, [orders]);
+
+  // --- Task 2: Product Profitability Table Data ---
+  const productProfitability = useMemo(() => {
+    // 1. Group sales by product identifier (ID or Fallback to Name)
+    const salesMap = new Map<
+      string,
+      { quantity: number; sales: number; cost: number; category: string }
+    >();
+
+    for (const order of orders) {
+      for (const item of order.items) {
+        const key = item.productId || item.productName;
+        const current = salesMap.get(key) || {
+          quantity: 0,
+          sales: 0,
+          cost: 0,
+          category: item.category,
+        };
+
+        current.quantity += item.quantity;
+        current.sales += item.unitPrice * item.quantity;
+        current.cost += item.unitCost * item.quantity;
+        salesMap.set(key, current);
+      }
+    }
+
+    // 2. Map all catalog products to metrics
+    return products.map((product) => {
+      const stats = salesMap.get(product.id) || salesMap.get(product.name);
+      const unitsSold = stats?.quantity || 0;
+      const sales = stats?.sales || 0;
+      const cost = stats?.cost || 0;
+      const profit = sales - cost;
+      const profitMargin = sales > 0 ? (profit / sales) * 100 : 0;
+
+      return {
+        id: product.id,
+        sku: product.sku,
+        name: product.name,
+        category: product.category || stats?.category || "Uncategorized",
+        unitsSold,
+        cost,
+        sales,
+        profit,
+        profitMargin,
+      };
+    });
+  }, [orders, products]);
+
+  // Extract distinct categories for Task 3 navigation
+  const categories = useMemo(() => {
+    const set = new Set<string>();
+    products.forEach((p) => p.category && set.add(p.category));
+    return ["ALL", ...Array.from(set).sort()];
+  }, [products]);
+
+  // --- Task 3: Filtering & Search Logic ---
+  const filteredProducts = useMemo(() => {
+    return productProfitability.filter((item) => {
+      const matchesCategory =
+        selectedCategory === "ALL" || item.category === selectedCategory;
+      const cleanQuery = searchTerm.trim().toLowerCase();
+      const matchesSearch =
+        !cleanQuery ||
+        item.name.toLowerCase().includes(cleanQuery) ||
+        item.sku.toLowerCase().includes(cleanQuery) ||
+        item.category.toLowerCase().includes(cleanQuery);
+
+      return matchesCategory && matchesSearch;
+    });
+  }, [productProfitability, selectedCategory, searchTerm]);
+
+  return (
+    <div className="space-y-8">
+      {/* 4 Existing KPI Cards */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Total Sales
+          </p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
+            {formatCurrency(kpis.totalSales)}
+          </p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Total Cost
+          </p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
+            {formatCurrency(kpis.totalCost)}
+          </p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Gross Profit
+          </p>
+          <p
+            className={`mt-2 text-2xl font-bold ${
+              kpis.grossProfit >= 0 ? "text-emerald-600" : "text-rose-600"
+            }`}
+          >
+            {formatCurrency(kpis.grossProfit)}
+          </p>
+        </div>
+        <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Items Sold
+          </p>
+          <p className="mt-2 text-2xl font-bold text-slate-900">
+            {kpis.itemsSold.toLocaleString()}
+          </p>
+        </div>
+      </div>
+
+      {/* Task 3: Search Bar + Category Tabs */}
+      <div className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="w-full md:max-w-xs">
+            <label htmlFor="search" className="sr-only">
+              Search products
+            </label>
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by SKU, name, category..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full rounded-lg border border-slate-300 px-3.5 py-2 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            />
+          </div>
+
+          {/* Category Navigation Pills */}
+          <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto pb-1">
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setSelectedCategory(category)}
+                className={`rounded-full px-3 py-1.5 text-xs font-medium transition ${
+                  selectedCategory === category
+                    ? "bg-blue-600 text-white shadow-sm"
+                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                }`}
+              >
+                {category === "ALL" ? "All Categories" : category}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Task 2: Product Profitability Table */}
+        <div className="mt-6 overflow-x-auto">
+          <table className="min-w-full divide-y divide-slate-200 text-left text-sm">
+            <thead>
+              <tr className="bg-slate-50 font-semibold text-slate-600">
+                <th scope="col" className="px-4 py-3">SKU</th>
+                <th scope="col" className="px-4 py-3">Name</th>
+                <th scope="col" className="px-4 py-3">Category</th>
+                <th scope="col" className="px-4 py-3 text-right">Units Sold</th>
+                <th scope="col" className="px-4 py-3 text-right">Cost</th>
+                <th scope="col" className="px-4 py-3 text-right">Sales</th>
+                <th scope="col" className="px-4 py-3 text-right">Profit</th>
+                <th scope="col" className="px-4 py-3 text-right">Profit Margin</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 bg-white">
+              {filteredProducts.length === 0 ? (
+                <tr>
+                  <td colSpan={8} className="px-4 py-8 text-center text-slate-500">
+                    No products found matching your filters.
+                  </td>
+                </tr>
+              ) : (
+                filteredProducts.map((p) => (
+                  <tr key={p.id} className="hover:bg-slate-50/70 transition">
+                    <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-slate-500">
+                      {p.sku || "—"}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">
+                      {p.name}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-slate-500">
+                      <span className="inline-flex rounded bg-slate-100 px-2 py-0.5 text-xs font-medium text-slate-600">
+                        {p.category}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right text-slate-700">
+                      {p.unitsSold.toLocaleString()}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right text-slate-700">
+                      {formatCurrency(p.cost)}
+                    </td>
+                    <td className="whitespace-nowrap px-4 py-3 text-right text-slate-900 font-medium">
+                      {formatCurrency(p.sales)}
+                    </td>
+                    <td
+                      className={`whitespace-nowrap px-4 py-3 text-right font-medium ${
+                        p.profit >= 0 ? "text-emerald-600" : "text-rose-600"
+                      }`}
+                    >
+                      {formatCurrency(p.profit)}
+                    </td>
+                    <td
+                      className={`whitespace-nowrap px-4 py-3 text-right font-medium ${
+                        p.profitMargin >= 0 ? "text-emerald-600" : "text-rose-600"
+                      }`}
+                    >
+                      {p.sales > 0 ? `${p.profitMargin.toFixed(1)}%` : "0.0%"}
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}"use client";
+
+import { useMemo, useState } from "react";
 import {
   ArcElement,
   BarElement,
