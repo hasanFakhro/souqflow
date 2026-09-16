@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 export default async function SalesPage() {
   const orders = await prisma.order.findMany({
-    where: { status: "COMPLETED" },
+    where: { status: "DONE" },
     orderBy: { orderedAt: "asc" },
     select: {
       id: true,

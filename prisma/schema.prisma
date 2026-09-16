@@ -14,8 +14,9 @@ enum Role {
 
 enum OrderStatus {
   PENDING
-  COMPLETED
-  CANCELLED
+  DELIVERING
+  DONE       @map("COMPLETED")
+  PROBLEM    @map("CANCELED")
 }
 
 model User {
@@ -81,17 +82,16 @@ model Order {
   orderedAt    DateTime    @default(now())
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
-
-  items OrderItem[]
+  items        OrderItem[]
 
   @@index([orderedAt, status])
   @@map("orders")
 }
 
 model OrderItem {
-  id          String  @id @default(cuid())
+  id          String   @id @default(cuid())
   orderId     String
-  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
   productId   String?
   product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
