@@ -1,45 +1,68 @@
-
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { Role } from "@prisma/client";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
+
         const { email, password, name, phone } = body;
 
         if (!email || !password || !phone) {
             return NextResponse.json(
-                { error: "Email, password and phone number are required" },
+                {
+                    error: "Email, password and phone number are required",
+                },
                 { status: 400 }
             );
         }
 
         if (!email.includes("@")) {
             return NextResponse.json(
-                { error: "Please enter a valid email" },
+                {
+                    error: "Please enter a valid email",
+                },
                 { status: 400 }
             );
         }
 
-        const cleanPhone = phone.replace(/\s/g, "");
-        const phoneRegex = /^\+961\d{8}$/;
-
-        if (!phoneRegex.test(cleanPhone)) {
+        if (!isValidPhoneNumber(phone)) {
             return NextResponse.json(
-                { error: "Please enter a valid Lebanese phone number." },
+                {
+                    error: "Please enter a valid phone number",
+                },
                 { status: 400 }
             );
         }
 
         const existingUser = await prisma.user.findUnique({
-            where: { email },
+            where: {
+                email,
+            },
         });
 
         if (existingUser) {
             return NextResponse.json(
-                { error: "User already exists" },
+                {
+                    error: "User already exists",
+                },
+                { status: 400 }
+            );
+        }
+
+        const existingPhone = await prisma.user.findUnique({
+            where: {
+                phone,
+            },
+        });
+
+        if (existingPhone) {
+            return NextResponse.json(
+                {
+                    error: "Phone number is already in use",
+                },
                 { status: 400 }
             );
         }
@@ -51,14 +74,16 @@ export async function POST(req: NextRequest) {
                 email,
                 password: hashedPassword,
                 name: name || null,
-                phone: cleanPhone,
+                phone,
                 role: Role.USER,
+
                 subscription: {
                     create: {
                         isActive: false,
                     },
                 },
             },
+
             include: {
                 subscription: true,
             },
@@ -77,9 +102,10 @@ export async function POST(req: NextRequest) {
         console.error("Register error:", error);
 
         return NextResponse.json(
-            { error: "Unable to create your account" },
+            {
+                error: "Unable to create your account",
+            },
             { status: 500 }
         );
     }
 }
-
