@@ -12,12 +12,12 @@ enum Role {
   ADMIN
 }
 
-
 enum OrderStatus {
   PENDING
   COMPLETED
-  CANCELED
+  CANCELLED
 }
+
 model User {
   id        String   @id @default(cuid())
   name      String?
@@ -57,15 +57,18 @@ model Product {
   sku         String?  @unique
   category    String?
 
-  costPrice   Float    
-  sellPrice   Float    
+  costPrice   Float
+  sellPrice   Float
 
-  quantity    Int      @default(0)   
-  lowStockAt  Int?     
+  quantity    Int      @default(0)
+  lowStockAt  Int?
+
+  orderItems  OrderItem[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  
+
+  @@index([category])
   @@map("products")
 }
 
@@ -73,7 +76,8 @@ model Order {
   id           String      @id @default(cuid())
   orderNumber  String      @unique
   customerName String?
-  status       OrderStatus @default(COMPLETED)
+  total        Float
+  status       OrderStatus @default(PENDING)
   orderedAt    DateTime    @default(now())
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
@@ -85,19 +89,21 @@ model Order {
 }
 
 model OrderItem {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   orderId     String
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
   productId   String?
+  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
   productName String
   category    String?
+  price       Float
   quantity    Int
-  unitCost    Float
-  unitPrice   Float
   createdAt   DateTime @default(now())
 
-  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
   @@index([orderId])
+  @@index([productId])
   @@index([category])
   @@map("order_items")
 }
