@@ -62,3 +62,41 @@ model Product {
   
   @@map("products")
 }
+
+enum OrderStatus {
+  PENDING
+  DELIVERING
+  DONE       @map("COMPLETED")
+  PROBLEM    @map("CANCELED")
+}
+
+model Order {
+  id           String      @id
+  orderNumber  String      @unique
+  customerName String?
+  status       OrderStatus @default(DONE)
+  orderedAt    DateTime    @default(now())
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  items        OrderItem[]
+
+  @@index([orderedAt, status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id          String   @id
+  orderId     String
+  productId   String?
+  productName String
+  category    String?
+  quantity    Int
+  unitCost    Float
+  unitPrice   Float
+  createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@index([orderId])
+  @@map("order_items")
+}
