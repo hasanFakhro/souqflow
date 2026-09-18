@@ -11,7 +11,7 @@ import {
   type ProfileFormData,
 } from "@/lib/validations/profile";
 import { FolderUp } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import DisableAccount from "./DisableAccount";
 import { useSession } from "next-auth/react";
 import UpdateRate from "./UpdateRate";

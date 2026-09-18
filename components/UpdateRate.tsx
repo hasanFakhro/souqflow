@@ -3,7 +3,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { ArrowLeftRight, X } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 
 export default function UpdateRate() {
   const [isOpen, setIsOpen] = useState(false);

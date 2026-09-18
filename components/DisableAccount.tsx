@@ -4,8 +4,7 @@ import { useState } from "react";
 import { Power } from "lucide-react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-
+import { toast } from "sonner";
 export default function DisableAccount() {
   const [showModal, setShowModal] = useState(false);
   const [disableText, setDisableText] = useState("");
