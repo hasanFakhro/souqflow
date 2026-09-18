@@ -3,7 +3,8 @@ import { create } from "zustand";
 export type CartItem = {
     productId: string;
     name: string;
-    price: number;
+    unitPrice: number;
+    costPrice:number;
     category: string;
     quantity: number;
     stock: number;

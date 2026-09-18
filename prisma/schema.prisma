@@ -77,7 +77,7 @@ model Order {
   id           String      @id @default(cuid())
   orderNumber  String      @unique
   customerName String?
-  total        Float
+  total        Float       @default(0)
   status       OrderStatus @default(PENDING)
   orderedAt    DateTime    @default(now())
   createdAt    DateTime    @default(now())
@@ -98,7 +98,8 @@ model OrderItem {
 
   productName String
   category    String?
-  price       Float
+  unitCost      Float
+  unitPrice     Float
   quantity    Int
   createdAt   DateTime @default(now())
 
@@ -106,4 +107,13 @@ model OrderItem {
   @@index([productId])
   @@index([category])
   @@map("order_items")
+}
+
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  usdToLbp  Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("exchange_rates")
 }

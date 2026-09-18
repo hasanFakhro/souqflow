@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
         }
 
         const orderNumber = 'ORD-' + Date.now();
-        const total = items.reduce((acc: number, item: CartItem) => acc + item.price * item.quantity, 0);
+        const total = items.reduce((acc: number, item: CartItem) => acc + item.unitPrice * item.quantity, 0);
 
         const result = await prisma.$transaction(async (tx) => {
             const order = await tx.order.create({
@@ -27,7 +27,8 @@ export async function POST(request: NextRequest) {
                             productId: item.productId,
                             productName: item.name,
                             category: item.category,
-                            price: item.price,
+                            unitPrice: item.unitPrice,
+                            unitCost:item.costPrice,
                             quantity: item.quantity
                         }))
                     }
