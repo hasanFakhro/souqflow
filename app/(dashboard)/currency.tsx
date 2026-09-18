@@ -1,18 +1,17 @@
 "use client";
 
-import { useEffect, useSyncExternalStore } from "react";
+import { useEffect, useState } from "react";
 
 type Currency = "USD" | "LBP";
 
 const storageKey = "souqflow.currency";
-const changeEvent = "souqflow:currency-change";
 
-let sessionCurrency: Currency | undefined;
-let exchangeRate = 89_500;
 
-function getCurrency(): Currency {
-  if (sessionCurrency) return sessionCurrency;
+const currencyChangeEvent = "souqflow:currency-change";
+const exchangeRateChangeEvent = "souqflow:exchange-rate-change";
 
+
+function getStoredCurrency(): Currency {
   try {
     return localStorage.getItem(storageKey) === "LBP"
       ? "LBP"
@@ -22,44 +21,70 @@ function getCurrency(): Currency {
   }
 }
 
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  window.addEventListener(changeEvent, callback);
 
-  return () => {
-    window.removeEventListener("storage", callback);
-    window.removeEventListener(changeEvent, callback);
-  };
-}
 
 export function useCurrency() {
-  return useSyncExternalStore(
-    subscribe,
-    getCurrency,
-    (): Currency => "USD"
-  );
+  const [currency, setCurrency] = useState<Currency>("USD");
+
+  useEffect(() => {
+  
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCurrency(getStoredCurrency());
+
+ 
+    const handleCurrencyChange = () => {
+      setCurrency(getStoredCurrency());
+    };
+
+    window.addEventListener(
+      currencyChangeEvent,
+      handleCurrencyChange,
+    );
+
+    return () => {
+      window.removeEventListener(
+        currencyChangeEvent,
+        handleCurrencyChange,
+      );
+    };
+  }, []);
+
+  return currency;
 }
 
 export function toggleCurrency() {
-  const next = getCurrency() === "USD" ? "LBP" : "USD";
+  const current = getStoredCurrency();
+
+  const next: Currency =
+    current === "USD" ? "LBP" : "USD";
 
   try {
     localStorage.setItem(storageKey, next);
-    sessionCurrency = undefined;
   } catch {
-    sessionCurrency = next;
   }
 
-  window.dispatchEvent(new Event(changeEvent));
+
+  window.dispatchEvent(
+    new Event(currencyChangeEvent),
+  );
 }
 
+
 export function useExchangeRate() {
+  // null means the rate has not been loaded yet.
+  const [rate, setRate] = useState<number | null>(null);
+
   useEffect(() => {
-    async function loadRate() {
+    // Get the current rate from our backend.
+    const loadRate = async () => {
       try {
-        const response = await fetch("/api/exchange-rate", {
-          cache: "no-store",
-        });
+     
+        const response = await fetch(
+          "/api/exchangerate",
+          {
+            cache: "no-store",
+          },
+        );
 
         if (!response.ok) {
           return;
@@ -71,29 +96,42 @@ export function useExchangeRate() {
           typeof data.usdToLbp === "number" &&
           data.usdToLbp > 0
         ) {
-          exchangeRate = data.usdToLbp;
-
-          window.dispatchEvent(
-            new Event(changeEvent)
-          );
+          setRate(data.usdToLbp);
         }
       } catch {
-        // Keep the existing rate if fetching fails.
       }
-    }
+    };
 
     loadRate();
+
+  
+    const handleRateChange = () => {
+      loadRate();
+    };
+
+    window.addEventListener(
+      exchangeRateChangeEvent,
+      handleRateChange,
+    );
+
+    return () => {
+      window.removeEventListener(
+        exchangeRateChangeEvent,
+        handleRateChange,
+      );
+    };
   }, []);
 
-  return exchangeRate;
+  return rate;
 }
 
-// Always convert from the original USD amount to avoid rounding drift on toggles.
+
 export function formatPrice(
   amountUsd: number,
   currency: Currency,
-  usdToLbp: number
+  usdToLbp: number,
 ) {
+  // User wants to see LBP.
   if (currency === "LBP") {
     return `LL ${new Intl.NumberFormat("en-US", {
       maximumFractionDigits: 0,
@@ -106,17 +144,37 @@ export function formatPrice(
   }).format(amountUsd);
 }
 
+
+
 export function Price({
   amountUsd,
 }: {
   amountUsd: number;
 }) {
   const currency = useCurrency();
-  const usdToLbp = useExchangeRate();
 
+  const rate = useExchangeRate();
+
+  if (rate === null) {
+    if (currency === "USD") {
+      return (
+        <>
+          {formatPrice(amountUsd, "USD", 0)}
+        </>
+      );
+    }
+
+    return <>LL ...</>;
+  }
+
+  
   return (
     <>
-      {formatPrice(amountUsd, currency, usdToLbp)}
+      {formatPrice(
+        amountUsd,
+        currency,
+        rate,
+      )}
     </>
   );
 }

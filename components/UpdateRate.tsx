@@ -36,38 +36,44 @@ export default function UpdateRate() {
     setRate("");
   };
 
-  const handleUpdate = async () => {
-    const newRate = Number(rate);
+const handleUpdate = async () => {
+  const newRate = Number(rate);
 
-    if (!Number.isFinite(newRate) || newRate <= 0) {
-      toast.error("Please enter a valid exchange rate");
-      return;
+  if (!Number.isFinite(newRate) || newRate <= 0) {
+    toast.error("Please enter a valid exchange rate");
+    return;
+  }
+
+  try {
+    setIsUpdating(true);
+
+    await axios.put("/api/exchangerate", {
+      usdToLbp: newRate,
+    });
+
+    // Tell currency.ts:
+    // "The exchange rate changed. Get the new value."
+    window.dispatchEvent(
+      new Event("souqflow:exchange-rate-change"),
+    );
+
+    toast.success("Exchange rate updated successfully");
+
+    setIsOpen(false);
+    setRate("");
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      toast.error(
+        error.response?.data?.error ||
+          "Could not update exchange rate",
+      );
+    } else {
+      toast.error("Something went wrong");
     }
-
-    try {
-      setIsUpdating(true);
-
-      await axios.put("/api/exchangerate", {
-        usdToLbp: newRate,
-      });
-
-      toast.success("Exchange rate updated successfully");
-
-      setIsOpen(false);
-      setRate("");
-    } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(
-          error.response?.data?.error ||
-            "Could not update exchange rate",
-        );
-      } else {
-        toast.error("Something went wrong");
-      }
-    } finally {
-      setIsUpdating(false);
-    }
-  };
+  } finally {
+    setIsUpdating(false);
+  }
+};
 
   return (
     <>
@@ -127,9 +133,7 @@ export default function UpdateRate() {
                   min="1"
                   step="1"
                   value={rate}
-                  onChange={(event) =>
-                    setRate(event.target.value)
-                  }
+                  onChange={(event) => setRate(event.target.value)}
                   className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   placeholder="89500"
                 />
@@ -153,11 +157,7 @@ export default function UpdateRate() {
               <button
                 type="button"
                 onClick={handleUpdate}
-                disabled={
-                  isLoading ||
-                  isUpdating ||
-                  !rate
-                }
+                disabled={isLoading || isUpdating || !rate}
                 className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isUpdating ? "Updating..." : "Update"}

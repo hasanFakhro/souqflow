@@ -6,7 +6,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { profileSchema, type ProfileFormData } from "@/lib/validations/profile";
+import {
+  profileSchema,
+  type ProfileFormData,
+} from "@/lib/validations/profile";
 import { FolderUp } from "lucide-react";
 import toast from "react-hot-toast";
 import DisableAccount from "./DisableAccount";
@@ -21,14 +24,18 @@ type ProfileUser = {
   image: string | null;
 };
 
-export default function ProfileForm({ user }: { user: ProfileUser }) {
+export default function ProfileForm({
+  user,
+}: {
+  user: ProfileUser;
+}) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const { data: session } = useSession();
 
+  const { data: session } = useSession();
   const router = useRouter();
 
-  const role = (session?.user as { role?: string } )?.role;
+  const role = (session?.user as { role?: string })?.role;
 
   const {
     register,
@@ -103,7 +110,8 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
 
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message || "Failed to update profile",
+          error.response?.data?.message ||
+            "Failed to update profile",
         );
       } else {
         toast.error("Something went wrong");
@@ -147,115 +155,107 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-  {role !== "ADMIN" && <UpdateRate />}
+        <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
+          {role !== "ADMIN" && <UpdateRate />}
 
-  <DisableAccount />
-</div>
-      </div>
-
-      <div className="space-y-5">
-        <div>
-          <label
-            htmlFor="name"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Name
-          </label>
-
-          <input
-            id="name"
-            type="text"
-            disabled={!isEditing}
-            {...register("name")}
-            className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition ${
-              isEditing
-                ? "border-gray-300 bg-white focus:border-primary focus:ring-2 focus:ring-primary/10"
-                : "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-500"
-            }`}
-          />
-
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="email"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Email
-          </label>
-
-          <input
-            id="email"
-            type="email"
-            disabled={!isEditing}
-            {...register("email")}
-            className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition ${
-              isEditing
-                ? "border-gray-300 bg-white focus:border-primary focus:ring-2 focus:ring-primary/10"
-                : "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-500"
-            }`}
-          />
-
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="phone"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Phone
-          </label>
-
-          <input
-            id="phone"
-            type="text"
-            disabled={!isEditing}
-            {...register("phone")}
-            className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition ${
-              isEditing
-                ? "border-gray-300 bg-white focus:border-primary focus:ring-2 focus:ring-primary/10"
-                : "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-500"
-            }`}
-          />
-
-          {errors.phone && (
-            <p className="mt-1 text-sm text-red-500">{errors.phone.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label
-            htmlFor="image"
-            className="mb-2 block text-sm font-medium text-gray-700"
-          >
-            Profile Image URL
-          </label>
-
-          <input
-            id="image"
-            type="text"
-            disabled={!isEditing}
-            {...register("image")}
-            className={`w-full rounded-xl border px-4 py-3 text-sm outline-none transition ${
-              isEditing
-                ? "border-gray-300 bg-white focus:border-primary focus:ring-2 focus:ring-primary/10"
-                : "cursor-not-allowed border-gray-200 bg-gray-50 text-gray-500"
-            }`}
-          />
-
-          {errors.image && (
-            <p className="mt-1 text-sm text-red-500">{errors.image.message}</p>
-          )}
+          <DisableAccount />
         </div>
       </div>
 
+     
+      {isEditing && (
+        <div className="space-y-5">
+          <div>
+            <label
+              htmlFor="name"
+              className="mb-2 block text-sm font-medium text-gray-700"
+            >
+              Name
+            </label>
+
+            <input
+              id="name"
+              type="text"
+              {...register("name")}
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            />
+
+            {errors.name && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.name.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="email"
+              className="mb-2 block text-sm font-medium text-gray-700"
+            >
+              Email
+            </label>
+
+            <input
+              id="email"
+              type="email"
+              {...register("email")}
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            />
+
+            {errors.email && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.email.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="phone"
+              className="mb-2 block text-sm font-medium text-gray-700"
+            >
+              Phone
+            </label>
+
+            <input
+              id="phone"
+              type="text"
+              {...register("phone")}
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            />
+
+            {errors.phone && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.phone.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label
+              htmlFor="image"
+              className="mb-2 block text-sm font-medium text-gray-700"
+            >
+              Profile Image URL
+            </label>
+
+            <input
+              id="image"
+              type="text"
+              {...register("image")}
+              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            />
+
+            {errors.image && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.image.message}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Change Password */}
       {isEditing && (
         <div className="mt-8 border-t border-gray-200 pt-8">
           <h2 className="mb-1 text-lg font-semibold text-gray-900">

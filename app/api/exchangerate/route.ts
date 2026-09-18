@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -25,7 +25,7 @@ export async function GET() {
   }
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   try {
     const session = await auth();
 
@@ -36,16 +36,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    const user = session.user as {
-      role?: string;
-    };
-
-    if (user.role !== "ADMIN") {
-      return NextResponse.json(
-        { error: "Forbidden" },
-        { status: 403 }
-      );
-    }
+    
 
     const body = await request.json();
 

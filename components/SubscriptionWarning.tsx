@@ -18,19 +18,13 @@ export default function SubscriptionWarning() {
   const { data: session } = useSession();
   const router = useRouter();
 
-  const sessionUser = session?.user as
-    | SessionUserWithSubscription
-    | undefined;
+  const sessionUser = session?.user as SessionUserWithSubscription | undefined;
 
   const [timeLeft, setTimeLeft] = useState(0);
-  const [dismissedDate, setDismissedDate] = useState<string | null>(
-    null
-  );
+  const [dismissedDate, setDismissedDate] = useState<string | null>(null);
 
   useEffect(() => {
-    const savedDate = localStorage.getItem(
-      "subscription-warning-dismissed"
-    );
+    const savedDate = localStorage.getItem("subscription-warning-dismissed");
 
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setDismissedDate(savedDate);
@@ -62,10 +56,7 @@ export default function SubscriptionWarning() {
   const handleDismiss = () => {
     const today = getToday();
 
-    localStorage.setItem(
-      "subscription-warning-dismissed",
-      today
-    );
+    localStorage.setItem("subscription-warning-dismissed", today);
 
     setDismissedDate(today);
   };
@@ -87,19 +78,14 @@ export default function SubscriptionWarning() {
     return null;
   }
 
-  const days = Math.floor(
-    timeLeft / (1000 * 60 * 60 * 24)
-  );
+  const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
 
-  const hours = Math.floor(
-    (timeLeft / (1000 * 60 * 60)) % 24
-  );
+  const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
 
-  const format = (value: number) =>
-    value.toString().padStart(2, "0");
+  const format = (value: number) => value.toString().padStart(2, "0");
 
   return (
-    <div className="fixed left-1/2 top-4 z-50 -translate-x-1/2">
+    <div className="mb-6 flex justify-center">
       <div className="flex w-max max-w-[calc(100vw-2rem)] items-center gap-2 rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50 via-white to-purple-50 px-3 py-2.5 shadow-lg shadow-blue-100/40">
         <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-blue-100">
           <AlertTriangle className="h-4 w-4 text-blue-600" />

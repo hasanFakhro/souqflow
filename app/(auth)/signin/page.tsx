@@ -34,16 +34,14 @@ export default function SignInPage() {
 
             const session = await getSession();
 
-            const user = session?.user as { role?: string;subscriptionActive?: boolean}
+            const user = session?.user as { role?: string; subscriptionActive?: boolean };
 
             if (!user) {
                 setError("Unable to get your session. Please try again.");
                 return;
             }
 
-            if (user.role === "ADMIN") {
-                router.push("/dashboard");
-            } else if (user.subscriptionActive === true) {
+            if (user.role === "ADMIN" || user.subscriptionActive === true) {
                 router.push("/dashboard");
             } else {
                 router.push("/subscription");
@@ -165,7 +163,7 @@ export default function SignInPage() {
 
                     <div className="mt-8 pt-6 border-t border-gray-100 text-center">
                         <p className="text-sm text-gray-500">
-                            Dont have an account?{" "}
+                            Don&apos;t have an account?{" "}
                             <Link
                                 href="/register"
                                 className="font-semibold text-blue-600 hover:text-purple-600 transition"
@@ -184,4 +182,3 @@ export default function SignInPage() {
         </main>
     );
 }
-

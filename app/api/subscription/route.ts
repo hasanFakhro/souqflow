@@ -26,8 +26,7 @@ export async function GET() {
   });
 }
 
-// Temporary mock confirmation. Replace this with verified Wish Money payment
-// data before enabling real billing.
+
 export async function POST() {
   const session = await auth();
   const user = session?.user as { id?: string; role?: string } | undefined;

@@ -4,8 +4,23 @@ import Link from "next/link";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
-import {ArrowLeftRight,LayoutDashboard,LogOut,Menu,Package,Settings,ShoppingCart,TrendingUp,Wallet,X} from "lucide-react";
-import { toggleCurrency, useCurrency } from "./currency";
+import {
+  ArrowLeftRight,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  Package,
+  Settings,
+  ShoppingCart,
+  TrendingUp,
+  Wallet,
+  X,
+} from "lucide-react";
+import {
+  toggleCurrency,
+  useCurrency,
+  useExchangeRate,
+} from "./currency";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -17,7 +32,12 @@ const links = [
 
 function Sidebar() {
   const pathname = usePathname();
+
+  // Current currency selected by the user.
   const currency = useCurrency();
+
+  // Current exchange rate from the database.
+  const exchangeRate = useExchangeRate();
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
@@ -89,24 +109,72 @@ function Sidebar() {
           </nav>
 
           <div className="mt-5 border-t border-gray-100 pt-4">
+            {/* Currency */}
             <button
               type="button"
               aria-label={`Change currency to ${
                 currency === "USD" ? "Lebanese lira" : "US dollars"
               }`}
               onClick={toggleCurrency}
-              className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+              className="flex w-full items-start gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
             >
-              <Wallet size={20} aria-hidden="true" />
-
-              <span className="flex-1">
-                Change currency
-                <span className="block text-xs text-gray-400">
-                  {currency === "USD" ? "USD ($)" : "Lebanese lira (LL)"}
-                </span>
+              {/* Money icon */}
+              <span
+                className="pt-0.5 text-lg leading-none"
+                aria-hidden="true"
+              >
+                💰
               </span>
 
-              <ArrowLeftRight size={16} aria-hidden="true" />
+              <span className="flex-1">
+                {/* Currency + switch */}
+                <span className="flex items-center gap-2">
+                  <span className="font-medium text-gray-700">
+                    Currency
+                  </span>
+
+                  <span className="flex items-center gap-1 text-xs font-semibold">
+                    {/* USD */}
+                    <span
+                      className={
+                        currency === "USD"
+                          ? "inline-block rounded-md bg-green-50 px-2 py-1 text-green-700 shadow-sm ring-1 ring-green-200 animate-pulse"
+                          : "inline-block text-gray-400"
+                      }
+                    >
+                      USD
+                    </span>
+
+                    {/* Swap icon */}
+                    <ArrowLeftRight
+                      size={13}
+                      className="text-gray-400"
+                      aria-hidden="true"
+                    />
+
+                    {/* LBP */}
+                    <span
+                      className={
+                        currency === "LBP"
+                          ? "inline-block rounded-md bg-blue-50 px-2 py-1 text-blue-700 shadow-sm ring-1 ring-blue-200 animate-pulse"
+                          : "inline-block text-gray-400"
+                      }
+                    >
+                      LBP
+                    </span>
+                  </span>
+                </span>
+
+                {/* Exchange rate */}
+                <span className="mt-1 block text-xs text-gray-400">
+                  1 USD ={" "}
+                  {exchangeRate !== null
+                    ? `${new Intl.NumberFormat("en-US").format(
+                        exchangeRate,
+                      )} LL`
+                    : "..."}
+                </span>
+              </span>
             </button>
 
             <button
@@ -139,7 +207,8 @@ function Sidebar() {
 
         <nav aria-label="Main navigation" className="mt-8 space-y-2">
           {links.map(({ href, label, icon: Icon }) => {
-            const active = pathname === href || pathname.startsWith(`${href}/`);
+            const active =
+              pathname === href || pathname.startsWith(`${href}/`);
 
             return (
               <Link
@@ -160,24 +229,72 @@ function Sidebar() {
         </nav>
 
         <div className="mt-auto border-t border-gray-100 pt-4">
+          {/* Currency */}
           <button
             type="button"
             aria-label={`Change currency to ${
               currency === "USD" ? "Lebanese lira" : "US dollars"
             }`}
             onClick={toggleCurrency}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+            className="flex w-full items-start gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
           >
-            <Wallet size={20} aria-hidden="true" />
-
-            <span className="flex-1">
-              Change currency
-              <span className="block text-xs text-gray-400">
-                {currency === "USD" ? "USD ($)" : "Lebanese lira (LL)"}
-              </span>
+            {/* Money icon */}
+            <span
+              className="pt-0.5 text-lg leading-none"
+              aria-hidden="true"
+            >
+              💰
             </span>
 
-            <ArrowLeftRight size={16} aria-hidden="true" />
+            <span className="flex-1">
+              {/* Currency + switch */}
+              <span className="flex items-center gap-2">
+                <span className="font-medium text-gray-700">
+                  Currency
+                </span>
+
+                <span className="flex items-center gap-1 text-xs font-semibold">
+                  {/* USD */}
+                  <span
+                    className={
+                      currency === "USD"
+                        ? "inline-block rounded-md bg-green-50 px-2 py-1 text-green-700 shadow-sm ring-1 ring-green-200 animate-pulse"
+                        : "inline-block text-gray-400"
+                    }
+                  >
+                    USD
+                  </span>
+
+                  {/* Swap icon */}
+                  <ArrowLeftRight
+                    size={13}
+                    className="text-gray-400"
+                    aria-hidden="true"
+                  />
+
+                  {/* LBP */}
+                  <span
+                    className={
+                      currency === "LBP"
+                        ? "inline-block rounded-md bg-blue-50 px-2 py-1 text-blue-700 shadow-sm ring-1 ring-blue-200 animate-pulse"
+                        : "inline-block text-gray-400"
+                    }
+                  >
+                    LBP
+                  </span>
+                </span>
+              </span>
+
+              {/* Exchange rate */}
+              <span className="mt-1 block text-xs text-gray-400">
+                1 USD ={" "}
+                {exchangeRate !== null
+                  ? `${new Intl.NumberFormat("en-US").format(
+                      exchangeRate,
+                    )} LL`
+                  : "..."}
+              </span>
+            </span>
           </button>
 
           <button

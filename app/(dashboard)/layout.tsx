@@ -11,10 +11,10 @@ export default function DashboardLayout({
       <Sidebar />
 
       <main className="min-w-0 flex-1 p-6 md:p-10">
+        <SubscriptionWarning />
+
         {children}
       </main>
-
-      <SubscriptionWarning />
     </div>
   );
 }
