@@ -100,3 +100,12 @@ model OrderItem {
   @@index([orderId])
   @@map("order_items")
 }
+
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  usdToLbp  Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("exchange_rates")
+}
