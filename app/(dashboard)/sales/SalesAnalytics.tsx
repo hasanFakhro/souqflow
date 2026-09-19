@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import {
   ArcElement,
   BarElement,
@@ -15,12 +15,13 @@ import {
 } from "chart.js";
 import { Bar, Pie } from "react-chartjs-2";
 import { BarChart3, CalendarDays, PackageOpen } from "lucide-react";
-import { formatPrice, useCurrency } from "../currency";
+import { formatPrice, useCurrency, useExchangeRate } from "../currency";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
 type TimeRange = "daily" | "monthly" | "yearly";
 type SalesBreakdown = "category-money" | "category-quantity" | "item-money" | "item-quantity";
+type BarMetric = "sales" | "cost" | "profit";
 
 type AnalyticsOrder = {
   id: string;
@@ -75,14 +76,14 @@ function bucketKey(date: Date, range: TimeRange) {
 
 function bucketLabel(date: Date, range: TimeRange) {
   if (range === "yearly") return String(date.getFullYear());
-  if (range === "monthly") return date.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+  if (range === "monthly") return date.toLocaleDateString("en-US", { month: "short" });
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 function makeBuckets(range: TimeRange): ChartBucket[] {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const count = timeRangePeriods[range];
+  const count = range === "monthly" ? today.getMonth() + 1 : timeRangePeriods[range];
 
   return Array.from({ length: count }, (_, index) => {
     const offset = count - index - 1;
@@ -92,7 +93,7 @@ function makeBuckets(range: TimeRange): ChartBucket[] {
       date = new Date(today);
       date.setDate(today.getDate() - offset);
     } else if (range === "monthly") {
-      date = new Date(today.getFullYear(), today.getMonth() - offset, 1);
+      date = new Date(today.getFullYear(), index, 1);
     } else {
       date = new Date(today.getFullYear() - offset, 0, 1);
     }
@@ -116,7 +117,17 @@ function round(value: number) {
 export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] }) {
   const [timeRange, setTimeRange] = useState<TimeRange>("monthly");
   const [breakdown, setBreakdown] = useState<SalesBreakdown>("category-money");
+  const [barVisibility, setBarVisibility] = useState<Record<BarMetric, boolean>>({ sales: true, cost: true, profit: true });
+  const [hiddenPieLabels, setHiddenPieLabels] = useState<string[]>([]);
   const currency = useCurrency();
+  const exchangeRate = useExchangeRate();
+  const formatAmount = useCallback(
+    (amount: number) => {
+      if (currency === "LBP" && exchangeRate === null) return "LL …";
+      return formatPrice(amount, currency, exchangeRate ?? 0);
+    },
+    [currency, exchangeRate],
+  );
 
   const buckets = useMemo(() => {
     const values = makeBuckets(timeRange);
@@ -166,6 +177,7 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
           borderWidth: 1,
           borderRadius: 6,
           borderSkipped: false,
+          hidden: !barVisibility.sales,
         },
         {
           label: "Cost",
@@ -175,6 +187,7 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
           borderWidth: 1,
           borderRadius: 6,
           borderSkipped: false,
+          hidden: !barVisibility.cost,
         },
         {
           label: "Profit",
@@ -184,13 +197,14 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
           borderWidth: 1,
           borderRadius: 6,
           borderSkipped: false,
+          hidden: !barVisibility.profit,
         },
       ],
     }),
-    [buckets],
+    [barVisibility, buckets],
   );
 
-  const pieData = useMemo<ChartData<"pie">>(() => {
+  const pieEntries = useMemo(() => {
     const useQuantity = breakdown.endsWith("quantity");
     const byCategory = breakdown.startsWith("category");
     const values = new Map<string, number>();
@@ -208,19 +222,30 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
     const other = ranked.slice(7).reduce((sum, [, value]) => sum + value, 0);
     if (other > 0) largest.push(["Other", other]);
 
+    return largest.map(([label, value], index) => ({
+      id: label,
+      label,
+      value: round(value),
+      color: pieColours[index % pieColours.length],
+    }));
+  }, [breakdown, buckets]);
+
+  const pieData = useMemo<ChartData<"pie">>(() => {
+    const visibleEntries = pieEntries.filter((entry) => !hiddenPieLabels.includes(entry.id));
+
     return {
-      labels: largest.map(([label]) => label),
+      labels: visibleEntries.map((entry) => entry.label),
       datasets: [
         {
-          data: largest.map(([, value]) => round(value)),
-          backgroundColor: largest.map((_, index) => pieColours[index % pieColours.length]),
+          data: visibleEntries.map((entry) => entry.value),
+          backgroundColor: visibleEntries.map((entry) => entry.color),
           borderColor: "#ffffff",
           borderWidth: 2,
           hoverOffset: 6,
         },
       ],
     };
-  }, [breakdown, buckets]);
+  }, [hiddenPieLabels, pieEntries]);
 
   const barOptions = useMemo<ChartOptions<"bar">>(
     () => ({
@@ -228,10 +253,10 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
       maintainAspectRatio: false,
       interaction: { mode: "index", intersect: false },
       plugins: {
-        legend: { position: "top", align: "end", labels: { usePointStyle: true, boxWidth: 8, padding: 18 } },
+        legend: { display: false },
         tooltip: {
           callbacks: {
-            label: (context: TooltipItem<"bar">) => `${context.dataset.label ?? "Value"}: ${formatPrice(Number(context.parsed.y ?? 0), currency)}`,
+            label: (context: TooltipItem<"bar">) => `${context.dataset.label ?? "Value"}: ${formatAmount(Number(context.parsed.y ?? 0))}`,
           },
         },
       },
@@ -240,11 +265,11 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
         y: {
           beginAtZero: true,
           grid: { color: "#e2e8f0" },
-          ticks: { color: "#64748b", callback: (value) => formatPrice(Number(value), currency) },
+          ticks: { color: "#64748b", callback: (value) => formatAmount(Number(value)) },
         },
       },
     }),
-    [currency],
+    [formatAmount],
   );
 
   const pieOptions = useMemo<ChartOptions<"pie">>(
@@ -252,7 +277,7 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { position: "bottom", labels: { usePointStyle: true, boxWidth: 8, padding: 16 } },
+        legend: { display: false },
         tooltip: {
           callbacks: {
             label: (context: TooltipItem<"pie">) => {
@@ -261,14 +286,14 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
               const percentage = total ? (value / total) * 100 : 0;
               const displayValue = breakdown.endsWith("quantity")
                 ? `${value.toLocaleString()} units`
-                : formatPrice(value, currency);
+                : formatAmount(value);
               return `${context.label ?? "Other"}: ${displayValue} (${percentage.toFixed(1)}%)`;
             },
           },
         },
       },
     }),
-    [breakdown, currency],
+    [breakdown, formatAmount],
   );
 
   const hasData = totals.sales > 0 || totals.cost > 0 || totals.quantity > 0;
@@ -304,9 +329,9 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <SummaryCard label="Total sales" value={formatPrice(totals.sales, currency)} tone="blue" />
-        <SummaryCard label="Total cost" value={formatPrice(totals.cost, currency)} tone="orange" />
-        <SummaryCard label="Gross profit" value={formatPrice(totals.profit, currency)} tone="emerald" />
+        <SummaryCard label="Total sales" value={formatAmount(totals.sales)} tone="blue" />
+        <SummaryCard label="Total cost" value={formatAmount(totals.cost)} tone="orange" />
+        <SummaryCard label="Gross profit" value={formatAmount(totals.profit)} tone="emerald" />
         <SummaryCard label="Items sold" value={totals.quantity.toLocaleString()} tone="violet" />
       </section>
 
@@ -318,6 +343,18 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
               <div>
                 <h2 className="font-bold text-slate-900">Cost, sales &amp; profit</h2>
                 <p className="mt-1 text-sm text-slate-500">Performance across the selected {timeRangeLabels[timeRange].toLowerCase()} period.</p>
+                <ChartLegendButtons
+                  ariaLabel="Toggle cost, sales, and profit metrics"
+                  items={[
+                    { id: "sales", label: "Sales", color: "#2563eb", active: barVisibility.sales },
+                    { id: "cost", label: "Cost", color: "#f97316", active: barVisibility.cost },
+                    { id: "profit", label: "Profit", color: "#10b981", active: barVisibility.profit },
+                  ]}
+                  onToggle={(id) => {
+                    const metric = id as BarMetric;
+                    setBarVisibility((current) => ({ ...current, [metric]: !current[metric] }));
+                  }}
+                />
               </div>
             </div>
             <div className="h-[340px]"><Bar data={barData} options={barOptions} aria-label="Cost, sales, and profit bar chart" /></div>
@@ -328,12 +365,27 @@ export default function SalesAnalytics({ orders }: { orders: AnalyticsOrder[] })
               <div>
                 <h2 className="font-bold text-slate-900">Sales breakdown</h2>
                 <p className="mt-1 text-sm text-slate-500">Share of {measureLabel} by {breakdownLabel}.</p>
+                <ChartLegendButtons
+                  ariaLabel="Toggle sales breakdown segments"
+                  items={pieEntries.map(({ id, label, color }) => ({
+                    id,
+                    label,
+                    color,
+                    active: !hiddenPieLabels.includes(id),
+                  }))}
+                  onToggle={(id) => {
+                    setHiddenPieLabels((current) => current.includes(id) ? current.filter((label) => label !== id) : [...current, id]);
+                  }}
+                />
               </div>
               <label className="sr-only" htmlFor="sales-breakdown">Sales breakdown</label>
               <select
                 id="sales-breakdown"
                 value={breakdown}
-                onChange={(event) => setBreakdown(event.target.value as SalesBreakdown)}
+                onChange={(event) => {
+                  setBreakdown(event.target.value as SalesBreakdown);
+                  setHiddenPieLabels([]);
+                }}
                 className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 xl:w-full"
               >
                 <option value="category-money">Sales by category — money</option>
@@ -369,5 +421,51 @@ function SummaryCard({ label, value, tone }: { label: string; value: string; ton
       <p className="text-sm font-medium opacity-75">{label}</p>
       <p className="mt-2 text-2xl font-bold tracking-tight">{value}</p>
     </article>
+  );
+}
+
+type ChartLegendButton = {
+  id: string;
+  label: string;
+  color: string;
+  active: boolean;
+};
+
+function ChartLegendButtons({
+  ariaLabel,
+  items,
+  onToggle,
+}: {
+  ariaLabel: string;
+  items: ChartLegendButton[];
+  onToggle: (id: string) => void;
+}) {
+  return (
+    <div className="mt-3">
+      <p className="text-xs font-medium text-slate-500">Click a label to show or hide it.</p>
+      <div className="mt-2 flex flex-wrap gap-2" role="group" aria-label={ariaLabel}>
+        {items.map((item) => (
+          <button
+            key={item.id}
+            type="button"
+            aria-pressed={item.active}
+            title={`${item.active ? "Hide" : "Show"} ${item.label}`}
+            onClick={() => onToggle(item.id)}
+            className={`inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-xs font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
+              item.active
+                ? "border-slate-200 bg-white text-slate-700 shadow-sm hover:border-blue-300 hover:bg-blue-50"
+                : "border-slate-200 bg-slate-50 text-slate-400 opacity-70 line-through hover:border-slate-300 hover:bg-slate-100"
+            }`}
+          >
+            <span
+              aria-hidden="true"
+              className={`h-2.5 w-2.5 rounded-full ${item.active ? "" : "opacity-40"}`}
+              style={{ backgroundColor: item.color }}
+            />
+            {item.label}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }

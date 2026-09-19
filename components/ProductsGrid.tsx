@@ -53,7 +53,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 mt-4">
                 {filteredProducts.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product.id} product={{ ...product, category: product.category ?? "Uncategorized" }} />
                 ))}
             </div>
         </div>
