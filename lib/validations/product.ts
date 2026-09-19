@@ -15,7 +15,6 @@ export const productSchema = z.object({
 
   imageUrl: z
     .string()
-    .url("Please enter a valid image URL")
     .optional()
     .or(z.literal("")),
 
@@ -26,12 +25,10 @@ export const productSchema = z.object({
     .optional()
     .or(z.literal("")),
 
-  category: z
-    .string()
-    .trim()
-    .max(50, "Category must be less than 50 characters")
-    .optional()
-    .or(z.literal("")),
+  categoryId: z
+  .string()
+  .optional()
+  .or(z.literal("")),
 
   costPrice: z
     .coerce

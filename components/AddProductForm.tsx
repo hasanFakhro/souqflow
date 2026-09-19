@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -12,12 +13,46 @@ import {
 
 type Props = {
   initialData?: ProductFormData;
-  onSave?: (data: ProductFormData) => Promise<void> | void;
+  onSave?: (
+    data: ProductFormData,
+    imageFile?: File | null
+  ) => Promise<void>;
   onCancel?: () => void;
+};
+
+type Category = {
+  id: string;
+  name: string;
 };
 
 export default function AddProductForm({ initialData, onSave, onCancel }: Props) {
   const router = useRouter();
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/categories");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch categories");
+        }
+
+        const data = await response.json();
+
+        setCategories(data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const {
     register,
     handleSubmit,
@@ -30,7 +65,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
       description: "",
       imageUrl: "",
       sku: "",
-      category: "",
+      categoryId: "",
       costPrice: 0,
       sellPrice: 0,
       quantity: 0,
@@ -42,15 +77,31 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
   const onSubmit = async (data: ProductFormData) => {
     try {
       if (onSave) {
-        await onSave(data);
+        await onSave(data, imageFile);
         return;
       }
+
+      const formData = new FormData();
+
+      formData.append("name", data.name);
+      formData.append("description", data.description || "");
+      formData.append("sku", data.sku || "");
+      formData.append("categoryId", data.categoryId || "");
+      formData.append("costPrice", String(data.costPrice));
+      formData.append("sellPrice", String(data.sellPrice));
+      formData.append("quantity", String(data.quantity));
+      formData.append(
+        "lowStockAt",
+        data.lowStockAt !== undefined ? String(data.lowStockAt) : ""
+      );
+
+      if (imageFile) {
+        formData.append("image", imageFile);
+      }
+
       const response = await fetch("/api/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(data),
+        body: formData,
       });
 
       const result = await response.json();
@@ -61,6 +112,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
 
       alert("Product added successfully!");
       reset();
+      setImageFile(null);
       router.refresh();
     } catch (error) {
       console.error(error);
@@ -75,7 +127,6 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
           onSubmit={handleSubmit(onSubmit)}
           className="space-y-5"
         >
-          {/* Name */}
           <div className="space-y-2">
             <label
               htmlFor="name"
@@ -98,7 +149,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
             )}
           </div>
 
-          {/* Description */}
+          
           <div className="space-y-2">
             <label
               htmlFor="description"
@@ -120,30 +171,34 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
             )}
           </div>
 
-          {/* Image URL */}
+
           <div className="space-y-2">
             <label
-              htmlFor="imageUrl"
+              htmlFor="image"
               className="block text-sm font-semibold text-gray-700"
             >
-              Image URL
+              Product Image
             </label>
 
             <input
-              id="imageUrl"
-              type="url"
-              {...register("imageUrl")}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              id="image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0] || null;
+                setImageFile(file);
+              }}
+              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900"
             />
 
-            {errors.imageUrl && (
-              <p className="text-sm text-red-600">
-                {errors.imageUrl.message}
+            {imageFile && (
+              <p className="text-sm text-gray-500">
+                Selected: {imageFile.name}
               </p>
             )}
           </div>
 
-          {/* SKU */}
+          
           <div className="space-y-2">
             <label
               htmlFor="sku"
@@ -166,33 +221,43 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
             )}
           </div>
 
-          {/* Category */}
+          
           <div className="space-y-2">
             <label
-              htmlFor="category"
+              htmlFor="categoryId"
               className="block text-sm font-semibold text-gray-700"
             >
               Category
             </label>
 
-            <input
-              id="category"
-              type="text"
-              {...register("category")}
-              className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-            />
+            <select
+              id="categoryId"
+              {...register("categoryId")}
+              disabled={categoriesLoading}
+              className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-gray-100"
+            >
+              <option value="">
+                {categoriesLoading ? "Loading categories..." : "Select a category"}
+              </option>
 
-            {errors.category && (
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+
+            {errors.categoryId && (
               <p className="text-sm text-red-600">
-                {errors.category.message}
+                {errors.categoryId.message}
               </p>
             )}
           </div>
 
-          {/* Prices */}
+          
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             
-            {/* Cost Price */}
+            
             <div className="space-y-2">
               <label
                 htmlFor="costPrice"
@@ -217,7 +282,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
               )}
             </div>
 
-            {/* Sell Price */}
+            
             <div className="space-y-2">
               <label
                 htmlFor="sellPrice"
@@ -243,10 +308,10 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
             </div>
           </div>
 
-          {/* Stock */}
+          
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
 
-            {/* Quantity */}
+           
             <div className="space-y-2">
               <label
                 htmlFor="quantity"
@@ -270,7 +335,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
               )}
             </div>
 
-            {/* Low Stock */}
+           
             <div className="space-y-2">
               <label
                 htmlFor="lowStockAt"
@@ -296,15 +361,30 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
 
           </div>
 
-          {/* Submit */}
-          {onCancel && <button type="button" disabled={isSubmitting} onClick={onCancel} className="rounded-lg border px-4 py-2">Cancel</button>}
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-          >
-            {isSubmitting ? "Saving..." : initialData ? "Update Product" : "Add Product"}
-          </button>
+          <div className="flex gap-3">
+            {onCancel && (
+              <button
+                type="button"
+                disabled={isSubmitting}
+                onClick={onCancel}
+                className="rounded-lg border border-gray-300 px-4 py-3 font-semibold text-gray-700 transition hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Cancel
+              </button>
+            )}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="flex-1 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+            >
+              {isSubmitting
+                ? "Saving..."
+                : initialData
+                  ? "Update Product"
+                  : "Add Product"}
+            </button>
+          </div>
         </form>
     </div>
   );
