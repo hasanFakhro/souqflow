@@ -7,7 +7,7 @@ export type { ProductFormData } from "@/lib/validations/product";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: ProductFormData) => Promise<void> | void;
+  onSubmit: ( data: ProductFormData, imageFile?: File | null ) => Promise<void> | void;
   initialData?: ProductFormData;
 };
 
@@ -24,10 +24,11 @@ export default function ProductFormModal({ isOpen, onClose, onSubmit, initialDat
           </div>
           <button type="button" onClick={onClose} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-700">✕</button>
         </div>
-        <AddProductForm initialData={initialData} onCancel={onClose} onSave={async (data) => {
-          await onSubmit(data);
-          onClose();
-        }} />
+        <AddProductForm initialData={initialData} onCancel={onClose} onSave={async (data, imageFile) => {
+            await onSubmit(data, imageFile);
+            onClose();
+          }}
+        />
       </div>
     </div>
   );

@@ -56,7 +56,9 @@ model Product {
   description String?
   imageUrl    String?
   sku         String?  @unique
-  category    String?
+  
+  categoryId  String?
+  category    Category? @relation(fields: [categoryId], references: [id])
 
   costPrice   Float
   sellPrice   Float
@@ -69,8 +71,19 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  @@index([category])
+  @@index([categoryId])
   @@map("products")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String    @unique
+  products  Product[]
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("categories")
 }
 
 model Order {
