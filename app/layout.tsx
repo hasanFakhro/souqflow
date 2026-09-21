@@ -8,6 +8,8 @@ import Providers from "./providers";
 
 import { Toaster } from "sonner";
 
+import EnableEruda from "@/components/EnableEruda";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -33,8 +35,8 @@ export default function RootLayout({
     >
       <Providers>
         <body className="min-h-full flex flex-col">
+          <EnableEruda />
           {children}
-
           <Toaster position="top-right" />
         </body>
       </Providers>

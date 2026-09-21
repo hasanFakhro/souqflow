@@ -3,40 +3,63 @@
 import type { Product } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Pencil } from "lucide-react";
 import ProductFormModal, { ProductFormData } from "./ProductFormModal";
 
 export function EditProductSection({ product }: { product: Product }) {
   const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleUpdateProduct = async (updatedProduct: ProductFormData) => {
+  const handleUpdateProduct = async (
+    updatedProduct: ProductFormData,
+    imageFile?: File | null
+  ) => {
+    const formData = new FormData();
+
+    formData.append("name", updatedProduct.name);
+    formData.append("description", updatedProduct.description || "");
+    formData.append("sku", updatedProduct.sku || "");
+    formData.append("categoryId", updatedProduct.categoryId || "");
+    formData.append("costPrice", String(updatedProduct.costPrice));
+    formData.append("sellPrice", String(updatedProduct.sellPrice));
+    formData.append("quantity", String(updatedProduct.quantity));
+
+    formData.append(
+      "lowStockAt",
+      updatedProduct.lowStockAt !== undefined
+        ? String(updatedProduct.lowStockAt)
+        : ""
+    );
+
+    if (imageFile) {
+      formData.append("image", imageFile);
+    }
+
     const response = await fetch(`/api/products/${product.id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updatedProduct),
-  });
+      method: "PUT",
+      body: formData,
+    });
 
-  const result = await response.json();
-  if (!response.ok) {
-    throw new Error(result.message || "Failed to update product");
-  }
+    const result = await response.json();
 
-  router.refresh();
+    if (!response.ok) {
+      throw new Error(result.message || "Failed to update product");
+    }
+    
+    router.refresh();
   };
 
   return (
     <div>
-      {/* The Edit Product Button */}
       <button
         onClick={() => setIsModalOpen(true)}
-        className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-700 transition hover:bg-gray-50 hover:text-blue-600"
+        title="Edit product"
+        aria-label="Edit product"
+        className="rounded-md p-2 text-blue-600 transition hover:bg-blue-50"
       >
-        Edit
+        <Pencil size={18} />
       </button>
 
-      {/* The Modal with existing product populated */}
       <ProductFormModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
@@ -46,7 +69,7 @@ export function EditProductSection({ product }: { product: Product }) {
           description: product.description ?? "",
           imageUrl: product.imageUrl ?? "",
           sku: product.sku ?? "",
-          category: product.category ?? "",
+          categoryId: product.categoryId ?? "",
           lowStockAt: product.lowStockAt ?? undefined,
         }}
       />
