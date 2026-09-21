@@ -4,8 +4,8 @@ export type CartItem = {
     productId: string;
     name: string;
     unitPrice: number;
-    costPrice:number;
-    category: string;
+    costPrice: number;
+    category: string | null;
     quantity: number;
     stock: number;
 }
@@ -21,14 +21,18 @@ export const useCartStore = create<CartState>(() => {
     }
 });
 
-export function addItem(item: Omit<CartItem,"quantity" >) {
+export function addItem(item: Omit<CartItem, "quantity">) {
     useCartStore.setState(state => {
-        const existing = state.items.find(i => item.productId === i.productId);
+        const existing = state.items.find(i => i.productId === item.productId);
         if (existing) {
+            if (existing.quantity >= existing.stock) return state;
             return {
-                items: state.items.map(i => item.productId === i.productId ? { ...i, quantity: i.quantity + 1 } : i)
-            }
+                items: state.items.map(i =>
+                    i.productId === item.productId ? { ...i, quantity: i.quantity + 1 } : i
+                ),
+            };
         }
+        if (item.stock <= 0) return state;
         return { items: [...state.items, { ...item, quantity: 1 }] };
     });
 }
@@ -66,6 +70,6 @@ export function decrementQuantity(productId: string) {
     }));
 }
 
-export function clearCart(){
-    useCartStore.setState({items:[]});
+export function clearCart() {
+    useCartStore.setState({ items: [] });
 }

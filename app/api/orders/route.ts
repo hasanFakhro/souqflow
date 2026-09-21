@@ -14,6 +14,16 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        
+        for (const item of items as CartItem[]) {
+            if (!Number.isInteger(item.quantity) || item.quantity <= 0) {
+                return NextResponse.json(
+                    { error: 'Invalid quantity' },
+                    { status: 400 }
+                );
+            }
+        }
+
         const orderNumber = 'ORD-' + Date.now();
         const total = items.reduce((acc: number, item: CartItem) => acc + item.unitPrice * item.quantity, 0);
 
@@ -36,10 +46,14 @@ export async function POST(request: NextRequest) {
             });
 
             for (const item of items as CartItem[]) {
-                await tx.product.update({
-                    where: { id: item.productId },
+                const updated = await tx.product.updateMany({
+                    where: { id: item.productId, quantity: { gte: item.quantity } },
                     data: { quantity: { decrement: item.quantity } }
-                })
+                });
+
+                if (updated.count === 0) {
+                    throw new Error('Not enough stock for ' + item.name);
+                }
             }
 
             return order;
@@ -52,6 +66,10 @@ export async function POST(request: NextRequest) {
             { status: 201 })
 
     } catch (error) {
+        if (error instanceof Error && error.message.startsWith('Not enough stock')) {
+            return NextResponse.json({ error: error.message }, { status: 409 });
+        }
+
         console.error('Order creation failed: '+ error);
     return NextResponse.json(
         { error: 'Order creation failed. Please try again.'  },

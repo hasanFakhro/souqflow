@@ -17,6 +17,7 @@
     "bcryptjs": "^3.0.3",
     "chart.js": "^4.5.1",
     "clsx": "^2.1.1",
+    "eruda": "^3.4.3",
     "jspdf": "^4.2.1",
     "jspdf-autotable": "^5.0.8",
     "libphonenumber-js": "^1.13.13",

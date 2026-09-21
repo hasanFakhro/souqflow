@@ -28,6 +28,7 @@ const CartBar = () => {
 
         } catch (error) {
             console.error('Couldnt send request: ' + error);
+            toast.error("Couldn't reach the server");
         }
     }
 
@@ -71,10 +72,9 @@ const CartBar = () => {
                                         <span className="text-sm font-medium w-5 text-center">{item.quantity}</span>
                                         <button
                                             onClick={() => incrementQuantity(item.productId)}
-                                            className="w-7 h-7 rounded-full border border-gray-200 text-gray-500 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition"
-                                        >
-                                            +
-                                        </button>
+                                            disabled={item.quantity >= item.stock}
+                                            className="w-7 h-7 rounded-full border border-gray-200 text-gray-500 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition disabled:opacity-40"
+                                        >+</button>
                                         <span className="text-sm font-semibold text-gray-900 w-14 text-right">
                                             ${(item.unitPrice * item.quantity).toFixed(2)}
                                         </span>
