@@ -7,9 +7,11 @@ import { RefreshCw, Trash2 } from "lucide-react";
 import type { Product } from "@prisma/client";
 import { EditProductSection } from "./EditProductButton";
 import ManageCategories from "@/components/ManageCategories";
+import { ProductData } from "./ProductsGrid";
+
 
 type ProductTableProps = {
-  products: Product[];
+  products: ProductData[];
 };
 
 export default function ProductTable({
@@ -24,7 +26,7 @@ export default function ProductTable({
 
   const categoriesSet = new Set(
     products
-      .map((product) => product.category)
+      .map((product) => product.category?.name)
       .filter(
         (category): category is string => Boolean(category)
       )
@@ -46,7 +48,7 @@ export default function ProductTable({
       .includes(searchTerm.toLowerCase());
 
     const matchesCategory =
-      category === null || product.category === category;
+      category === null || product.category?.name === category;
 
     const matchesStock =
       stockState === null ||
@@ -271,7 +273,7 @@ export default function ProductTable({
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">
-                  {product.category || "-"}
+                  {product.category?.name || "-"}
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">

@@ -28,7 +28,7 @@ export default async function SalesPage() {
         id: true,
         sku: true,
         name: true,
-        category: true,
+        category: { select: { name: true } },
         costPrice: true,
         sellPrice: true,
       },
@@ -52,6 +52,7 @@ export default async function SalesPage() {
         }))}
         products={products.map((p) => ({
           ...p,
+          category: p.category?.name ?? null,
           costPrice: Number(p.costPrice),
           sellPrice: Number(p.sellPrice),
         }))}

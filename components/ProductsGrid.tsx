@@ -2,20 +2,23 @@
 
 import { useState } from "react";
 import SearchBar from "./SearchBar";
-import { Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import ProductCard from "./ProductCard";
 
+export type ProductData = Prisma.ProductGetPayload<{ include: { category: true } }>;
 type ProductsGridProps = {
-    products: Product[];
+    products: ProductData[];
 };
 
 const ProductsGrid = ({ products }: ProductsGridProps) => {
+    const flatProducts = products.map(product => ({ ...product, category: product.category?.name ?? null }));
+
     const [searchTerm, setSearchTerm] = useState("");
     const [category, setCategory] = useState<string | null>(null);
     const [stockState, setStockState] = useState<string | null>(null);
 
     const categoriesSet = new Set(
-        products
+        flatProducts
             .map((product) => product.category)
             .filter(
                 (category): category is string => Boolean(category)
@@ -24,7 +27,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
 
     const categoriesList = [...categoriesSet];
 
-    const filteredProducts = products.filter((product) => {
+    const filteredProducts = flatProducts.filter((product) => {
         const matchesSearch = product.name
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
@@ -55,26 +58,29 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                 />
 
                 <div className="flex flex-wrap gap-2">
-                    <select
-                        value={category ?? ""}
-                        onChange={(e) =>
-                            setCategory(
-                                e.target.value === ""
-                                    ? null
-                                    : e.target.value
-                            )
-                        }
-                        aria-label="Filter by category"
-                        className="rounded-lg shadow-sm px-3 py-2 text-sm bg-white"
+                    <button
+                        onClick={() => setCategory(null)}
+                        className={`px-3 py-1.5 rounded-full text-sm cursor-pointer transition ${
+                            category === null
+                                ? 'bg-primary text-white'
+                                : 'bg-white text-gray-600 shadow-sm hover:bg-gray-100'
+                        }`}
                     >
-                        <option value="">All categories</option>
-
-                        {categoriesList.map((cat) => (
-                            <option key={cat} value={cat}>
-                                {cat.charAt(0).toUpperCase() + cat.slice(1)}
-                            </option>
-                        ))}
-                    </select>
+                        All
+                    </button>
+                    {categoriesList.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => setCategory(cat)}
+                            className={`px-3 py-1.5 rounded-full text-sm cursor-pointer transition ${
+                                category === cat
+                                    ? 'bg-primary text-white'
+                                    : 'bg-white text-gray-600 shadow-sm hover:bg-gray-100'
+                            }`}
+                        >
+                            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                        </button>
+                    ))}
 
                     <select
                         value={stockState ?? ""}
