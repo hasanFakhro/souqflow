@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { AlertTriangle, X } from "lucide-react";
+import { AlertTriangle, Link, X } from "lucide-react";
 
 type SessionUserWithSubscription = {
   subscriptionActive?: boolean;
@@ -107,13 +107,12 @@ export default function SubscriptionWarning() {
           </span>
         </div>
 
-        <button
-          type="button"
-          onClick={() => router.push("/subscription")}
-          className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-purple-700"
-        >
-          Renew
-        </button>
+        <Link
+  href="/subscription"
+  className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-purple-700"
+>
+  Renew
+</Link>
 
         <button
           type="button"

@@ -17,7 +17,7 @@ export function AddProductSection() {
     formData.append("name", newProduct.name);
     formData.append("description", newProduct.description || "");
     formData.append("sku", newProduct.sku || "");
-    formData.append("category", newProduct.category || "");
+    formData.append("category", newProduct.categoryId || "");
     formData.append("costPrice", String(newProduct.costPrice));
     formData.append("sellPrice", String(newProduct.sellPrice));
     formData.append("quantity", String(newProduct.quantity));

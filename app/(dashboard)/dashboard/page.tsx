@@ -6,7 +6,6 @@ export default async function DashboardPage() {
     orderBy: { createdAt: "desc" },include:{category:true}
   });
 
-  console.log(products);
 
   return (
     <section className="space-y-6">
