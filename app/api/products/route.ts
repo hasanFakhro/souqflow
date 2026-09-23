@@ -2,24 +2,37 @@ import { writeFile } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
 
+import { auth } from "@/lib/auth";
 import { productSchema } from "@/lib/validations/product";
-import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
+function refreshProductViews() {
+  revalidatePath("/inventory");
+  revalidatePath("/products", "layout");
+  revalidatePath("/dashboard");
+  revalidatePath("/sales");
+}
+
 export async function GET() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const products = await prisma.product.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
+      where: { ownerId: userId },
+      orderBy: { createdAt: "desc" },
+      include: { category: true },
     });
 
-    return NextResponse.json(products, { status: 200 });
+    return NextResponse.json(products);
   } catch (error) {
     console.error("Error fetching products:", error);
-
     return NextResponse.json(
       { message: "Failed to fetch products" },
       { status: 500 }
@@ -28,17 +41,15 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const formData = await request.formData();
-
-    const name = formData.get("name") as string;
-    const description = formData.get("description") as string;
-    const categoryId = formData.get("categoryId") as string;
-    const costPrice = formData.get("costPrice") as string;
-    const sellPrice = formData.get("sellPrice") as string;
-    const quantity = formData.get("quantity") as string;
-    const lowStockAt = formData.get("lowStockAt") as string;
-
     const image = formData.get("image");
 
     if (image && !(image instanceof File)) {
@@ -46,6 +57,46 @@ export async function POST(request: NextRequest) {
         { message: "Invalid image file" },
         { status: 400 }
       );
+    }
+
+    const productData = {
+      name: formData.get("name") as string,
+      description: (formData.get("description") as string) || "",
+      imageUrl: "",
+      sku: (formData.get("sku") as string) || "",
+      categoryId: (formData.get("categoryId") as string) || "",
+      costPrice: Number(formData.get("costPrice")),
+      sellPrice: Number(formData.get("sellPrice")),
+      quantity: Number(formData.get("quantity")),
+      lowStockAt:
+        formData.get("lowStockAt") !== ""
+          ? Number(formData.get("lowStockAt"))
+          : undefined,
+    };
+
+    const parsed = productSchema.safeParse(productData);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: parsed.error.issues[0].message },
+        { status: 400 }
+      );
+    }
+
+    const { categoryId } = parsed.data;
+
+    if (categoryId) {
+      const category = await prisma.category.findFirst({
+        where: { id: categoryId, ownerId: userId },
+        select: { id: true },
+      });
+
+      if (!category) {
+        return NextResponse.json(
+          { message: "Category not found" },
+          { status: 400 }
+        );
+      }
     }
 
     let imageUrl: string | null = null;
@@ -65,90 +116,41 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      const uploadDir = path.join(process.cwd(), "public");
-
       const extension = image.type.split("/")[1];
       const fileName = `${randomUUID()}.${extension}`;
-
-      const filePath = path.join(uploadDir, fileName);
-
-      const bytes = await image.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+      const filePath = path.join(process.cwd(), "public", fileName);
+      const buffer = Buffer.from(await image.arrayBuffer());
 
       await writeFile(filePath, buffer);
-
       imageUrl = `/${fileName}`;
     }
 
-    const productData = {
-      name,
-      description: description || "",
-      imageUrl: imageUrl || "",
-      categoryId: categoryId || "",
-      costPrice: Number(costPrice),
-      sellPrice: Number(sellPrice),
-      quantity: Number(quantity),
-      lowStockAt:
-        lowStockAt !== "" ? Number(lowStockAt) : undefined,
-    };
-
-    const parsed = productSchema.safeParse(productData);
-
-    if (!parsed.success) {
-      return NextResponse.json(
-        {
-          message: parsed.error.issues[0].message,
-        },
-        { status: 400 }
-      );
-    }
-
-    const {
-      name: parsedName,
-      description: parsedDescription,
-      categoryId: parsedCategoryId,
-      costPrice: parsedCostPrice,
-      sellPrice: parsedSellPrice,
-      quantity: parsedQuantity,
-      lowStockAt: parsedLowStockAt,
-    } = parsed.data;
-
     const product = await prisma.product.create({
       data: {
-        name: parsedName.trim(),
-        description: parsedDescription || null,
+        ownerId: userId,
+        name: parsed.data.name.trim(),
+        description: parsed.data.description || null,
         imageUrl,
-        categoryId: parsedCategoryId || null,
-
-        costPrice: Number(parsedCostPrice),
-        sellPrice: Number(parsedSellPrice),
-        quantity: Number(parsedQuantity),
-
-        lowStockAt:
-          parsedLowStockAt !== undefined
-            ? Number(parsedLowStockAt)
-            : null,
+        sku: parsed.data.sku || null,
+        categoryId: parsed.data.categoryId || null,
+        costPrice: parsed.data.costPrice,
+        sellPrice: parsed.data.sellPrice,
+        quantity: parsed.data.quantity,
+        lowStockAt: parsed.data.lowStockAt ?? null,
       },
+      include: { category: true },
     });
 
-    revalidatePath("/inventory");
-    revalidatePath("/products", "layout");
-    revalidatePath("/dashboard");
+    refreshProductViews();
 
     return NextResponse.json(
-      {
-        message: "Product added successfully",
-        product,
-      },
+      { message: "Product added successfully", product },
       { status: 201 }
     );
   } catch (error) {
     console.error("Error creating product:", error);
-
     return NextResponse.json(
-      {
-        message: "Failed to create product",
-      },
+      { message: "Failed to create product" },
       { status: 500 }
     );
   }

@@ -1,7 +1,7 @@
 import type { Prisma } from "@prisma/client";
 
 export type OrderWithItems = Prisma.OrderGetPayload<{ include: { items: true } }>;
-export type SerializedOrder = Omit<OrderWithItems, "orderedAt" | "createdAt" | "updatedAt" | "items"> & {
+export type SerializedOrder = Omit<OrderWithItems, "ownerId" | "orderedAt" | "createdAt" | "updatedAt" | "items"> & {
   orderedAt: string;
   items: Omit<OrderWithItems["items"][number], "createdAt">[];
 };

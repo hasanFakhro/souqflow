@@ -30,8 +30,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
   subscription Subscription?
+  products     Product[]     @relation("UserProducts")
+  orders       Order[]       @relation("UserOrders")
+  categories   Category[]    @relation("UserCategories")
 
   @@map("users")
 }
@@ -51,38 +53,49 @@ model Subscription {
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   description String?
   imageUrl    String?
-  sku         String?  @unique
-  
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
+  sku         String?
 
-  costPrice   Float
-  sellPrice   Float
+  // Nullable only for records that existed before ownership was introduced.
+  // New products are always created with an ownerId by the API.
+  ownerId String?
+  owner   User?   @relation("UserProducts", fields: [ownerId], references: [id], onDelete: Cascade)
 
-  quantity    Int      @default(0)
-  lowStockAt  Int?
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
 
-  orderItems  OrderItem[]
+  costPrice  Float
+  sellPrice  Float
+  quantity   Int   @default(0)
+  lowStockAt Int?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
 
+  @@unique([ownerId, sku])
+  @@index([ownerId, createdAt])
   @@index([categoryId])
   @@map("products")
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String    @unique
-  products  Product[]
+  id   String @id @default(cuid())
+  name String
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  // Nullable only for records that existed before ownership was introduced.
+  ownerId  String?
+  owner    User?     @relation("UserCategories", fields: [ownerId], references: [id], onDelete: Cascade)
+  products Product[]
 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ownerId, name])
+  @@index([ownerId, name])
   @@map("categories")
 }
 
@@ -92,27 +105,33 @@ model Order {
   customerName String?
   total        Float       @default(0)
   status       OrderStatus @default(PENDING)
-  orderedAt    DateTime    @default(now())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  items        OrderItem[]
 
+  // Nullable only for records that existed before ownership was introduced.
+  ownerId String?
+  owner   User?   @relation("UserOrders", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  orderedAt DateTime    @default(now())
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  items     OrderItem[]
+
+  @@index([ownerId, orderedAt])
   @@index([orderedAt, status])
   @@map("orders")
 }
 
 model OrderItem {
-  id          String   @id @default(cuid())
-  orderId     String
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
-  productId   String?
-  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
 
   productName String
   category    String?
-  unitCost      Float
-  unitPrice     Float
+  unitCost    Float
+  unitPrice   Float
   quantity    Int
   createdAt   DateTime @default(now())
 

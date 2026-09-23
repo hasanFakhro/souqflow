@@ -1,11 +1,24 @@
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import ProductsGrid from "@/components/ProductsGrid";
 import CartBar from "@/components/CartBar";
-export default async function DashboardPage() {
-  const products = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },include:{category:true}
-  });
+import { redirect } from "next/navigation";
 
+export const dynamic = "force-dynamic";
+
+export default async function DashboardPage() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    redirect("/signin");
+  }
+
+  const products = await prisma.product.findMany({
+    where: { ownerId: userId },
+    orderBy: { createdAt: "desc" },
+    include: { category: true },
+  });
 
   return (
     <section className="space-y-6">
