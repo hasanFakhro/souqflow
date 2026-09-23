@@ -549,10 +549,10 @@ export default function SalesAnalytics({ orders, products }: SalesAnalyticsProps
 
 function SummaryCard({ label, value, tone }: { label: string; value: string; tone: "blue" | "orange" | "emerald" | "violet" }) {
   const tones = {
-    blue: "border-blue-100 bg-blue-50 text-blue-700",
-    orange: "border-orange-100 bg-orange-50 text-orange-700",
-    emerald: "border-emerald-100 bg-emerald-50 text-emerald-700",
-    violet: "border-violet-100 bg-violet-50 text-violet-700",
+    blue: "sales-summary-card--blue border-blue-100 bg-blue-50 text-blue-700",
+    orange: "sales-summary-card--orange border-orange-100 bg-orange-50 text-orange-700",
+    emerald: "sales-summary-card--emerald border-emerald-100 bg-emerald-50 text-emerald-700",
+    violet: "sales-summary-card--violet border-violet-100 bg-violet-50 text-violet-700",
   };
 
   return (

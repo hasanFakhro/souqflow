@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -10,10 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "#0f766e",
-        success: "#16a34a",
-        warning: "#d97706",
-        danger: "#dc2626",
+        primary: "var(--color-primary)",
+        success: "var(--color-success)",
+        warning: "var(--color-warning)",
+        danger: "var(--color-danger)",
       },
     },
   },
@@ -21,4 +20,3 @@ const config: Config = {
 };
 
 export default config;
-
