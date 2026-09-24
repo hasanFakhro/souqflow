@@ -5,7 +5,7 @@ export default async function DashboardPage() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },include:{category:true}
   });
-
+  
 
   return (
     <section className="space-y-6">

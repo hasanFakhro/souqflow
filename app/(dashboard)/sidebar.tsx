@@ -30,7 +30,7 @@ const links = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-function Sidebar() {
+function Sidebar({ businessName }: { businessName: string | undefined }) {
   const pathname = usePathname();
 
   // Current currency selected by the user.
@@ -68,7 +68,7 @@ function Sidebar() {
           onClick={closeMobileMenu}
           className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent"
         >
-          SouqFlow
+          {businessName ?? "SouqFlow"}
         </Link>
 
         <button
@@ -202,7 +202,7 @@ function Sidebar() {
           href="/dashboard"
           className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent"
         >
-          SouqFlow
+          {businessName ?? "SouqFlow"}
         </Link>
 
         <nav aria-label="Main navigation" className="mt-8 space-y-2">

@@ -12,18 +12,25 @@ export default async function ProfilePage() {
 
   const userId = session.user.id;
 
-  const user = await prisma.user.findUnique({
-    where: {
-      id: userId,
-    },
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      email: true,
-      phone: true,
-    },
-  });
+  const [user, business] = await Promise.all([
+    prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        name: true,
+        image: true,
+        email: true,
+        phone: true,
+      },
+    }),
+    prisma.business.findUnique({
+      where: {
+        userId,
+      },
+    }),
+  ]);
 
   if (!user) {
     redirect("/signin");
@@ -38,7 +45,9 @@ export default async function ProfilePage() {
         <span className="text-3xl">👋</span>
       </div>
 
-      <ProfileForm user={user} />
+      <ProfileForm user={user}
+       business={business}
+      />
     </div>
   );
 }

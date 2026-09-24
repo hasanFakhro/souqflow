@@ -19,41 +19,27 @@ export default async function OrdersPage({
 
   const page = Math.max(requestedPage, 1);
 
-  // Measure orders query.
-  console.time("ORDERS findMany");
+  const [orders, totalOrders] = await Promise.all([
+    prisma.order.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
 
-  const orders = await prisma.order.findMany({
-    skip: (page - 1) * pageSize,
-    take: pageSize,
-
-    include: {
-      items: {
-        orderBy: {
-          createdAt: "asc",
+      include: {
+        items: {
+          orderBy: {
+            createdAt: "asc",
+          },
         },
       },
-    },
 
-    orderBy: {
-      orderedAt: "desc",
-    },
-  });
-
-  console.timeEnd("ORDERS findMany");
-
-  // Measure count query.
-  console.time("ORDERS count");
-
-  const totalOrders = await prisma.order.count();
-
-  console.timeEnd("ORDERS count");
-
-  // Measure serialization.
-  console.time("ORDERS serialize");
+      orderBy: {
+        orderedAt: "desc",
+      },
+    }),
+    prisma.order.count(),
+  ]);
 
   const serializedOrders = orders.map(serializeOrder);
-
-  console.timeEnd("ORDERS serialize");
 
   const totalPages = Math.ceil(
     totalOrders / pageSize,

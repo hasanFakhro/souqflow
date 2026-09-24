@@ -7,31 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  DELIVERING
-  DONE       @map("COMPLETED")
-  PROBLEM    @map("CANCELED")
-}
-
 model User {
-  id        String   @id @default(cuid())
-  name      String?
-  email     String   @unique
-  password  String
-  phone     String   @unique
-  image     String?
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  // Relations
+  id           String        @id @default(cuid())
+  name         String?
+  email        String        @unique
+  password     String
+  image        String?
+  role         Role          @default(USER)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  phone        String        @unique
+  categories   Category[]
+  orders       Order[]
+  products     Product[]
   subscription Subscription?
+  business     Business?   
 
   @@map("users")
 }
@@ -44,45 +34,46 @@ model Subscription {
   isActive  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("subscription")
 }
 
 model Product {
-  id          String   @id @default(cuid())
+  id          String      @id @default(cuid())
   name        String
   description String?
   imageUrl    String?
-  sku         String?  @unique
-  
-  categoryId  String?
-  category    Category? @relation(fields: [categoryId], references: [id])
-
+  sku         String?
   costPrice   Float
   sellPrice   Float
-
-  quantity    Int      @default(0)
+  quantity    Int         @default(0)
   lowStockAt  Int?
-
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  categoryId  String?
+  ownerId     String?
   orderItems  OrderItem[]
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  users       User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  @@unique([ownerId, sku])
   @@index([categoryId])
+  @@index([ownerId, createdAt])
   @@map("products")
 }
 
 model Category {
   id        String    @id @default(cuid())
-  name      String    @unique
-  products  Product[]
-
+  name      String
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+  ownerId   String?
+  users     User?     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  products  Product[]
 
+  @@unique([ownerId, name])
+  @@index([ownerId, name])
   @@map("categories")
 }
 
@@ -90,31 +81,32 @@ model Order {
   id           String      @id @default(cuid())
   orderNumber  String      @unique
   customerName String?
-  total        Float       @default(0)
   status       OrderStatus @default(PENDING)
   orderedAt    DateTime    @default(now())
   createdAt    DateTime    @default(now())
   updatedAt    DateTime    @updatedAt
+  total        Float       @default(0)
+  ownerId      String?
   items        OrderItem[]
+  users        User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([orderedAt, status])
+  @@index([ownerId, orderedAt])
   @@map("orders")
 }
 
 model OrderItem {
   id          String   @id @default(cuid())
   orderId     String
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-
   productId   String?
-  product     Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
-
   productName String
   category    String?
-  unitCost      Float
-  unitPrice     Float
   quantity    Int
+  unitCost    Float
+  unitPrice   Float
   createdAt   DateTime @default(now())
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product? @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
@@ -129,4 +121,28 @@ model ExchangeRate {
   updatedAt DateTime @updatedAt
 
   @@map("exchange_rates")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  DONE       @map("COMPLETED")
+  PROBLEM    @map("CANCELED")
+  DELIVERING
+}
+model Business {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  logo      String?
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("businesses")
 }

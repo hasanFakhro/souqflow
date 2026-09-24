@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import SearchBar from "./SearchBar";
 import { Prisma } from "@prisma/client";
 import ProductCard from "./ProductCard";
@@ -11,23 +11,28 @@ type ProductsGridProps = {
 };
 
 const ProductsGrid = ({ products }: ProductsGridProps) => {
-    const flatProducts = products.map(product => ({ ...product, category: product.category?.name ?? null }));
+    const flatProducts = useMemo(
+        () => products.map(product => ({ ...product, category: product.category?.name ?? null })),
+        [products]
+    );
 
     const [searchTerm, setSearchTerm] = useState("");
     const [category, setCategory] = useState<string | null>(null);
     const [stockState, setStockState] = useState<string | null>(null);
 
-    const categoriesSet = new Set(
-        flatProducts
-            .map((product) => product.category)
-            .filter(
-                (category): category is string => Boolean(category)
-            )
-    );
+    const categoriesList = useMemo(() => {
+        const categoriesSet = new Set(
+            flatProducts
+                .map((product) => product.category)
+                .filter(
+                    (category): category is string => Boolean(category)
+                )
+        );
 
-    const categoriesList = [...categoriesSet];
+        return [...categoriesSet];
+    }, [flatProducts]);
 
-    const filteredProducts = flatProducts.filter((product) => {
+    const filteredProducts = useMemo(() => flatProducts.filter((product) => {
         const matchesSearch = product.name
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
@@ -47,7 +52,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                     product.quantity > product.lowStockAt));
 
         return matchesSearch && matchesCategory && matchesStock;
-    });
+    }), [flatProducts, searchTerm, category, stockState]);
 
     return (
         <div className="p-4">

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Search } from "lucide-react";
 
@@ -32,19 +32,23 @@ export default function OrderTable({
 
   const query = search.trim().toLowerCase();
 
-  const filteredOrders = orders.filter(
-    (order) =>
-      (state === "ALL" || order.status === state) &&
-      [
-        order.orderNumber,
-        order.customerName,
-        ...order.items.flatMap((item) => [
-          item.productName,
-          item.category,
-        ]),
-      ].some((value) =>
-        value?.toLowerCase().includes(query),
+  const filteredOrders = useMemo(
+    () =>
+      orders.filter(
+        (order) =>
+          (state === "ALL" || order.status === state) &&
+          [
+            order.orderNumber,
+            order.customerName,
+            ...order.items.flatMap((item) => [
+              item.productName,
+              item.category,
+            ]),
+          ].some((value) =>
+            value?.toLowerCase().includes(query),
+          ),
       ),
+    [orders, state, query],
   );
 
   return (
