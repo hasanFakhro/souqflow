@@ -34,8 +34,22 @@ model User {
   products     Product[]     @relation("UserProducts")
   orders       Order[]       @relation("UserOrders")
   categories   Category[]    @relation("UserCategories")
+  business     Business?
 
   @@map("users")
+}
+
+model Business {
+  id        String   @id @default(cuid())
+  name      String
+  phone     String?
+  logo      String?
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("businesses")
 }
 
 model Subscription {
@@ -99,12 +113,18 @@ model Category {
   @@map("categories")
 }
 
+enum OrderSource {
+  STOREFRONT
+  MANUAL
+}
+
 model Order {
   id           String      @id @default(cuid())
   orderNumber  String      @unique
   customerName String?
   total        Float       @default(0)
   status       OrderStatus @default(PENDING)
+  source       OrderSource @default(MANUAL)
 
   // Nullable only for records that existed before ownership was introduced.
   ownerId String?
