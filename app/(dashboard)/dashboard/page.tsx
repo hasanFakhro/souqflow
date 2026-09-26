@@ -21,10 +21,12 @@ export default async function DashboardPage() {
   });
 
   return (
-    <section className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-      <ProductsGrid products={products} />
+    <div className="lg:flex lg:items-start lg:min-h-screen">
+      <section className="flex-1 min-w-0 space-y-6">
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <ProductsGrid products={products} />
+      </section>
       <CartBar />
-    </section>
+    </div>
   );
 }
