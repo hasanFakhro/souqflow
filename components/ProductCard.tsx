@@ -22,8 +22,12 @@ const ProductCard = ({ product }: ProductCardProps) => {
     const cartQuantity = useCartStore(
         (state) => state.items.find((i) => i.productId === product.id)?.quantity ?? 0
     );
+    const remainingQuantity = product.quantity - cartQuantity;
+    const isOutOfStock = remainingQuantity === 0;
 
     const handleAdd = () => {
+        if (isOutOfStock) return;
+
         addItem({
             productId: product.id,
             name: product.name,
@@ -40,12 +44,15 @@ const ProductCard = ({ product }: ProductCardProps) => {
     return (
         <div
             onClick={handleAdd}
-            className={`relative rounded-lg shadow-sm hover:shadow-md overflow-hidden flex flex-col cursor-pointer select-none transition-all duration-150 ease-out ${
-                isPressed ? "scale-95 shadow-sm" : "scale-100"
-            }`}
+            aria-disabled={isOutOfStock}
+            className={`relative rounded-lg shadow-sm overflow-hidden flex flex-col select-none transition-all duration-150 ease-out ${isOutOfStock
+                ? "opacity-40 cursor-not-allowed"
+                : "cursor-pointer hover:shadow-md"
+                } ${isPressed ? "scale-95 shadow-sm" : "scale-100"
+                }`}
         >
             {cartQuantity > 0 && (
-                <div className="absolute top-2 right-2 z-10 flex items-center justify-center min-w-[22px] h-[22px] px-1 rounded-full bg-primary text-white text-xs font-semibold shadow-sm transition-transform duration-200 scale-100 animate-in">
+                <div className="absolute top-2 right-2 z-10 flex items-center justify-center min-w-[22px] h-[22px] px-1 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-semibold shadow-sm transition-transform duration-200 scale-100 animate-in">
                     {cartQuantity}
                 </div>
             )}
@@ -73,7 +80,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                         ${product.sellPrice}
                     </span>
                     <span className="text-xs sm:text-sm text-gray-500">
-                        {product.quantity} left
+                        {isOutOfStock ? "Out of stock" : `${remainingQuantity} left`}
                     </span>
                 </div>
             </div>
