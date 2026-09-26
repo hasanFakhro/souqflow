@@ -13,7 +13,6 @@ import {
   Settings,
   ShoppingCart,
   TrendingUp,
-  Wallet,
   X,
 } from "lucide-react";
 import {
@@ -21,6 +20,7 @@ import {
   useCurrency,
   useExchangeRate,
 } from "./currency";
+import { useBusiness } from "@/context/BusinessContext";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -30,9 +30,9 @@ const links = [
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
-function Sidebar({ businessName }: { businessName: string | undefined }) {
+function Sidebar() {
   const pathname = usePathname();
-
+const { businessName } = useBusiness();
   // Current currency selected by the user.
   const currency = useCurrency();
 
@@ -93,6 +93,7 @@ function Sidebar({ businessName }: { businessName: string | undefined }) {
                 <Link
                   key={href}
                   href={href}
+                  prefetch={false}
                   onClick={closeMobileMenu}
                   aria-current={active ? "page" : undefined}
                   className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition ${
@@ -214,6 +215,8 @@ function Sidebar({ businessName }: { businessName: string | undefined }) {
               <Link
                 key={href}
                 href={href}
+                        prefetch={false}
+
                 aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
                   active

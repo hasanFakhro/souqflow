@@ -6,6 +6,7 @@ import { serializeOrder } from "@/lib/orders";
 
 const pageSize = 6;
 
+
 export default async function OrdersPage({
   searchParams,
 }: {

@@ -1,17 +1,23 @@
 "use client";
 
-
 import { X } from "lucide-react";
+
 import BusinessForm from "./BusinessForm";
 
 type BusinessUser = {
   id: string;
   name: string;
-  phone: string | null;
   logo: string | null;
+  description: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  user: {
+    phone: string;
+  };
 };
 
 export default function BusinessModal({
@@ -23,29 +29,36 @@ export default function BusinessModal({
 }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-xl">
-        <button
-          type="button"
-          onClick={onClose}
-          className="absolute right-4 top-4 rounded-full p-2 text-gray-500 hover:bg-gray-100"
-        >
-          <X className="h-5 w-5" />
-        </button>
+      <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col rounded-2xl bg-white shadow-xl">
+        {/* Header */}
+        <div className="flex shrink-0 items-center justify-between border-b border-gray-100 p-6">
+          <div>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Update Business Profile
+            </h2>
 
-        <h2 className="text-xl font-semibold text-gray-900">
-          Update Business Profile
-        </h2>
+            <p className="mt-1 text-sm text-gray-500">
+              Update your business information.
+            </p>
+          </div>
 
-        <p className="mt-1 text-sm text-gray-500">
-          Update your business information.
-        </p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-2 text-gray-500 transition hover:bg-gray-100"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        </div>
 
-        <BusinessForm
-          business={business}
-          onClose={onClose}
-        />
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto p-6">
+          <BusinessForm
+            business={business}
+            onClose={onClose}
+          />
+        </div>
       </div>
     </div>
   );
 }
-

@@ -29,11 +29,17 @@ type ProfileUser = {
 type BusinessUser = {
   id: string;
   name: string;
-  phone: string | null;
   logo: string | null;
+  description: string | null;
+  instagram: string | null;
+  facebook: string | null;
+  tiktok: string | null;
   userId: string;
   createdAt: Date;
   updatedAt: Date;
+  user: {
+    phone: string;
+  };
 };
 
 export default function ProfileForm({

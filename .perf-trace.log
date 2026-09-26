@@ -1,0 +1,1156 @@
+[TRACE] proxy redirect /dashboard 0.0ms @ 2026-09-24T19:19:40.704Z
+[TRACE] proxy public /signin 0.0ms @ 2026-09-24T19:19:40.724Z
+[TRACE] prisma sql (520ms raw) :: SELECT 1 520.0ms @ 2026-09-24T19:20:04.181Z
+[TRACE] prisma sql (407ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 407.0ms @ 2026-09-24T19:20:04.589Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 172.0ms @ 2026-09-24T19:20:04.762Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:20:05.161Z
+[TRACE] layout auth() 33.4ms @ 2026-09-24T19:20:05.236Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:20:05.253Z
+[TRACE] layout auth() 33.6ms @ 2026-09-24T19:20:05.311Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T19:20:05.324Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 170.0ms @ 2026-09-24T19:20:05.387Z
+[TRACE] prisma sql (165ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 165.0ms @ 2026-09-24T19:20:05.489Z
+[TRACE] layout business query 252.4ms @ 2026-09-24T19:20:05.490Z
+[TRACE] layout TOTAL 288.2ms @ 2026-09-24T19:20:05.491Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 168.0ms @ 2026-09-24T19:20:05.556Z
+[TRACE] dashboard page query 349.4ms @ 2026-09-24T19:20:05.557Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 166.0ms @ 2026-09-24T19:20:07.886Z
+[TRACE] layout business query 2574.9ms @ 2026-09-24T19:20:07.887Z
+[TRACE] layout TOTAL 2610.0ms @ 2026-09-24T19:20:07.888Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 175.0ms @ 2026-09-24T19:20:07.900Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:20:07.991Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 168.0ms @ 2026-09-24T19:20:08.064Z
+[TRACE] dashboard page query 2781.9ms @ 2026-09-24T19:20:08.065Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 172.0ms @ 2026-09-24T19:20:08.219Z
+[TRACE] proxy public /signin 0.0ms @ 2026-09-24T19:20:38.450Z
+[TRACE] prisma sql (81ms raw) :: SELECT 1 81.0ms @ 2026-09-24T19:20:47.124Z
+[TRACE] prisma sql (180ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 180.0ms @ 2026-09-24T19:20:47.305Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 170.0ms @ 2026-09-24T19:20:47.475Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:20:47.809Z
+[TRACE] layout auth() 46.9ms @ 2026-09-24T19:20:47.882Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:20:47.894Z
+[TRACE] layout auth() 23.8ms @ 2026-09-24T19:20:47.938Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T19:20:47.967Z
+[TRACE] prisma sql (176ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 176.0ms @ 2026-09-24T19:20:48.023Z
+[TRACE] prisma sql (165ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 165.0ms @ 2026-09-24T19:20:48.133Z
+[TRACE] layout business query 251.4ms @ 2026-09-24T19:20:48.134Z
+[TRACE] layout TOTAL 299.8ms @ 2026-09-24T19:20:48.134Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 167.0ms @ 2026-09-24T19:20:48.191Z
+[TRACE] dashboard page query 352.3ms @ 2026-09-24T19:20:48.191Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 173.0ms @ 2026-09-24T19:20:48.752Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 171.0ms @ 2026-09-24T19:20:48.754Z
+[TRACE] layout business query 815.5ms @ 2026-09-24T19:20:48.754Z
+[TRACE] layout TOTAL 841.2ms @ 2026-09-24T19:20:48.755Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:20:48.809Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 170.0ms @ 2026-09-24T19:20:48.923Z
+[TRACE] dashboard page query 1006.8ms @ 2026-09-24T19:20:48.924Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 167.0ms @ 2026-09-24T19:20:48.995Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:20:52.045Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T19:20:52.281Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 169.0ms @ 2026-09-24T19:20:52.451Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:20:53.306Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 170.0ms @ 2026-09-24T19:20:53.569Z
+[TRACE] prisma sql (171ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 171.0ms @ 2026-09-24T19:20:53.572Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 172.0ms @ 2026-09-24T19:20:53.742Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:20:54.573Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 169.0ms @ 2026-09-24T19:20:54.807Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 171.0ms @ 2026-09-24T19:20:54.809Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 167.0ms @ 2026-09-24T19:20:54.975Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 183.0ms @ 2026-09-24T19:20:54.993Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:20:55.962Z
+[TRACE] settings auth() 26.7ms @ 2026-09-24T19:20:56.055Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 170.0ms @ 2026-09-24T19:20:56.229Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 172.0ms @ 2026-09-24T19:20:56.231Z
+[TRACE] settings queries 175.3ms @ 2026-09-24T19:20:56.231Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:21:03.599Z
+[TRACE] layout auth() 38.3ms @ 2026-09-24T19:21:03.660Z
+[TRACE] settings auth() 39.2ms @ 2026-09-24T19:21:03.663Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T19:21:03.745Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T19:21:03.749Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T19:21:03.749Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T19:21:03.829Z
+[TRACE] layout business query 168.7ms @ 2026-09-24T19:21:03.830Z
+[TRACE] layout TOTAL 209.0ms @ 2026-09-24T19:21:03.830Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 167.0ms @ 2026-09-24T19:21:03.920Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 174.0ms @ 2026-09-24T19:21:03.925Z
+[TRACE] settings queries 267.7ms @ 2026-09-24T19:21:03.932Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:21:04.191Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 170.0ms @ 2026-09-24T19:21:04.382Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:21:05.041Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:21:05.157Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:21:05.241Z
+[TRACE] dashboard page query 176.6ms @ 2026-09-24T19:21:05.242Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:21:05.830Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:21:05.944Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:21:06.029Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:21:06.635Z
+[TRACE] prisma sql (163ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 163.0ms @ 2026-09-24T19:21:06.834Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 174.0ms @ 2026-09-24T19:21:06.845Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 174.0ms @ 2026-09-24T19:21:07.020Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:21:07.497Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 166.0ms @ 2026-09-24T19:21:07.688Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 174.0ms @ 2026-09-24T19:21:07.696Z
+[TRACE] prisma sql (165ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 165.0ms @ 2026-09-24T19:21:07.854Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 183.0ms @ 2026-09-24T19:21:07.879Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:21:08.333Z
+[TRACE] settings auth() 19.8ms @ 2026-09-24T19:21:08.371Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 82.0ms @ 2026-09-24T19:21:08.456Z
+[TRACE] prisma sql (88ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 88.0ms @ 2026-09-24T19:21:08.462Z
+[TRACE] settings queries 91.9ms @ 2026-09-24T19:21:08.463Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:29:24.871Z
+[TRACE] prisma sql (178ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 178.0ms @ 2026-09-24T19:29:27.283Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 174.0ms @ 2026-09-24T19:29:27.458Z
+[TRACE] dashboard page query 2552.3ms @ 2026-09-24T19:29:27.459Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:29:28.216Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:29:28.331Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T19:29:28.415Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:29:29.048Z
+[TRACE] prisma sql (173ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 173.0ms @ 2026-09-24T19:29:29.258Z
+[TRACE] prisma sql (303ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 303.0ms @ 2026-09-24T19:29:29.997Z
+[TRACE] dashboard page query 977.3ms @ 2026-09-24T19:29:57.374Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:30:28.947Z
+[TRACE] layout auth() 42.7ms @ 2026-09-24T19:30:29.042Z
+[TRACE] layout business query 4954.9ms @ 2026-09-24T19:30:33.997Z
+[TRACE] layout TOTAL 4999.2ms @ 2026-09-24T19:30:33.998Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:30:34.219Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:30:34.235Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:30:34.237Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:30:34.259Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:30:34.262Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:30:34.291Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:30:34.293Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:30:34.294Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:30:34.295Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:30:34.324Z
+[TRACE] dashboard page query 5769.3ms @ 2026-09-24T19:30:34.772Z
+[TRACE] proxy total /subscription 0.0ms @ 2026-09-24T19:30:56.895Z
+[TRACE] proxy total / 0.0ms @ 2026-09-24T19:30:57.349Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:30:57.364Z
+[TRACE] layout auth() 6.4ms @ 2026-09-24T19:30:57.374Z
+[TRACE] dashboard page query 171.1ms @ 2026-09-24T19:30:57.539Z
+[TRACE] layout business query 171.2ms @ 2026-09-24T19:30:57.545Z
+[TRACE] layout TOTAL 179.1ms @ 2026-09-24T19:30:57.546Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:30:57.640Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:30:57.648Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:30:57.658Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:30:57.666Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:30:57.671Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:30:57.690Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:30:57.701Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:30:57.709Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:30:57.711Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:30:57.721Z
+[TRACE] proxy total / 0.0ms @ 2026-09-24T19:47:11.754Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:47:12.538Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:48:20.773Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:48:20.791Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:48:49.970Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:49:12.432Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:50:50.775Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:50:55.134Z
+[TRACE] layout auth() 211.2ms @ 2026-09-24T19:50:55.542Z
+[TRACE] layout TOTAL 212.1ms @ 2026-09-24T19:50:55.543Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 183.0ms @ 2026-09-24T19:50:56.734Z
+[TRACE] prisma sql (177ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 177.0ms @ 2026-09-24T19:50:56.913Z
+[TRACE] dashboard page query 1554.5ms @ 2026-09-24T19:50:56.916Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:51:16.447Z
+[TRACE] layout auth() 37.0ms @ 2026-09-24T19:51:16.524Z
+[TRACE] layout TOTAL 38.3ms @ 2026-09-24T19:51:16.525Z
+[TRACE] prisma sql (89ms raw) :: SELECT 1 89.0ms @ 2026-09-24T19:51:16.591Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:51:16.678Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T19:51:16.764Z
+[TRACE] dashboard page query 272.3ms @ 2026-09-24T19:51:16.765Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:51:33.692Z
+[TRACE] layout auth() 34.5ms @ 2026-09-24T19:51:33.759Z
+[TRACE] layout TOTAL 35.4ms @ 2026-09-24T19:51:33.760Z
+[TRACE] prisma sql (87ms raw) :: SELECT 1 87.0ms @ 2026-09-24T19:51:33.824Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:51:33.911Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T19:51:34.072Z
+[TRACE] dashboard page query 345.2ms @ 2026-09-24T19:51:34.073Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:51:34.095Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 172.0ms @ 2026-09-24T19:51:34.343Z
+[TRACE] proxy total / 0.0ms @ 2026-09-24T19:51:51.245Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:51:51.252Z
+[TRACE] layout auth() 153.2ms @ 2026-09-24T19:51:52.156Z
+[TRACE] layout TOTAL 154.0ms @ 2026-09-24T19:51:52.157Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:51:52.225Z
+[TRACE] layout auth() 44.7ms @ 2026-09-24T19:51:52.292Z
+[TRACE] layout TOTAL 45.7ms @ 2026-09-24T19:51:52.293Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:51:52.591Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:51:52.815Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 173.0ms @ 2026-09-24T19:51:52.899Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 175.0ms @ 2026-09-24T19:51:53.075Z
+[TRACE] dashboard page query 1051.6ms @ 2026-09-24T19:51:53.076Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 174.0ms @ 2026-09-24T19:51:53.514Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 169.0ms @ 2026-09-24T19:51:53.580Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 166.0ms @ 2026-09-24T19:51:53.601Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 171.0ms @ 2026-09-24T19:51:53.686Z
+[TRACE] dashboard page query 1436.3ms @ 2026-09-24T19:51:53.687Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:51:54.785Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:51:54.938Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:51:55.023Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:51:55.855Z
+[TRACE] prisma sql (179ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 179.0ms @ 2026-09-24T19:51:56.100Z
+[TRACE] prisma sql (181ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 181.0ms @ 2026-09-24T19:51:56.102Z
+[TRACE] prisma sql (185ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 185.0ms @ 2026-09-24T19:51:56.288Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:51:56.858Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 169.0ms @ 2026-09-24T19:51:57.086Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 175.0ms @ 2026-09-24T19:51:57.092Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 168.0ms @ 2026-09-24T19:51:57.255Z
+[TRACE] prisma sql (185ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 185.0ms @ 2026-09-24T19:51:57.277Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:51:57.807Z
+[TRACE] settings auth() 21.6ms @ 2026-09-24T19:51:57.878Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 174.0ms @ 2026-09-24T19:51:58.057Z
+[TRACE] prisma sql (178ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 178.0ms @ 2026-09-24T19:51:58.062Z
+[TRACE] settings queries 184.4ms @ 2026-09-24T19:51:58.063Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:51:59.085Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:51:59.196Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T19:51:59.282Z
+[TRACE] dashboard page query 179.8ms @ 2026-09-24T19:51:59.283Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:52:00.694Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:52:00.811Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T19:52:00.897Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:52:01.217Z
+[TRACE] prisma sql (83ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 83.0ms @ 2026-09-24T19:52:01.344Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 86.0ms @ 2026-09-24T19:52:01.348Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 86.0ms @ 2026-09-24T19:52:01.434Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:52:02.100Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 84.0ms @ 2026-09-24T19:52:02.209Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 85.0ms @ 2026-09-24T19:52:02.210Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 96.0ms @ 2026-09-24T19:52:02.306Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 96.0ms @ 2026-09-24T19:52:02.306Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:52:02.707Z
+[TRACE] settings auth() 18.8ms @ 2026-09-24T19:52:02.743Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 170.0ms @ 2026-09-24T19:52:02.917Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 171.0ms @ 2026-09-24T19:52:02.919Z
+[TRACE] settings queries 176.0ms @ 2026-09-24T19:52:02.920Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T19:52:43.855Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T19:52:44.025Z
+[TRACE] prisma sql (175ms raw) :: INSERT INTO "public"."businesses" ("id","name","phone","logo","userId","createdA 175.0ms @ 2026-09-24T19:52:44.205Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:52:44.224Z
+[TRACE] layout auth() 24.6ms @ 2026-09-24T19:52:44.274Z
+[TRACE] layout TOTAL 25.4ms @ 2026-09-24T19:52:44.275Z
+[TRACE] settings auth() 26.5ms @ 2026-09-24T19:52:44.278Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T19:52:44.364Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 84.0ms @ 2026-09-24T19:52:44.366Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 84.0ms @ 2026-09-24T19:52:44.448Z
+[TRACE] settings queries 170.6ms @ 2026-09-24T19:52:44.449Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:52:55.310Z
+[TRACE] prisma sql (151ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 151.0ms @ 2026-09-24T19:52:55.492Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:52:55.577Z
+[TRACE] dashboard page query 244.9ms @ 2026-09-24T19:52:55.578Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:52:56.499Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:52:56.557Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:52:56.618Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:52:56.703Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T19:52:56.765Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 169.0ms @ 2026-09-24T19:52:56.936Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:52:57.342Z
+[TRACE] prisma sql (168ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 168.0ms @ 2026-09-24T19:52:57.558Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 172.0ms @ 2026-09-24T19:52:57.563Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 173.0ms @ 2026-09-24T19:52:57.737Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:52:58.580Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 169.0ms @ 2026-09-24T19:52:58.774Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 173.0ms @ 2026-09-24T19:52:58.778Z
+[TRACE] prisma sql (182ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 182.0ms @ 2026-09-24T19:52:58.958Z
+[TRACE] prisma sql (179ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 179.0ms @ 2026-09-24T19:52:58.959Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:52:59.344Z
+[TRACE] settings auth() 21.3ms @ 2026-09-24T19:52:59.386Z
+[TRACE] prisma sql (90ms raw) :: SELECT 1 90.0ms @ 2026-09-24T19:52:59.480Z
+[TRACE] prisma sql (93ms raw) :: SELECT 1 93.0ms @ 2026-09-24T19:52:59.483Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 83.0ms @ 2026-09-24T19:52:59.564Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 83.0ms @ 2026-09-24T19:52:59.566Z
+[TRACE] settings queries 179.8ms @ 2026-09-24T19:52:59.567Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:53:02.260Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:53:02.371Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T19:53:02.457Z
+[TRACE] dashboard page query 179.5ms @ 2026-09-24T19:53:02.458Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:54:30.265Z
+[TRACE] layout auth() 29.1ms @ 2026-09-24T19:54:30.313Z
+[TRACE] layout TOTAL 30.0ms @ 2026-09-24T19:54:30.313Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:54:30.322Z
+[TRACE] layout auth() 20.6ms @ 2026-09-24T19:54:30.363Z
+[TRACE] layout TOTAL 21.4ms @ 2026-09-24T19:54:30.364Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T19:54:30.377Z
+[TRACE] prisma sql (186ms raw) :: SELECT 1 186.0ms @ 2026-09-24T19:54:30.539Z
+[TRACE] prisma sql (164ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 164.0ms @ 2026-09-24T19:54:30.542Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:54:30.624Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:54:30.626Z
+[TRACE] dashboard page query 340.6ms @ 2026-09-24T19:54:30.627Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:54:30.708Z
+[TRACE] dashboard page query 364.1ms @ 2026-09-24T19:54:30.709Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:56:18.051Z
+[TRACE] layout auth() 68.3ms @ 2026-09-24T19:56:18.153Z
+[TRACE] layout TOTAL 69.1ms @ 2026-09-24T19:56:18.154Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:56:18.163Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:56:18.166Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T19:56:18.229Z
+[TRACE] layout auth() 83.6ms @ 2026-09-24T19:56:18.271Z
+[TRACE] layout TOTAL 84.4ms @ 2026-09-24T19:56:18.272Z
+[TRACE] layout auth() 38.2ms @ 2026-09-24T19:56:18.280Z
+[TRACE] layout TOTAL 39.1ms @ 2026-09-24T19:56:18.281Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:56:18.313Z
+[TRACE] prisma sql (296ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 296.0ms @ 2026-09-24T19:56:18.655Z
+[TRACE] prisma sql (278ms raw) :: SELECT 1 278.0ms @ 2026-09-24T19:56:18.656Z
+[TRACE] prisma sql (226ms raw) :: SELECT 1 226.0ms @ 2026-09-24T19:56:18.656Z
+[TRACE] prisma sql (100ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 100.0ms @ 2026-09-24T19:56:18.657Z
+[TRACE] prisma sql (102ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 102.0ms @ 2026-09-24T19:56:18.657Z
+[TRACE] dashboard page query 567.3ms @ 2026-09-24T19:56:18.658Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:56:18.704Z
+[TRACE] prisma sql (190ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 190.0ms @ 2026-09-24T19:56:18.705Z
+[TRACE] dashboard page query 513.5ms @ 2026-09-24T19:56:18.706Z
+[TRACE] layout auth() 74.0ms @ 2026-09-24T19:56:18.743Z
+[TRACE] layout TOTAL 75.0ms @ 2026-09-24T19:56:18.744Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:56:18.768Z
+[TRACE] prisma sql (177ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 177.0ms @ 2026-09-24T19:56:18.850Z
+[TRACE] dashboard page query 605.8ms @ 2026-09-24T19:56:18.851Z
+[TRACE] prisma sql (145ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 145.0ms @ 2026-09-24T19:56:18.915Z
+[TRACE] dashboard page query 246.4ms @ 2026-09-24T19:56:18.918Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:56:18.977Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T19:56:18.980Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T19:56:19.039Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 83.0ms @ 2026-09-24T19:56:19.155Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 169.0ms @ 2026-09-24T19:56:19.178Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 167.0ms @ 2026-09-24T19:56:19.244Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T19:56:19.271Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T19:56:19.386Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T19:56:19.400Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T19:56:19.525Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T19:56:19.537Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 84.0ms @ 2026-09-24T19:56:19.645Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:56:32.034Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:56:32.152Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:56:32.237Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:56:32.849Z
+[TRACE] prisma sql (84ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 84.0ms @ 2026-09-24T19:56:32.973Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 86.0ms @ 2026-09-24T19:56:32.975Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 86.0ms @ 2026-09-24T19:56:33.061Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:56:33.720Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T19:56:33.835Z
+[TRACE] prisma sql (84ms raw) :: SELECT 1 84.0ms @ 2026-09-24T19:56:33.836Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 84.0ms @ 2026-09-24T19:56:33.919Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 84.0ms @ 2026-09-24T19:56:33.921Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 96.0ms @ 2026-09-24T19:56:34.016Z
+[TRACE] prisma sql (95ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 95.0ms @ 2026-09-24T19:56:34.016Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:56:34.449Z
+[TRACE] settings auth() 18.5ms @ 2026-09-24T19:56:34.492Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 83.0ms @ 2026-09-24T19:56:34.578Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 86.0ms @ 2026-09-24T19:56:34.581Z
+[TRACE] settings queries 89.1ms @ 2026-09-24T19:56:34.582Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:56:35.611Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T19:56:35.723Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:56:35.808Z
+[TRACE] dashboard page query 178.8ms @ 2026-09-24T19:56:35.809Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:57:49.733Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:57:50.328Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T19:57:50.548Z
+[TRACE] prisma sql (200ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 200.0ms @ 2026-09-24T19:57:50.749Z
+[TRACE] prisma sql (199ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 199.0ms @ 2026-09-24T19:57:51.236Z
+[TRACE] prisma sql (206ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 206.0ms @ 2026-09-24T19:57:51.243Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 175.0ms @ 2026-09-24T19:57:51.419Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:57:52.774Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T19:57:52.974Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 168.0ms @ 2026-09-24T19:57:53.143Z
+[TRACE] dashboard page query 350.9ms @ 2026-09-24T19:57:53.145Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:57:53.755Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:57:53.865Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:57:53.950Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:57:54.834Z
+[TRACE] prisma sql (83ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 83.0ms @ 2026-09-24T19:57:54.949Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 86.0ms @ 2026-09-24T19:57:54.952Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 86.0ms @ 2026-09-24T19:57:55.038Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:57:55.613Z
+[TRACE] prisma sql (341ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 341.0ms @ 2026-09-24T19:57:55.982Z
+[TRACE] prisma sql (342ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 342.0ms @ 2026-09-24T19:57:55.984Z
+[TRACE] prisma sql (182ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 182.0ms @ 2026-09-24T19:57:56.165Z
+[TRACE] prisma sql (182ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 182.0ms @ 2026-09-24T19:57:56.166Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:57:56.181Z
+[TRACE] settings auth() 18.0ms @ 2026-09-24T19:57:56.216Z
+[TRACE] prisma sql (359ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 359.0ms @ 2026-09-24T19:57:56.581Z
+[TRACE] prisma sql (364ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 364.0ms @ 2026-09-24T19:57:56.586Z
+[TRACE] settings queries 369.1ms @ 2026-09-24T19:57:56.587Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T19:57:57.392Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T19:57:57.502Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:57:57.587Z
+[TRACE] dashboard page query 179.0ms @ 2026-09-24T19:57:57.588Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T19:57:58.258Z
+[TRACE] prisma sql (84ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 84.0ms @ 2026-09-24T19:57:58.373Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 85.0ms @ 2026-09-24T19:57:58.375Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 86.0ms @ 2026-09-24T19:57:58.461Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T19:57:59.122Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 83.0ms @ 2026-09-24T19:57:59.234Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 85.0ms @ 2026-09-24T19:57:59.236Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 84.0ms @ 2026-09-24T19:57:59.318Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 96.0ms @ 2026-09-24T19:57:59.333Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T19:57:59.868Z
+[TRACE] settings auth() 21.2ms @ 2026-09-24T19:57:59.908Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 170.0ms @ 2026-09-24T19:58:00.081Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 172.0ms @ 2026-09-24T19:58:00.083Z
+[TRACE] settings queries 176.0ms @ 2026-09-24T19:58:00.084Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:58:01.167Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T19:58:01.275Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T19:58:01.360Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T19:59:59.442Z
+[TRACE] layout auth() 26.2ms @ 2026-09-24T19:59:59.489Z
+[TRACE] layout TOTAL 27.0ms @ 2026-09-24T19:59:59.490Z
+[TRACE] prisma sql (332ms raw) :: SELECT 1 332.0ms @ 2026-09-24T19:59:59.808Z
+[TRACE] prisma sql (352ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 352.0ms @ 2026-09-24T20:00:00.161Z
+[TRACE] prisma sql (361ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 361.0ms @ 2026-09-24T20:00:00.522Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:01:30.111Z
+[TRACE] layout auth() 40.1ms @ 2026-09-24T20:01:30.178Z
+[TRACE] layout TOTAL 41.4ms @ 2026-09-24T20:01:30.179Z
+[TRACE] prisma sql (141ms raw) :: SELECT 1 141.0ms @ 2026-09-24T20:01:30.296Z
+[TRACE] prisma sql (103ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 103.0ms @ 2026-09-24T20:01:30.396Z
+[TRACE] prisma sql (121ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 121.0ms @ 2026-09-24T20:01:30.523Z
+[TRACE] dashboard page query 380.8ms @ 2026-09-24T20:01:30.523Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:01:30.600Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:01:30.603Z
+[TRACE] api/business auth() 24.3ms @ 2026-09-24T20:01:30.660Z
+[TRACE] prisma sql (100ms raw) :: SELECT 1 100.0ms @ 2026-09-24T20:01:30.772Z
+[TRACE] prisma sql (212ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 212.0ms @ 2026-09-24T20:01:30.833Z
+[TRACE] prisma sql (249ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 249.0ms @ 2026-09-24T20:01:31.014Z
+[TRACE] api/business query 354.5ms @ 2026-09-24T20:01:31.016Z
+[TRACE] api/business TOTAL 381.2ms @ 2026-09-24T20:01:31.017Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:01:31.040Z
+[TRACE] api/business auth() 8.5ms @ 2026-09-24T20:01:31.063Z
+[TRACE] prisma sql (147ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 147.0ms @ 2026-09-24T20:01:31.214Z
+[TRACE] api/business query 150.6ms @ 2026-09-24T20:01:31.215Z
+[TRACE] api/business TOTAL 161.9ms @ 2026-09-24T20:01:31.216Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:02:22.721Z
+[TRACE] prisma sql (200ms raw) :: SELECT 1 200.0ms @ 2026-09-24T20:02:22.948Z
+[TRACE] prisma sql (227ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 227.0ms @ 2026-09-24T20:02:23.176Z
+[TRACE] prisma sql (510ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 510.0ms @ 2026-09-24T20:02:23.687Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:02:58.373Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 168.0ms @ 2026-09-24T20:03:02.080Z
+[TRACE] prisma sql (168ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 168.0ms @ 2026-09-24T20:03:02.082Z
+[TRACE] prisma sql (366ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 366.0ms @ 2026-09-24T20:03:02.447Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:03:11.741Z
+[TRACE] prisma sql (235ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 235.0ms @ 2026-09-24T20:03:12.005Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 169.0ms @ 2026-09-24T20:03:12.174Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:03:22.252Z
+[TRACE] layout auth() 31.6ms @ 2026-09-24T20:03:22.308Z
+[TRACE] layout TOTAL 32.4ms @ 2026-09-24T20:03:22.309Z
+[TRACE] prisma sql (168ms raw) :: SELECT 1 168.0ms @ 2026-09-24T20:03:22.458Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T20:03:22.542Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:03:22.546Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:03:22.549Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:03:22.633Z
+[TRACE] dashboard page query 352.5ms @ 2026-09-24T20:03:22.634Z
+[TRACE] api/business auth() 57.8ms @ 2026-09-24T20:03:22.640Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:03:22.681Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 167.0ms @ 2026-09-24T20:03:22.810Z
+[TRACE] api/business query 169.6ms @ 2026-09-24T20:03:22.811Z
+[TRACE] api/business TOTAL 229.7ms @ 2026-09-24T20:03:22.812Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:03:22.829Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 183.0ms @ 2026-09-24T20:03:22.847Z
+[TRACE] api/business auth() 9.2ms @ 2026-09-24T20:03:22.856Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 168.0ms @ 2026-09-24T20:03:23.026Z
+[TRACE] api/business query 170.1ms @ 2026-09-24T20:03:23.027Z
+[TRACE] api/business TOTAL 181.4ms @ 2026-09-24T20:03:23.028Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:03:23.594Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T20:03:23.803Z
+[TRACE] prisma sql (1535ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 1535.0ms @ 2026-09-24T20:03:25.339Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:03:49.809Z
+[TRACE] prisma sql (616ms raw) :: SELECT 1 616.0ms @ 2026-09-24T20:03:50.457Z
+[TRACE] prisma sql (128ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 128.0ms @ 2026-09-24T20:03:50.586Z
+[TRACE] prisma sql (88ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 88.0ms @ 2026-09-24T20:03:50.676Z
+[TRACE] dashboard page query 844.2ms @ 2026-09-24T20:03:50.677Z
+[TRACE] proxy total /inventory 0.1ms @ 2026-09-24T20:09:31.348Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:09:31.478Z
+[TRACE] layout auth() 115.1ms @ 2026-09-24T20:09:31.542Z
+[TRACE] layout TOTAL 115.9ms @ 2026-09-24T20:09:31.543Z
+[TRACE] layout auth() 83.9ms @ 2026-09-24T20:09:31.650Z
+[TRACE] layout TOTAL 85.1ms @ 2026-09-24T20:09:31.651Z
+[TRACE] prisma sql (201ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 201.0ms @ 2026-09-24T20:09:32.450Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 173.0ms @ 2026-09-24T20:09:32.540Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 171.0ms @ 2026-09-24T20:09:32.622Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 168.0ms @ 2026-09-24T20:09:32.709Z
+[TRACE] dashboard page query 1139.5ms @ 2026-09-24T20:09:32.710Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:09:34.105Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:09:34.219Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:09:34.303Z
+[TRACE] dashboard page query 177.9ms @ 2026-09-24T20:09:34.305Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:09:35.241Z
+[TRACE] prisma sql (271ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 271.0ms @ 2026-09-24T20:09:35.541Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:09:35.625Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:09:36.150Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 168.0ms @ 2026-09-24T20:09:36.359Z
+[TRACE] prisma sql (172ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 172.0ms @ 2026-09-24T20:09:36.363Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 172.0ms @ 2026-09-24T20:09:36.532Z
+[TRACE] proxy total /dashboard 0.2ms @ 2026-09-24T20:10:11.821Z
+[TRACE] proxy total / 0.0ms @ 2026-09-24T20:10:11.874Z
+[TRACE] layout auth() 315.5ms @ 2026-09-24T20:10:12.493Z
+[TRACE] layout TOTAL 316.7ms @ 2026-09-24T20:10:12.495Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:10:12.574Z
+[TRACE] layout auth() 48.1ms @ 2026-09-24T20:10:12.662Z
+[TRACE] layout TOTAL 49.2ms @ 2026-09-24T20:10:12.663Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 174.0ms @ 2026-09-24T20:10:13.172Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:10:13.197Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:10:13.201Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 170.0ms @ 2026-09-24T20:10:13.217Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:10:13.222Z
+[TRACE] dashboard page query 607.4ms @ 2026-09-24T20:10:13.226Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:10:13.400Z
+[TRACE] api/business auth() 78.3ms @ 2026-09-24T20:10:13.473Z
+[TRACE] api/business auth() 29.1ms @ 2026-09-24T20:10:13.485Z
+[TRACE] prisma sql (191ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 191.0ms @ 2026-09-24T20:10:13.504Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T20:10:13.768Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 170.0ms @ 2026-09-24T20:10:13.936Z
+[TRACE] dashboard page query 1729.5ms @ 2026-09-24T20:10:13.937Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 166.0ms @ 2026-09-24T20:10:14.211Z
+[TRACE] prisma sql (180ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 180.0ms @ 2026-09-24T20:10:14.253Z
+[TRACE] api/business query 780.0ms @ 2026-09-24T20:10:14.255Z
+[TRACE] api/business TOTAL 863.0ms @ 2026-09-24T20:10:14.257Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 167.0ms @ 2026-09-24T20:10:14.272Z
+[TRACE] api/business query 784.7ms @ 2026-09-24T20:10:14.273Z
+[TRACE] api/business TOTAL 819.2ms @ 2026-09-24T20:10:14.275Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:10:14.319Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:10:14.330Z
+[TRACE] api/business auth() 30.8ms @ 2026-09-24T20:10:14.384Z
+[TRACE] api/business auth() 16.0ms @ 2026-09-24T20:10:14.389Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 84.0ms @ 2026-09-24T20:10:14.472Z
+[TRACE] api/business query 87.1ms @ 2026-09-24T20:10:14.473Z
+[TRACE] api/business TOTAL 120.6ms @ 2026-09-24T20:10:14.474Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 82.0ms @ 2026-09-24T20:10:14.480Z
+[TRACE] api/business query 90.5ms @ 2026-09-24T20:10:14.481Z
+[TRACE] api/business TOTAL 109.8ms @ 2026-09-24T20:10:14.483Z
+[TRACE] proxy public /signin 0.0ms @ 2026-09-24T20:10:16.586Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 168.0ms @ 2026-09-24T20:10:23.881Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 171.0ms @ 2026-09-24T20:10:24.053Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:10:24.398Z
+[TRACE] layout auth() 26.4ms @ 2026-09-24T20:10:24.452Z
+[TRACE] layout TOTAL 27.3ms @ 2026-09-24T20:10:24.453Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:10:24.473Z
+[TRACE] layout auth() 25.3ms @ 2026-09-24T20:10:24.524Z
+[TRACE] layout TOTAL 26.2ms @ 2026-09-24T20:10:24.525Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:10:24.590Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:10:24.593Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 169.0ms @ 2026-09-24T20:10:24.618Z
+[TRACE] api/business auth() 14.8ms @ 2026-09-24T20:10:24.625Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T20:10:24.686Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 82.0ms @ 2026-09-24T20:10:24.701Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 167.0ms @ 2026-09-24T20:10:24.776Z
+[TRACE] dashboard page query 348.0ms @ 2026-09-24T20:10:24.777Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 168.0ms @ 2026-09-24T20:10:24.796Z
+[TRACE] api/business query 170.7ms @ 2026-09-24T20:10:24.797Z
+[TRACE] api/business TOTAL 187.4ms @ 2026-09-24T20:10:24.798Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:10:24.815Z
+[TRACE] api/business auth() 4.6ms @ 2026-09-24T20:10:24.830Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 170.0ms @ 2026-09-24T20:10:24.856Z
+[TRACE] dashboard page query 353.9ms @ 2026-09-24T20:10:24.858Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 84.0ms @ 2026-09-24T20:10:24.917Z
+[TRACE] api/business query 87.0ms @ 2026-09-24T20:10:24.918Z
+[TRACE] api/business TOTAL 93.2ms @ 2026-09-24T20:10:24.919Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:10:27.106Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:10:27.271Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:10:27.356Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:10:28.487Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 170.0ms @ 2026-09-24T20:10:28.732Z
+[TRACE] prisma sql (171ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 171.0ms @ 2026-09-24T20:10:28.733Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 174.0ms @ 2026-09-24T20:10:28.907Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:10:29.717Z
+[TRACE] prisma sql (84ms raw) :: SELECT 1 84.0ms @ 2026-09-24T20:10:29.864Z
+[TRACE] prisma sql (84ms raw) :: SELECT 1 84.0ms @ 2026-09-24T20:10:29.866Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 171.0ms @ 2026-09-24T20:10:30.036Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 174.0ms @ 2026-09-24T20:10:30.039Z
+[TRACE] prisma sql (184ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 184.0ms @ 2026-09-24T20:10:30.220Z
+[TRACE] prisma sql (181ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 181.0ms @ 2026-09-24T20:10:30.221Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:10:31.075Z
+[TRACE] settings auth() 29.9ms @ 2026-09-24T20:10:31.161Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 169.0ms @ 2026-09-24T20:10:31.334Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 174.0ms @ 2026-09-24T20:10:31.339Z
+[TRACE] settings queries 178.2ms @ 2026-09-24T20:10:31.341Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:10:32.372Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:10:32.482Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:10:32.567Z
+[TRACE] dashboard page query 176.0ms @ 2026-09-24T20:10:32.568Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:10:33.253Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:10:33.362Z
+[TRACE] prisma sql (89ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 89.0ms @ 2026-09-24T20:10:33.452Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:10:34.017Z
+[TRACE] prisma sql (86ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 86.0ms @ 2026-09-24T20:10:34.134Z
+[TRACE] prisma sql (88ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 88.0ms @ 2026-09-24T20:10:34.137Z
+[TRACE] prisma sql (110ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 110.0ms @ 2026-09-24T20:10:34.248Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:10:34.763Z
+[TRACE] prisma sql (94ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 94.0ms @ 2026-09-24T20:10:34.881Z
+[TRACE] prisma sql (95ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 95.0ms @ 2026-09-24T20:10:34.882Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 96.0ms @ 2026-09-24T20:10:34.977Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 96.0ms @ 2026-09-24T20:10:34.978Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:10:35.504Z
+[TRACE] settings auth() 15.8ms @ 2026-09-24T20:10:35.537Z
+[TRACE] prisma sql (89ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 89.0ms @ 2026-09-24T20:10:35.629Z
+[TRACE] prisma sql (91ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 91.0ms @ 2026-09-24T20:10:35.631Z
+[TRACE] settings queries 94.6ms @ 2026-09-24T20:10:35.632Z
+[TRACE] proxy total / 0.1ms @ 2026-09-24T20:11:57.086Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:11:57.510Z
+[TRACE] layout auth() 77.6ms @ 2026-09-24T20:11:57.681Z
+[TRACE] layout TOTAL 78.6ms @ 2026-09-24T20:11:57.682Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:11:58.018Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:11:58.021Z
+[TRACE] api/business auth() 19.7ms @ 2026-09-24T20:11:58.146Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 170.0ms @ 2026-09-24T20:11:58.472Z
+[TRACE] prisma sql (256ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 256.0ms @ 2026-09-24T20:11:58.728Z
+[TRACE] dashboard page query 1093.4ms @ 2026-09-24T20:11:58.730Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 166.0ms @ 2026-09-24T20:11:59.156Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 167.0ms @ 2026-09-24T20:11:59.163Z
+[TRACE] api/business query 1017.2ms @ 2026-09-24T20:11:59.164Z
+[TRACE] api/business TOTAL 1038.7ms @ 2026-09-24T20:11:59.165Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:11:59.201Z
+[TRACE] api/business auth() 31.5ms @ 2026-09-24T20:11:59.266Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:11:59.271Z
+[TRACE] layout auth() 44.4ms @ 2026-09-24T20:11:59.352Z
+[TRACE] layout TOTAL 45.5ms @ 2026-09-24T20:11:59.353Z
+[TRACE] prisma sql (121ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 121.0ms @ 2026-09-24T20:11:59.390Z
+[TRACE] api/business query 124.1ms @ 2026-09-24T20:11:59.391Z
+[TRACE] api/business TOTAL 158.9ms @ 2026-09-24T20:11:59.393Z
+[TRACE] prisma sql (178ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 178.0ms @ 2026-09-24T20:11:59.502Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:11:59.647Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:11:59.651Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 166.0ms @ 2026-09-24T20:11:59.698Z
+[TRACE] dashboard page query 385.9ms @ 2026-09-24T20:11:59.700Z
+[TRACE] api/business auth() 47.7ms @ 2026-09-24T20:11:59.745Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 85.0ms @ 2026-09-24T20:11:59.765Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 82.0ms @ 2026-09-24T20:11:59.834Z
+[TRACE] api/business query 88.7ms @ 2026-09-24T20:11:59.835Z
+[TRACE] api/business TOTAL 139.0ms @ 2026-09-24T20:11:59.836Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:11:59.872Z
+[TRACE] api/business auth() 28.5ms @ 2026-09-24T20:11:59.924Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T20:12:00.010Z
+[TRACE] api/business query 86.0ms @ 2026-09-24T20:12:00.011Z
+[TRACE] api/business TOTAL 117.7ms @ 2026-09-24T20:12:00.013Z
+[TRACE] proxy public /signin 0.0ms @ 2026-09-24T20:12:02.438Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 168.0ms @ 2026-09-24T20:12:10.804Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 169.0ms @ 2026-09-24T20:12:10.973Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:12:11.321Z
+[TRACE] layout auth() 25.6ms @ 2026-09-24T20:12:11.382Z
+[TRACE] layout TOTAL 26.4ms @ 2026-09-24T20:12:11.383Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:12:11.405Z
+[TRACE] layout auth() 25.9ms @ 2026-09-24T20:12:11.451Z
+[TRACE] layout TOTAL 26.9ms @ 2026-09-24T20:12:11.452Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:12:11.513Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:12:11.520Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T20:12:11.523Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 170.0ms @ 2026-09-24T20:12:11.537Z
+[TRACE] api/business auth() 14.3ms @ 2026-09-24T20:12:11.562Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 82.0ms @ 2026-09-24T20:12:11.603Z
+[TRACE] dashboard page query 173.4ms @ 2026-09-24T20:12:11.604Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 166.0ms @ 2026-09-24T20:12:11.701Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 170.0ms @ 2026-09-24T20:12:11.708Z
+[TRACE] dashboard page query 348.8ms @ 2026-09-24T20:12:11.709Z
+[TRACE] prisma sql (166ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 166.0ms @ 2026-09-24T20:12:12.329Z
+[TRACE] api/business query 768.3ms @ 2026-09-24T20:12:12.331Z
+[TRACE] api/business TOTAL 784.5ms @ 2026-09-24T20:12:12.332Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:12:12.348Z
+[TRACE] api/business auth() 9.0ms @ 2026-09-24T20:12:12.370Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T20:12:12.455Z
+[TRACE] api/business query 84.9ms @ 2026-09-24T20:12:12.456Z
+[TRACE] api/business TOTAL 95.5ms @ 2026-09-24T20:12:12.457Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:12:13.940Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 171.0ms @ 2026-09-24T20:12:14.173Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 168.0ms @ 2026-09-24T20:12:14.342Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:12:14.795Z
+[TRACE] prisma sql (81ms raw) :: SELECT 1 81.0ms @ 2026-09-24T20:12:14.938Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 170.0ms @ 2026-09-24T20:12:15.027Z
+[TRACE] prisma sql (166ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 166.0ms @ 2026-09-24T20:12:15.105Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 172.0ms @ 2026-09-24T20:12:15.200Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:12:15.766Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 167.0ms @ 2026-09-24T20:12:15.988Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 171.0ms @ 2026-09-24T20:12:15.993Z
+[TRACE] prisma sql (181ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 181.0ms @ 2026-09-24T20:12:16.170Z
+[TRACE] prisma sql (178ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 178.0ms @ 2026-09-24T20:12:16.171Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:12:16.740Z
+[TRACE] settings auth() 24.8ms @ 2026-09-24T20:12:16.820Z
+[TRACE] prisma sql (190ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 190.0ms @ 2026-09-24T20:12:17.015Z
+[TRACE] prisma sql (192ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 192.0ms @ 2026-09-24T20:12:17.017Z
+[TRACE] settings queries 196.7ms @ 2026-09-24T20:12:17.018Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:15:28.767Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:15:28.770Z
+[TRACE] layout auth() 78.8ms @ 2026-09-24T20:15:28.904Z
+[TRACE] layout TOTAL 80.3ms @ 2026-09-24T20:15:28.906Z
+[TRACE] layout auth() 58.1ms @ 2026-09-24T20:15:28.910Z
+[TRACE] layout TOTAL 59.7ms @ 2026-09-24T20:15:28.912Z
+[TRACE] settings auth() 63.5ms @ 2026-09-24T20:15:28.917Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:15:28.925Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:15:28.927Z
+[TRACE] layout auth() 29.8ms @ 2026-09-24T20:15:28.984Z
+[TRACE] layout TOTAL 30.6ms @ 2026-09-24T20:15:28.985Z
+[TRACE] prisma sql (228ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 228.0ms @ 2026-09-24T20:15:29.341Z
+[TRACE] prisma sql (242ms raw) :: SELECT 1 242.0ms @ 2026-09-24T20:15:29.341Z
+[TRACE] prisma sql (201ms raw) :: SELECT 1 201.0ms @ 2026-09-24T20:15:29.342Z
+[TRACE] prisma sql (243ms raw) :: SELECT 1 243.0ms @ 2026-09-24T20:15:29.342Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:15:29.343Z
+[TRACE] prisma sql (90ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 90.0ms @ 2026-09-24T20:15:29.343Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 169.0ms @ 2026-09-24T20:15:29.344Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 170.0ms @ 2026-09-24T20:15:29.344Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 82.0ms @ 2026-09-24T20:15:29.345Z
+[TRACE] dashboard page query 514.5ms @ 2026-09-24T20:15:29.345Z
+[TRACE] settings queries 428.7ms @ 2026-09-24T20:15:29.347Z
+[TRACE] dashboard page query 393.1ms @ 2026-09-24T20:15:29.350Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:15:29.702Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:29.704Z
+[TRACE] api/business auth() 21.1ms @ 2026-09-24T20:15:29.749Z
+[TRACE] prisma sql (95ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 95.0ms @ 2026-09-24T20:15:29.812Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T20:15:29.834Z
+[TRACE] api/business query 85.5ms @ 2026-09-24T20:15:29.835Z
+[TRACE] api/business TOTAL 109.0ms @ 2026-09-24T20:15:29.837Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:29.856Z
+[TRACE] api/business auth() 18.2ms @ 2026-09-24T20:15:29.889Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 84.0ms @ 2026-09-24T20:15:29.975Z
+[TRACE] api/business query 86.2ms @ 2026-09-24T20:15:29.976Z
+[TRACE] api/business TOTAL 105.8ms @ 2026-09-24T20:15:29.977Z
+[TRACE] proxy total / 0.0ms @ 2026-09-24T20:15:45.898Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:15:45.906Z
+[TRACE] layout auth() 111.4ms @ 2026-09-24T20:15:46.421Z
+[TRACE] layout TOTAL 112.5ms @ 2026-09-24T20:15:46.422Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:15:46.482Z
+[TRACE] layout auth() 42.7ms @ 2026-09-24T20:15:46.551Z
+[TRACE] layout TOTAL 43.6ms @ 2026-09-24T20:15:46.552Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:15:46.942Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:46.946Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:15:47.097Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:47.100Z
+[TRACE] api/business auth() 118.6ms @ 2026-09-24T20:15:47.148Z
+[TRACE] api/business auth() 17.0ms @ 2026-09-24T20:15:47.158Z
+[TRACE] proxy public /signin 0.0ms @ 2026-09-24T20:15:50.014Z
+[TRACE] prisma sql (229ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 229.0ms @ 2026-09-24T20:15:50.654Z
+[TRACE] prisma sql (283ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 283.0ms @ 2026-09-24T20:15:50.938Z
+[TRACE] dashboard page query 4427.6ms @ 2026-09-24T20:15:50.940Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 169.0ms @ 2026-09-24T20:15:51.451Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 167.0ms @ 2026-09-24T20:15:51.456Z
+[TRACE] api/business query 4298.2ms @ 2026-09-24T20:15:51.458Z
+[TRACE] api/business TOTAL 4317.3ms @ 2026-09-24T20:15:51.459Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 171.0ms @ 2026-09-24T20:15:51.462Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 175.0ms @ 2026-09-24T20:15:51.468Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 171.0ms @ 2026-09-24T20:15:51.468Z
+[TRACE] api/business query 4319.3ms @ 2026-09-24T20:15:51.469Z
+[TRACE] api/business TOTAL 4440.3ms @ 2026-09-24T20:15:51.470Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:51.485Z
+[TRACE] api/business auth() 15.2ms @ 2026-09-24T20:15:51.516Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 83.0ms @ 2026-09-24T20:15:51.601Z
+[TRACE] api/business query 86.2ms @ 2026-09-24T20:15:51.602Z
+[TRACE] api/business TOTAL 103.0ms @ 2026-09-24T20:15:51.603Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 171.0ms @ 2026-09-24T20:15:51.639Z
+[TRACE] dashboard page query 5302.5ms @ 2026-09-24T20:15:51.641Z
+[TRACE] prisma sql (189ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 189.0ms @ 2026-09-24T20:15:58.389Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 183.0ms @ 2026-09-24T20:15:58.573Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:15:58.927Z
+[TRACE] layout auth() 30.4ms @ 2026-09-24T20:15:58.981Z
+[TRACE] layout TOTAL 31.5ms @ 2026-09-24T20:15:58.982Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:15:59.008Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T20:15:59.049Z
+[TRACE] layout auth() 24.0ms @ 2026-09-24T20:15:59.051Z
+[TRACE] layout TOTAL 24.5ms @ 2026-09-24T20:15:59.051Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:15:59.131Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:59.134Z
+[TRACE] prisma sql (107ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 107.0ms @ 2026-09-24T20:15:59.167Z
+[TRACE] dashboard page query 212.6ms @ 2026-09-24T20:15:59.168Z
+[TRACE] api/business auth() 15.7ms @ 2026-09-24T20:15:59.182Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 85.0ms @ 2026-09-24T20:15:59.235Z
+[TRACE] prisma sql (202ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 202.0ms @ 2026-09-24T20:15:59.241Z
+[TRACE] prisma sql (232ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 232.0ms @ 2026-09-24T20:15:59.417Z
+[TRACE] api/business query 235.0ms @ 2026-09-24T20:15:59.418Z
+[TRACE] api/business TOTAL 252.1ms @ 2026-09-24T20:15:59.419Z
+[TRACE] prisma sql (187ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 187.0ms @ 2026-09-24T20:15:59.430Z
+[TRACE] dashboard page query 400.0ms @ 2026-09-24T20:15:59.431Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:15:59.442Z
+[TRACE] api/business auth() 6.5ms @ 2026-09-24T20:15:59.463Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 84.0ms @ 2026-09-24T20:15:59.550Z
+[TRACE] api/business query 86.4ms @ 2026-09-24T20:15:59.550Z
+[TRACE] api/business TOTAL 95.0ms @ 2026-09-24T20:15:59.551Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:16:00.754Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:16:00.839Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:16:00.900Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:16:00.957Z
+[TRACE] prisma sql (93ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 93.0ms @ 2026-09-24T20:16:00.994Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T20:16:01.043Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:16:01.932Z
+[TRACE] prisma sql (167ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 167.0ms @ 2026-09-24T20:16:02.164Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 174.0ms @ 2026-09-24T20:16:02.171Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 174.0ms @ 2026-09-24T20:16:02.346Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:16:02.986Z
+[TRACE] prisma sql (212ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 212.0ms @ 2026-09-24T20:16:03.255Z
+[TRACE] prisma sql (213ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 213.0ms @ 2026-09-24T20:16:03.256Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 183.0ms @ 2026-09-24T20:16:03.439Z
+[TRACE] prisma sql (210ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 210.0ms @ 2026-09-24T20:16:03.467Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:16:04.117Z
+[TRACE] settings auth() 22.2ms @ 2026-09-24T20:16:04.192Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 168.0ms @ 2026-09-24T20:16:04.364Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 174.0ms @ 2026-09-24T20:16:04.370Z
+[TRACE] settings queries 179.2ms @ 2026-09-24T20:16:04.372Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:20:17.336Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:20:17.347Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:20:17.350Z
+[TRACE] layout auth() 113.3ms @ 2026-09-24T20:20:17.496Z
+[TRACE] layout TOTAL 114.1ms @ 2026-09-24T20:20:17.497Z
+[TRACE] prisma sql (102ms raw) :: SELECT 1 102.0ms @ 2026-09-24T20:20:17.507Z
+[TRACE] layout auth() 81.8ms @ 2026-09-24T20:20:17.519Z
+[TRACE] layout TOTAL 82.6ms @ 2026-09-24T20:20:17.520Z
+[TRACE] settings auth() 83.6ms @ 2026-09-24T20:20:17.522Z
+[TRACE] layout auth() 71.2ms @ 2026-09-24T20:20:17.531Z
+[TRACE] layout TOTAL 72.0ms @ 2026-09-24T20:20:17.532Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T20:20:17.553Z
+[TRACE] prisma sql (98ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 98.0ms @ 2026-09-24T20:20:17.891Z
+[TRACE] prisma sql (96ms raw) :: SELECT 1 96.0ms @ 2026-09-24T20:20:17.892Z
+[TRACE] prisma sql (98ms raw) :: SELECT 1 98.0ms @ 2026-09-24T20:20:17.893Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:20:17.893Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:20:17.894Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T20:20:17.895Z
+[TRACE] prisma sql (184ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 184.0ms @ 2026-09-24T20:20:17.895Z
+[TRACE] prisma sql (184ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 184.0ms @ 2026-09-24T20:20:17.896Z
+[TRACE] dashboard page query 510.3ms @ 2026-09-24T20:20:17.897Z
+[TRACE] dashboard page query 434.4ms @ 2026-09-24T20:20:17.898Z
+[TRACE] settings queries 377.1ms @ 2026-09-24T20:20:17.900Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:20:18.262Z
+[TRACE] prisma sql (341ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 341.0ms @ 2026-09-24T20:20:18.622Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:20:25.490Z
+[TRACE] layout auth() 30.2ms @ 2026-09-24T20:20:25.542Z
+[TRACE] layout TOTAL 31.0ms @ 2026-09-24T20:20:25.543Z
+[TRACE] settings auth() 32.3ms @ 2026-09-24T20:20:25.546Z
+[TRACE] prisma sql (95ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 95.0ms @ 2026-09-24T20:20:25.644Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 96.0ms @ 2026-09-24T20:20:25.646Z
+[TRACE] settings queries 106.0ms @ 2026-09-24T20:20:25.653Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:20:25.875Z
+[TRACE] prisma sql (108ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 108.0ms @ 2026-09-24T20:20:25.998Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:20:26.701Z
+[TRACE] prisma sql (509ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 509.0ms @ 2026-09-24T20:20:27.235Z
+[TRACE] prisma sql (214ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 214.0ms @ 2026-09-24T20:20:27.450Z
+[TRACE] dashboard page query 731.0ms @ 2026-09-24T20:20:27.451Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:20:28.077Z
+[TRACE] prisma sql (128ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 128.0ms @ 2026-09-24T20:20:28.237Z
+[TRACE] prisma sql (105ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 105.0ms @ 2026-09-24T20:20:28.343Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:20:28.833Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:20:28.879Z
+[TRACE] prisma sql (252ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 252.0ms @ 2026-09-24T20:20:29.123Z
+[TRACE] prisma sql (256ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 256.0ms @ 2026-09-24T20:20:29.128Z
+[TRACE] prisma sql (266ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 266.0ms @ 2026-09-24T20:20:29.174Z
+[TRACE] prisma sql (267ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 267.0ms @ 2026-09-24T20:20:29.176Z
+[TRACE] prisma sql (222ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 222.0ms @ 2026-09-24T20:20:29.351Z
+[TRACE] prisma sql (209ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 209.0ms @ 2026-09-24T20:20:29.385Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:20:29.808Z
+[TRACE] prisma sql (224ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 224.0ms @ 2026-09-24T20:20:30.064Z
+[TRACE] prisma sql (226ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 226.0ms @ 2026-09-24T20:20:30.066Z
+[TRACE] prisma sql (245ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 245.0ms @ 2026-09-24T20:20:30.310Z
+[TRACE] prisma sql (270ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 270.0ms @ 2026-09-24T20:20:30.336Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:20:30.720Z
+[TRACE] settings auth() 17.8ms @ 2026-09-24T20:20:30.755Z
+[TRACE] prisma sql (87ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 87.0ms @ 2026-09-24T20:20:30.846Z
+[TRACE] prisma sql (236ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 236.0ms @ 2026-09-24T20:20:30.995Z
+[TRACE] settings queries 240.1ms @ 2026-09-24T20:20:30.996Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:21:51.867Z
+[TRACE] prisma sql (215ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 215.0ms @ 2026-09-24T20:21:52.903Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 183.0ms @ 2026-09-24T20:21:53.087Z
+[TRACE] dashboard page query 1201.4ms @ 2026-09-24T20:21:53.088Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:24:39.184Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:24:39.185Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:24:39.187Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:24:39.189Z
+[TRACE] layout auth() 126.3ms @ 2026-09-24T20:24:39.380Z
+[TRACE] layout TOTAL 127.4ms @ 2026-09-24T20:24:39.381Z
+[TRACE] layout auth() 106.8ms @ 2026-09-24T20:24:39.385Z
+[TRACE] layout TOTAL 107.9ms @ 2026-09-24T20:24:39.386Z
+[TRACE] layout auth() 89.9ms @ 2026-09-24T20:24:39.391Z
+[TRACE] layout TOTAL 90.9ms @ 2026-09-24T20:24:39.392Z
+[TRACE] layout auth() 76.8ms @ 2026-09-24T20:24:39.396Z
+[TRACE] layout TOTAL 78.2ms @ 2026-09-24T20:24:39.398Z
+[TRACE] prisma sql (218ms raw) :: SELECT 1 218.0ms @ 2026-09-24T20:24:39.485Z
+[TRACE] prisma sql (107ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 107.0ms @ 2026-09-24T20:24:39.592Z
+[TRACE] prisma sql (98ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 98.0ms @ 2026-09-24T20:24:39.706Z
+[TRACE] dashboard page query 449.7ms @ 2026-09-24T20:24:39.708Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:24:39.735Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:24:39.833Z
+[TRACE] prisma sql (257ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 257.0ms @ 2026-09-24T20:24:40.025Z
+[TRACE] prisma sql (488ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 488.0ms @ 2026-09-24T20:24:40.575Z
+[TRACE] prisma sql (492ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 492.0ms @ 2026-09-24T20:24:40.579Z
+[TRACE] prisma sql (466ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 466.0ms @ 2026-09-24T20:24:40.584Z
+[TRACE] prisma sql (479ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 479.0ms @ 2026-09-24T20:24:41.054Z
+[TRACE] dashboard page query 1774.1ms @ 2026-09-24T20:24:41.055Z
+[TRACE] prisma sql (478ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 478.0ms @ 2026-09-24T20:24:41.058Z
+[TRACE] prisma sql (474ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 474.0ms @ 2026-09-24T20:24:41.058Z
+[TRACE] dashboard page query 1753.5ms @ 2026-09-24T20:24:41.059Z
+[TRACE] dashboard page query 1736.5ms @ 2026-09-24T20:24:41.060Z
+[TRACE] prisma sql (189ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 189.0ms @ 2026-09-24T20:24:41.567Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:25:20.268Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:25:20.274Z
+[TRACE] layout auth() 82.4ms @ 2026-09-24T20:25:20.388Z
+[TRACE] layout auth() 48.4ms @ 2026-09-24T20:25:20.393Z
+[TRACE] prisma sql (205ms raw) :: SELECT 1 205.0ms @ 2026-09-24T20:25:20.525Z
+[TRACE] prisma sql (177ms raw) :: SELECT 1 177.0ms @ 2026-09-24T20:25:20.538Z
+[TRACE] prisma sql (149ms raw) :: SELECT 1 149.0ms @ 2026-09-24T20:25:20.540Z
+[TRACE] prisma sql (145ms raw) :: SELECT 1 145.0ms @ 2026-09-24T20:25:20.542Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:25:20.623Z
+[TRACE] prisma sql (187ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 187.0ms @ 2026-09-24T20:25:20.713Z
+[TRACE] prisma sql (109ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 109.0ms @ 2026-09-24T20:25:20.733Z
+[TRACE] prisma sql (192ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 192.0ms @ 2026-09-24T20:25:20.734Z
+[TRACE] prisma sql (191ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 191.0ms @ 2026-09-24T20:25:20.734Z
+[TRACE] dashboard page query 383.8ms @ 2026-09-24T20:25:20.735Z
+[TRACE] layout business query 347.1ms @ 2026-09-24T20:25:20.736Z
+[TRACE] layout TOTAL 431.2ms @ 2026-09-24T20:25:20.737Z
+[TRACE] layout business query 344.8ms @ 2026-09-24T20:25:20.739Z
+[TRACE] layout TOTAL 395.0ms @ 2026-09-24T20:25:20.739Z
+[TRACE] prisma sql (220ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 220.0ms @ 2026-09-24T20:25:20.934Z
+[TRACE] dashboard page query 623.3ms @ 2026-09-24T20:25:20.935Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:25:59.489Z
+[TRACE] layout auth() 29.6ms @ 2026-09-24T20:25:59.550Z
+[TRACE] prisma sql (92ms raw) :: SELECT 1 92.0ms @ 2026-09-24T20:25:59.625Z
+[TRACE] prisma sql (95ms raw) :: SELECT 1 95.0ms @ 2026-09-24T20:25:59.648Z
+[TRACE] prisma sql (125ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 125.0ms @ 2026-09-24T20:25:59.751Z
+[TRACE] prisma sql (117ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 117.0ms @ 2026-09-24T20:25:59.765Z
+[TRACE] layout business query 215.2ms @ 2026-09-24T20:25:59.766Z
+[TRACE] layout TOTAL 246.1ms @ 2026-09-24T20:25:59.767Z
+[TRACE] prisma sql (118ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 118.0ms @ 2026-09-24T20:25:59.870Z
+[TRACE] dashboard page query 346.8ms @ 2026-09-24T20:25:59.872Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:25:59.992Z
+[TRACE] prisma sql (141ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 141.0ms @ 2026-09-24T20:26:00.158Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:26:02.209Z
+[TRACE] prisma sql (123ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 123.0ms @ 2026-09-24T20:26:02.374Z
+[TRACE] prisma sql (101ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 101.0ms @ 2026-09-24T20:26:02.476Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:26:03.111Z
+[TRACE] prisma sql (285ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 285.0ms @ 2026-09-24T20:26:03.441Z
+[TRACE] prisma sql (286ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 286.0ms @ 2026-09-24T20:26:03.442Z
+[TRACE] prisma sql (220ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 220.0ms @ 2026-09-24T20:26:03.663Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:26:04.100Z
+[TRACE] prisma sql (218ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 218.0ms @ 2026-09-24T20:26:04.352Z
+[TRACE] prisma sql (219ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 219.0ms @ 2026-09-24T20:26:04.355Z
+[TRACE] prisma sql (257ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 257.0ms @ 2026-09-24T20:26:04.610Z
+[TRACE] prisma sql (270ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 270.0ms @ 2026-09-24T20:26:04.624Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:26:05.019Z
+[TRACE] settings auth() 17.9ms @ 2026-09-24T20:26:05.067Z
+[TRACE] prisma sql (252ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 252.0ms @ 2026-09-24T20:26:05.323Z
+[TRACE] prisma sql (252ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 252.0ms @ 2026-09-24T20:26:05.324Z
+[TRACE] settings queries 256.3ms @ 2026-09-24T20:26:05.324Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:26:05.875Z
+[TRACE] prisma sql (160ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 160.0ms @ 2026-09-24T20:26:06.058Z
+[TRACE] prisma sql (153ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 153.0ms @ 2026-09-24T20:26:06.212Z
+[TRACE] dashboard page query 321.5ms @ 2026-09-24T20:26:06.213Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:26:07.874Z
+[TRACE] settings auth() 20.2ms @ 2026-09-24T20:26:07.911Z
+[TRACE] prisma sql (197ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 197.0ms @ 2026-09-24T20:26:08.112Z
+[TRACE] prisma sql (200ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 200.0ms @ 2026-09-24T20:26:08.115Z
+[TRACE] settings queries 203.8ms @ 2026-09-24T20:26:08.116Z
+[TRACE] proxy total /api/business 0.0ms @ 2026-09-24T20:26:15.192Z
+[TRACE] prisma sql (140ms raw) :: SELECT 1 140.0ms @ 2026-09-24T20:26:15.358Z
+[TRACE] prisma sql (248ms raw) :: INSERT INTO "public"."businesses" ("id","name","phone","logo","userId","createdA 248.0ms @ 2026-09-24T20:26:15.615Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:26:15.633Z
+[TRACE] layout auth() 49.0ms @ 2026-09-24T20:26:15.709Z
+[TRACE] settings auth() 49.2ms @ 2026-09-24T20:26:15.712Z
+[TRACE] prisma sql (87ms raw) :: SELECT 1 87.0ms @ 2026-09-24T20:26:15.803Z
+[TRACE] prisma sql (90ms raw) :: SELECT 1 90.0ms @ 2026-09-24T20:26:15.805Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 174.0ms @ 2026-09-24T20:26:15.886Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 84.0ms @ 2026-09-24T20:26:15.888Z
+[TRACE] layout business query 178.7ms @ 2026-09-24T20:26:15.889Z
+[TRACE] layout TOTAL 229.2ms @ 2026-09-24T20:26:15.889Z
+[TRACE] prisma sql (177ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 177.0ms @ 2026-09-24T20:26:15.983Z
+[TRACE] settings queries 271.1ms @ 2026-09-24T20:26:15.984Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:26:23.039Z
+[TRACE] layout auth() 33.8ms @ 2026-09-24T20:26:23.092Z
+[TRACE] settings auth() 34.5ms @ 2026-09-24T20:26:23.095Z
+[TRACE] prisma sql (95ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 95.0ms @ 2026-09-24T20:26:23.190Z
+[TRACE] prisma sql (92ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 92.0ms @ 2026-09-24T20:26:23.191Z
+[TRACE] prisma sql (92ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 92.0ms @ 2026-09-24T20:26:23.192Z
+[TRACE] layout business query 98.9ms @ 2026-09-24T20:26:23.192Z
+[TRACE] layout TOTAL 134.0ms @ 2026-09-24T20:26:23.193Z
+[TRACE] settings queries 98.6ms @ 2026-09-24T20:26:23.194Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:26:23.422Z
+[TRACE] prisma sql (206ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 206.0ms @ 2026-09-24T20:26:23.675Z
+[TRACE] proxy total / 0.0ms @ 2026-09-24T20:27:15.669Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:27:15.679Z
+[TRACE] layout auth() 204.7ms @ 2026-09-24T20:27:16.200Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:27:16.208Z
+[TRACE] layout auth() 34.3ms @ 2026-09-24T20:27:16.268Z
+[TRACE] prisma sql (259ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 259.0ms @ 2026-09-24T20:27:18.115Z
+[TRACE] layout business query 1915.9ms @ 2026-09-24T20:27:18.117Z
+[TRACE] layout TOTAL 2122.4ms @ 2026-09-24T20:27:18.117Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:27:18.581Z
+[TRACE] prisma sql (246ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 246.0ms @ 2026-09-24T20:27:18.900Z
+[TRACE] prisma sql (199ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 199.0ms @ 2026-09-24T20:27:19.041Z
+[TRACE] prisma sql (199ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 199.0ms @ 2026-09-24T20:27:19.042Z
+[TRACE] prisma sql (199ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 199.0ms @ 2026-09-24T20:27:19.043Z
+[TRACE] layout business query 2774.9ms @ 2026-09-24T20:27:19.043Z
+[TRACE] layout TOTAL 2810.6ms @ 2026-09-24T20:27:19.044Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 172.0ms @ 2026-09-24T20:27:19.214Z
+[TRACE] dashboard page query 3193.8ms @ 2026-09-24T20:27:19.216Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 174.0ms @ 2026-09-24T20:27:19.231Z
+[TRACE] dashboard page query 2995.0ms @ 2026-09-24T20:27:19.232Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:27:19.315Z
+[TRACE] prisma sql (210ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 210.0ms @ 2026-09-24T20:27:19.573Z
+[TRACE] proxy public /signin 0.0ms @ 2026-09-24T20:27:22.524Z
+[TRACE] prisma sql (86ms raw) :: SELECT 1 86.0ms @ 2026-09-24T20:27:36.931Z
+[TRACE] prisma sql (196ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 196.0ms @ 2026-09-24T20:27:37.128Z
+[TRACE] prisma sql (211ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 211.0ms @ 2026-09-24T20:27:37.340Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:27:37.686Z
+[TRACE] layout auth() 28.5ms @ 2026-09-24T20:27:37.745Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:27:37.760Z
+[TRACE] layout auth() 26.2ms @ 2026-09-24T20:27:37.806Z
+[TRACE] prisma sql (97ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 97.0ms @ 2026-09-24T20:27:37.825Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:27:37.830Z
+[TRACE] prisma sql (101ms raw) :: SELECT 1 101.0ms @ 2026-09-24T20:27:37.892Z
+[TRACE] prisma sql (105ms raw) :: SELECT 1 105.0ms @ 2026-09-24T20:27:37.914Z
+[TRACE] prisma sql (93ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 93.0ms @ 2026-09-24T20:27:37.918Z
+[TRACE] dashboard page query 197.6ms @ 2026-09-24T20:27:37.919Z
+[TRACE] prisma sql (109ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 109.0ms @ 2026-09-24T20:27:38.023Z
+[TRACE] prisma sql (193ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 193.0ms @ 2026-09-24T20:27:38.024Z
+[TRACE] layout business query 218.0ms @ 2026-09-24T20:27:38.025Z
+[TRACE] layout TOTAL 245.4ms @ 2026-09-24T20:27:38.025Z
+[TRACE] layout business query 281.8ms @ 2026-09-24T20:27:38.027Z
+[TRACE] layout TOTAL 311.5ms @ 2026-09-24T20:27:38.028Z
+[TRACE] proxy total /api/exchangerate 0.0ms @ 2026-09-24T20:27:38.102Z
+[TRACE] prisma sql (242ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 242.0ms @ 2026-09-24T20:27:38.136Z
+[TRACE] prisma sql (276ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 276.0ms @ 2026-09-24T20:27:38.404Z
+[TRACE] prisma sql (269ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 269.0ms @ 2026-09-24T20:27:38.409Z
+[TRACE] dashboard page query 625.8ms @ 2026-09-24T20:27:38.410Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:27:42.965Z
+[TRACE] prisma sql (124ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 124.0ms @ 2026-09-24T20:27:43.158Z
+[TRACE] prisma sql (126ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 126.0ms @ 2026-09-24T20:27:43.284Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:27:44.212Z
+[TRACE] prisma sql (109ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 109.0ms @ 2026-09-24T20:27:44.349Z
+[TRACE] prisma sql (125ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 125.0ms @ 2026-09-24T20:27:44.475Z
+[TRACE] dashboard page query 243.2ms @ 2026-09-24T20:27:44.476Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:27:47.574Z
+[TRACE] prisma sql (108ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 108.0ms @ 2026-09-24T20:27:47.708Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:27:47.793Z
+[TRACE] proxy total /dashboard 0.0ms @ 2026-09-24T20:27:48.260Z
+[TRACE] prisma sql (217ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 217.0ms @ 2026-09-24T20:27:48.503Z
+[TRACE] prisma sql (92ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 92.0ms @ 2026-09-24T20:27:48.596Z
+[TRACE] dashboard page query 319.8ms @ 2026-09-24T20:27:48.597Z
+[TRACE] proxy total /inventory 0.0ms @ 2026-09-24T20:33:47.961Z
+[TRACE] prisma sql (218ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 218.0ms @ 2026-09-24T20:33:49.384Z
+[TRACE] prisma sql (176ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 176.0ms @ 2026-09-24T20:33:49.561Z
+[TRACE] proxy total /orders 0.0ms @ 2026-09-24T20:33:51.554Z
+[TRACE] prisma sql (186ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 186.0ms @ 2026-09-24T20:33:51.812Z
+[TRACE] prisma sql (181ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 181.0ms @ 2026-09-24T20:33:51.993Z
+[TRACE] prisma sql (174ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 174.0ms @ 2026-09-24T20:33:52.413Z
+[TRACE] proxy total /sales 0.0ms @ 2026-09-24T20:33:53.070Z
+[TRACE] prisma sql (281ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 281.0ms @ 2026-09-24T20:33:53.414Z
+[TRACE] prisma sql (311ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 311.0ms @ 2026-09-24T20:33:53.444Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 168.0ms @ 2026-09-24T20:33:53.583Z
+[TRACE] prisma sql (183ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 183.0ms @ 2026-09-24T20:33:53.628Z
+[TRACE] proxy total /settings 0.0ms @ 2026-09-24T20:33:54.287Z
+[TRACE] settings auth() 31.4ms @ 2026-09-24T20:33:54.375Z
+[TRACE] prisma sql (209ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 209.0ms @ 2026-09-24T20:33:54.589Z
+[TRACE] prisma sql (212ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 212.0ms @ 2026-09-24T20:33:54.592Z
+[TRACE] settings queries 216.3ms @ 2026-09-24T20:33:54.592Z
+[TRACE] prisma sql (4187ms raw) :: SELECT 1 4187.0ms @ 2026-09-24T20:36:21.040Z
+[TRACE] prisma sql (4164ms raw) :: SELECT 1 4164.0ms @ 2026-09-24T20:36:21.042Z
+[TRACE] prisma sql (721ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 721.0ms @ 2026-09-24T20:36:21.762Z
+[TRACE] prisma sql (720ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 720.0ms @ 2026-09-24T20:36:21.763Z
+[TRACE] prisma sql (288ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 288.0ms @ 2026-09-24T20:36:22.051Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 169.0ms @ 2026-09-24T20:36:22.234Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 170.0ms @ 2026-09-24T20:36:22.236Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 175.0ms @ 2026-09-24T20:36:22.244Z
+[TRACE] prisma sql (614ms raw) :: SELECT 1 614.0ms @ 2026-09-24T20:37:19.823Z
+[TRACE] prisma sql (1403ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 1403.0ms @ 2026-09-24T20:37:21.227Z
+[TRACE] prisma sql (786ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 786.0ms @ 2026-09-24T20:37:22.013Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."email", 170.0ms @ 2026-09-24T20:37:30.829Z
+[TRACE] prisma sql (175ms raw) :: SELECT "public"."subscription"."id", "public"."subscription"."userId", "public". 175.0ms @ 2026-09-24T20:37:31.004Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:37:31.458Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:37:31.461Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:37:31.496Z
+[TRACE] prisma sql (81ms raw) :: SELECT 1 81.0ms @ 2026-09-24T20:37:31.521Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:37:31.534Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 82.0ms @ 2026-09-24T20:37:31.544Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T20:37:31.669Z
+[TRACE] prisma sql (165ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 165.0ms @ 2026-09-24T20:37:31.687Z
+[TRACE] prisma sql (176ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 176.0ms @ 2026-09-24T20:37:31.845Z
+[TRACE] prisma sql (199ms raw) :: SELECT "public"."exchange_rates"."id", "public"."exchange_rates"."usdToLbp", "pu 199.0ms @ 2026-09-24T20:37:31.982Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:37:37.091Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:37:37.175Z
+[TRACE] prisma sql (167ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 167.0ms @ 2026-09-24T20:37:38.269Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 172.0ms @ 2026-09-24T20:37:38.274Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 172.0ms @ 2026-09-24T20:37:38.446Z
+[TRACE] prisma sql (89ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 89.0ms @ 2026-09-24T20:37:39.157Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 173.0ms @ 2026-09-24T20:37:39.241Z
+[TRACE] prisma sql (97ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 97.0ms @ 2026-09-24T20:37:39.255Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 172.0ms @ 2026-09-24T20:37:39.413Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 83.0ms @ 2026-09-24T20:37:40.065Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T20:37:40.104Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 170.0ms @ 2026-09-24T20:37:40.152Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 84.0ms @ 2026-09-24T20:37:40.189Z
+[TRACE] prisma sql (168ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 168.0ms @ 2026-09-24T20:37:40.190Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 171.0ms @ 2026-09-24T20:37:41.158Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 167.0ms @ 2026-09-24T20:37:41.326Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T20:37:42.109Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:37:42.193Z
+[TRACE] prisma sql (166ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 166.0ms @ 2026-09-24T20:37:42.914Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 174.0ms @ 2026-09-24T20:37:42.922Z
+[TRACE] prisma sql (171ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 171.0ms @ 2026-09-24T20:37:43.093Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 167.0ms @ 2026-09-24T20:37:43.657Z
+[TRACE] prisma sql (173ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 173.0ms @ 2026-09-24T20:37:43.663Z
+[TRACE] prisma sql (181ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 181.0ms @ 2026-09-24T20:37:43.839Z
+[TRACE] prisma sql (176ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 176.0ms @ 2026-09-24T20:37:43.839Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 167.0ms @ 2026-09-24T20:37:44.381Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 172.0ms @ 2026-09-24T20:37:44.386Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T20:37:45.157Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:37:45.218Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:37:45.227Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:37:45.302Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:37:49.983Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 85.0ms @ 2026-09-24T20:37:49.986Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 82.0ms @ 2026-09-24T20:37:50.066Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 83.0ms @ 2026-09-24T20:37:50.484Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 85.0ms @ 2026-09-24T20:37:50.487Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 85.0ms @ 2026-09-24T20:37:50.569Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 96.0ms @ 2026-09-24T20:37:50.582Z
+[TRACE] prisma sql (86ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 86.0ms @ 2026-09-24T20:37:51.013Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 86.0ms @ 2026-09-24T20:37:51.014Z
+[TRACE] prisma sql (112ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 112.0ms @ 2026-09-24T20:37:51.127Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T20:37:51.572Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:37:51.655Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T20:37:52.233Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:37:52.317Z
+[TRACE] prisma sql (81ms raw) :: SELECT 1 81.0ms @ 2026-09-24T20:40:38.804Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 83.0ms @ 2026-09-24T20:40:38.887Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:40:38.971Z
+[TRACE] prisma sql (81ms raw) :: SELECT 1 81.0ms @ 2026-09-24T20:41:08.704Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:41:08.741Z
+[TRACE] prisma sql (259ms raw) :: SELECT 1 259.0ms @ 2026-09-24T20:41:08.958Z
+[TRACE] prisma sql (254ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 254.0ms @ 2026-09-24T20:41:08.959Z
+[TRACE] prisma sql (219ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 219.0ms @ 2026-09-24T20:41:08.961Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:41:09.044Z
+[TRACE] prisma sql (92ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 92.0ms @ 2026-09-24T20:41:09.054Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 169.0ms @ 2026-09-24T20:41:09.127Z
+[TRACE] prisma sql (98ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 98.0ms @ 2026-09-24T20:41:10.152Z
+[TRACE] prisma sql (82ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 82.0ms @ 2026-09-24T20:41:10.191Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T20:41:10.232Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 169.0ms @ 2026-09-24T20:41:10.240Z
+[TRACE] prisma sql (83ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 83.0ms @ 2026-09-24T20:41:10.275Z
+[TRACE] prisma sql (356ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 356.0ms @ 2026-09-24T20:41:12.635Z
+[TRACE] prisma sql (329ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 329.0ms @ 2026-09-24T20:41:12.650Z
+[TRACE] prisma sql (921ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 921.0ms @ 2026-09-24T20:41:13.259Z
+[TRACE] prisma sql (672ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 672.0ms @ 2026-09-24T20:41:13.307Z
+[TRACE] prisma sql (657ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 657.0ms @ 2026-09-24T20:41:13.308Z
+[TRACE] prisma sql (209ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 209.0ms @ 2026-09-24T20:41:14.052Z
+[TRACE] prisma sql (212ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 212.0ms @ 2026-09-24T20:41:14.057Z
+[TRACE] prisma sql (193ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name" FROM "public"."b 193.0ms @ 2026-09-24T20:41:14.283Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T20:41:38.156Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 172.0ms @ 2026-09-24T20:41:38.329Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 170.0ms @ 2026-09-24T20:41:38.500Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T20:41:39.471Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:41:39.556Z
+[TRACE] prisma sql (83ms raw) :: SELECT 1 83.0ms @ 2026-09-24T20:41:40.457Z
+[TRACE] prisma sql (172ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 172.0ms @ 2026-09-24T20:41:40.546Z
+[TRACE] prisma sql (290ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 290.0ms @ 2026-09-24T20:41:40.837Z
+[TRACE] prisma sql (518ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 518.0ms @ 2026-09-24T20:41:40.976Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 170.0ms @ 2026-09-24T20:41:41.861Z
+[TRACE] prisma sql (176ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 176.0ms @ 2026-09-24T20:41:41.867Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 167.0ms @ 2026-09-24T20:41:42.029Z
+[TRACE] prisma sql (184ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 184.0ms @ 2026-09-24T20:41:42.052Z
+[TRACE] prisma sql (178ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 178.0ms @ 2026-09-24T20:41:42.859Z
+[TRACE] prisma sql (178ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 178.0ms @ 2026-09-24T20:41:42.860Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 85.0ms @ 2026-09-24T20:41:44.595Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 85.0ms @ 2026-09-24T20:41:44.680Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."products"."id", "public"."products"."name", "public"."products" 84.0ms @ 2026-09-24T20:41:50.640Z
+[TRACE] prisma sql (84ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name", "public"."categ 84.0ms @ 2026-09-24T20:41:50.724Z
+[TRACE] prisma sql (168ms raw) :: SELECT COUNT(*) AS "_count$_all" FROM (SELECT "public"."orders"."id" FROM "publi 168.0ms @ 2026-09-24T20:41:51.276Z
+[TRACE] prisma sql (170ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderNumber", "public"."orders 170.0ms @ 2026-09-24T20:41:51.284Z
+[TRACE] prisma sql (174ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."orderId", "public"." 174.0ms @ 2026-09-24T20:41:51.459Z
+[TRACE] prisma sql (85ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 85.0ms @ 2026-09-24T20:41:51.836Z
+[TRACE] prisma sql (86ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 86.0ms @ 2026-09-24T20:41:51.837Z
+[TRACE] prisma sql (82ms raw) :: SELECT 1 82.0ms @ 2026-09-24T20:41:51.906Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 96.0ms @ 2026-09-24T20:41:51.932Z
+[TRACE] prisma sql (96ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 96.0ms @ 2026-09-24T20:41:51.933Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."orders"."id", "public"."orders"."orderedAt" FROM "public"."orde 167.0ms @ 2026-09-24T20:41:52.074Z
+[TRACE] prisma sql (181ms raw) :: SELECT "public"."order_items"."id", "public"."order_items"."productId", "public" 181.0ms @ 2026-09-24T20:41:52.256Z
+[TRACE] prisma sql (165ms raw) :: SELECT "public"."products"."id", "public"."products"."sku", "public"."products". 165.0ms @ 2026-09-24T20:41:52.646Z
+[TRACE] prisma sql (165ms raw) :: SELECT "public"."categories"."id", "public"."categories"."name" FROM "public"."c 165.0ms @ 2026-09-24T20:41:52.812Z
+[TRACE] prisma sql (167ms raw) :: SELECT "public"."businesses"."id", "public"."businesses"."name", "public"."busin 167.0ms @ 2026-09-24T20:41:54.116Z
+[TRACE] prisma sql (169ms raw) :: SELECT "public"."users"."id", "public"."users"."name", "public"."users"."image", 169.0ms @ 2026-09-24T20:41:54.119Z

@@ -17,11 +17,12 @@ model User {
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   phone        String        @unique
+  business     Business?
   categories   Category[]
   orders       Order[]
   products     Product[]
   subscription Subscription?
-  business     Business?   
+  notifications Notification[]
 
   @@map("users")
 }
@@ -87,6 +88,7 @@ model Order {
   updatedAt    DateTime    @updatedAt
   total        Float       @default(0)
   ownerId      String?
+  source       OrderSource @default(MANUAL)
   items        OrderItem[]
   users        User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
@@ -123,6 +125,42 @@ model ExchangeRate {
   @@map("exchange_rates")
 }
 
+model Business {
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?
+  description String?
+  instagram   String?
+  facebook    String?
+  tiktok      String?
+  userId      String   @unique
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+   
+   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("businesses")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  message   String
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId,isRead])
+  @@map("notifications")
+}
+
+
+
+
+
 enum Role {
   USER
   ADMIN
@@ -134,15 +172,8 @@ enum OrderStatus {
   PROBLEM    @map("CANCELED")
   DELIVERING
 }
-model Business {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String?
-  logo      String?
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 
-  @@map("businesses")
+enum OrderSource {
+  STOREFRONT
+  MANUAL
 }
