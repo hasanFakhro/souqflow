@@ -25,6 +25,20 @@ export const productSchema = z.object({
     .optional()
     .or(z.literal("")),
 
+  color: z
+    .string()
+    .trim()
+    .max(50, "Color must be less than 50 characters")
+    .optional()
+    .or(z.literal("")),
+
+  size: z
+    .string()
+    .trim()
+    .max(20, "Size must be less than 20 characters")
+    .optional()
+    .or(z.literal("")),
+
   categoryId: z
   .string()
   .optional()

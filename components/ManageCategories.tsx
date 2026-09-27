@@ -123,7 +123,7 @@ export default function ManageCategories() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="rounded-lg border px-4 py-2 font-medium transition hover:bg-gray-100"
+        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 transition hover:from-blue-700 hover:to-purple-700"
       >
         Manage Categories
       </button>

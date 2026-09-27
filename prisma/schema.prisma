@@ -30,21 +30,26 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  subscription Subscription?
-  products     Product[]     @relation("UserProducts")
-  orders       Order[]       @relation("UserOrders")
-  categories   Category[]    @relation("UserCategories")
-  business     Business?
+  subscription  Subscription?
+  products      Product[]      @relation("UserProducts")
+  orders        Order[]        @relation("UserOrders")
+  categories    Category[]     @relation("UserCategories")
+  business      Business?
+  notifications Notification[]
 
   @@map("users")
 }
 
 model Business {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String?
-  logo      String?
-  userId    String   @unique
+  id          String   @id @default(cuid())
+  name        String
+  logo        String?
+  userId      String   @unique
+  description String?
+  facebook    String?
+  instagram   String?
+  tiktok      String?
+
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -80,6 +85,9 @@ model Product {
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
+
+  color String?
+  size  String?
 
   costPrice  Float
   sellPrice  Float
@@ -168,4 +176,19 @@ model ExchangeRate {
   updatedAt DateTime @updatedAt
 
   @@map("exchange_rates")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  message   String
+  isRead    Boolean  @default(false)
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
 }
