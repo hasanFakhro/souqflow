@@ -17,6 +17,11 @@ export default auth(async (request) => {
     return NextResponse.redirect(new URL("/signin", request.url));
   }
 
+  // The checkout price needs conversion before a subscription is activated.
+  if (pathname === "/api/exchangerate" && request.method === "GET") {
+    return NextResponse.next();
+  }
+
   if (isSubscriptionExempt(user.role)) {
     return pathname === "/subscription"
       ? NextResponse.redirect(new URL("/", request.url))

@@ -3,6 +3,8 @@
 import { useId, useRef, useState, useTransition, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil, X } from "lucide-react";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 import type { SerializedOrder } from "@/lib/orders";
 
 const inputStyle = "mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100 disabled:opacity-60";
@@ -12,6 +14,11 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
   const dialog = useRef<HTMLDialogElement>(null);
   const form = useRef<HTMLFormElement>(null);
   const titleId = useId();
+  const phoneId = useId();
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [phoneTouched, setPhoneTouched] = useState(false);
+  const [open, setOpen] = useState(false);
+  const phoneInvalid = phoneTouched && customerPhone !== "" && !isValidPhoneNumber(customerPhone);
   const [saving, setSaving] = useState(false);
   const [refreshing, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -60,17 +67,21 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
         title="Edit order"
         onClick={() => {
           setError("");
+          setCustomerPhone("");
+          setPhoneTouched(false);
+          setOpen(true);
           form.current?.reset();
           dialog.current?.showModal();
         }}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-yellow-300 bg-yellow-50 text-yellow-700 transition hover:bg-yellow-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-yellow-500 disabled:cursor-not-allowed disabled:opacity-50"
+        className="shrink-0 rounded-md p-2 text-blue-600 transition hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
-        <Pencil size={16} aria-hidden="true" />
+        <Pencil size={18} aria-hidden="true" />
       </button>
       <dialog
         ref={dialog}
         aria-labelledby={titleId}
         aria-busy={busy}
+        onClose={() => setOpen(false)}
         onCancel={(event) => { if (busy) event.preventDefault(); }}
         onClick={(event) => {
           if (busy || event.target !== event.currentTarget) return;
@@ -97,6 +108,26 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
             Customer name
             <input name="customerName" defaultValue={order.customerName ?? ""} maxLength={200} disabled={busy} className={inputStyle} />
           </label>
+          <div>
+            <label htmlFor={phoneId} className="block text-sm font-medium">Customer phone (optional)</label>
+            {open && <PhoneInput
+              id={phoneId}
+              international
+              defaultCountry="LB"
+              autoComplete="tel"
+              placeholder="Enter phone number"
+              value={customerPhone}
+              onChange={(value) => setCustomerPhone(value ?? "")}
+              onBlur={() => setPhoneTouched(true)}
+              maxLength={40}
+              disabled={busy}
+              aria-invalid={phoneInvalid}
+              aria-describedby={`${phoneId}-hint${phoneInvalid ? ` ${phoneId}-error` : ""}`}
+              className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 [&_.PhoneInputInput]:min-w-0 [&_.PhoneInputInput]:outline-none"
+            />}
+            <p id={`${phoneId}-hint`} className="mt-2 text-xs text-gray-500">This number is not saved yet.</p>
+            {phoneInvalid && <p id={`${phoneId}-error`} role="alert" className="mt-2 text-xs text-red-600">Enter a valid phone number.</p>}
+          </div>
           <label className="block text-sm font-medium">
             Ordered at
             <input type="date" name="orderedAt" defaultValue={order.orderedAt.slice(0, 10)} required disabled={busy} className={inputStyle} />
@@ -104,7 +135,7 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
           {error && <p role="alert" className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{error}</p>}
           <div className="flex justify-end gap-3 border-t border-gray-100 pt-4">
             <button type="button" disabled={busy} onClick={() => dialog.current?.close()} className="btn-secondary text-sm">Cancel</button>
-            <button type="submit" disabled={busy} className="btn-primary text-sm">{busy ? "Saving..." : "Save changes"}</button>
+            <button type="submit" disabled={busy} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 disabled:cursor-not-allowed disabled:bg-blue-300">{busy ? "Saving..." : "Save changes"}</button>
           </div>
         </form>
       </dialog>

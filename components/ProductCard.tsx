@@ -1,4 +1,5 @@
 "use client";
+import { Price } from "@/app/(dashboard)/currency";
 
 import Image from "next/image"
 import { useState } from "react";
@@ -77,7 +78,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
                 </div>
                 <div className="flex justify-between items-center">
                     <span className="text-base sm:text-lg font-semibold">
-                        ${product.sellPrice}
+                        <Price amountUsd={product.sellPrice} />
                     </span>
                     <span className="text-xs sm:text-sm text-gray-500">
                         {isOutOfStock ? "Out of stock" : `${remainingQuantity} left`}

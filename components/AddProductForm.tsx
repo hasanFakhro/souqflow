@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
+import MoneyInput from "@/components/MoneyInput";
+import { useCurrency, useExchangeRate } from "@/app/(dashboard)/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +29,9 @@ type Category = {
 
 export default function AddProductForm({ initialData, onSave, onCancel }: Props) {
   const router = useRouter();
+  const currency = useCurrency();
+  const rate = useExchangeRate();
+  const waitingForRate = currency === "LBP" && rate === null;
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
@@ -55,6 +60,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
 
   const {
     register,
+    control,
     handleSubmit,
     reset,
     formState: { errors, isSubmitting },
@@ -75,6 +81,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
   });
 
   const onSubmit = async (data: ProductFormData) => {
+    if (waitingForRate) return;
     try {
       if (onSave) {
         await onSave(data, imageFile);
@@ -263,17 +270,12 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
                 htmlFor="costPrice"
                 className="block text-sm font-semibold text-gray-700"
               >
-                Cost Price
+                Cost Price ({currency})
               </label>
 
-              <input
-                id="costPrice"
-                type="number"
-                step="0.01"
-                min="0"
-                {...register("costPrice")}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              />
+              <Controller name="costPrice" control={control} render={({ field }) => (
+                <MoneyInput {...field} id="costPrice" disabled={isSubmitting} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:opacity-50" />
+              )} />
 
               {errors.costPrice && (
                 <p className="text-sm text-red-600">
@@ -288,17 +290,12 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
                 htmlFor="sellPrice"
                 className="block text-sm font-semibold text-gray-700"
               >
-                Sell Price
+                Sell Price ({currency})
               </label>
 
-              <input
-                id="sellPrice"
-                type="number"
-                step="0.01"
-                min="0"
-                {...register("sellPrice")}
-                className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-              />
+              <Controller name="sellPrice" control={control} render={({ field }) => (
+                <MoneyInput {...field} id="sellPrice" disabled={isSubmitting} className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:opacity-50" />
+              )} />
 
               {errors.sellPrice && (
                 <p className="text-sm text-red-600">
@@ -375,7 +372,7 @@ export default function AddProductForm({ initialData, onSave, onCancel }: Props)
 
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || waitingForRate}
               className="flex-1 rounded-lg bg-blue-600 px-4 py-3 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
             >
               {isSubmitting

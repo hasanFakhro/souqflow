@@ -1,4 +1,5 @@
 "use client";
+import { Price } from "@/app/(dashboard)/currency";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -277,11 +278,11 @@ export default function ProductTable({
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">
-                  ${product.costPrice}
+                  <Price amountUsd={product.costPrice} />
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">
-                  ${product.sellPrice}
+                  <Price amountUsd={product.sellPrice} />
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">

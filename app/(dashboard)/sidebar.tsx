@@ -123,7 +123,6 @@ function Sidebar() {
                 className="pt-0.5 text-lg leading-none"
                 aria-hidden="true"
               >
-                💰
               </span>
 
               <span className="flex-1">
@@ -243,7 +242,6 @@ function Sidebar() {
               className="pt-0.5 text-lg leading-none"
               aria-hidden="true"
             >
-              💰
             </span>
 
             <span className="flex-1">

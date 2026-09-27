@@ -126,6 +126,7 @@ async function loadExchangeRate() {
       // Make sure the rate is valid.
       if (
         typeof data.usdToLbp === "number" &&
+        Number.isFinite(data.usdToLbp) &&
         data.usdToLbp > 0
       ) {
         // Save the rate in memory.

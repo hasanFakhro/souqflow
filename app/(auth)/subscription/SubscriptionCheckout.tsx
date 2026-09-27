@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Check } from "lucide-react";
 import paymentQr from "@/app/assets/paymentQR.jpg";
+import { Price } from "@/app/(dashboard)/currency";
 
 const subscriptionFeatures = [
   {
@@ -83,7 +84,7 @@ export default function SubscriptionCheckout() {
 
           <div className="mt-7 rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 p-5 text-center text-white">
             <p className="text-sm font-medium text-blue-100">SouqFlow monthly plan</p>
-            <p className="mt-1 text-4xl font-extrabold">$9.99</p>
+            <p className="mt-1 text-4xl font-extrabold"><Price amountUsd={9.99} /></p>
             <p className="mt-1 text-xs text-blue-100">Billed every month</p>
           </div>
 
