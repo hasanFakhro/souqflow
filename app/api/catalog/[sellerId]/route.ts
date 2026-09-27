@@ -4,10 +4,10 @@ import prisma from "@/lib/prisma";
 type Context = { params: Promise<{ userId: string }> };
 
 export async function GET(_request: Request, { params }: Context) {
-  const { userId } = await params;
+  const { sellerId } = await params;
 
   const user = await prisma.user.findUnique({
-    where: { id: userId },
+    where: { id: sellerId },
     select: {
       id: true,
       name: true,
