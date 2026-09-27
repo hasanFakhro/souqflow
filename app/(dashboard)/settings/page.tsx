@@ -5,6 +5,9 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
 import ProfileForm from "@/components/ProfileForm";
+import SubscriptionSection from "@/components/SubscriptionSection";
+import BusinessSection from "@/components/BusinessSection";
+import UpdateRate from "@/components/UpdateRate";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -15,7 +18,7 @@ export default async function ProfilePage() {
 
   const userId = session.user.id;
 
-  const [user, business] = await Promise.all([
+  const [user, business, subscription] = await Promise.all([
     prisma.user.findUnique({
       where: {
         id: userId,
@@ -41,6 +44,14 @@ export default async function ProfilePage() {
         },
       },
     }),
+    prisma.subscription.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        endDate: true,
+      },
+    }),
   ]);
 
   if (!user) {
@@ -60,7 +71,11 @@ export default async function ProfilePage() {
         <span className="text-3xl">👋</span>
       </div>
 
-      <ProfileForm user={user} business={business} />
+      <ProfileForm user={user} />
+      <BusinessSection business={business}  />
+      <UpdateRate />
+
+      <SubscriptionSection subscription={subscription} />
     </div>
   );
 }

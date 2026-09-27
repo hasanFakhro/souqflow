@@ -39,8 +39,6 @@ export default function SignInPage() {
     setIsLoading(true);
 
     try {
-      // Measure signIn request.
-      console.time("LOGIN signIn");
 
       const result = await signIn(
         "credentials",
@@ -61,8 +59,6 @@ export default function SignInPage() {
         return;
       }
 
-      // Measure getSession request.
-      console.time("LOGIN getSession");
 
       const session =
         await getSession();
@@ -83,8 +79,6 @@ export default function SignInPage() {
         return;
       }
 
-      // Measure navigation.
-      console.time("LOGIN redirect");
 
       if (
         user.role === "ADMIN" ||
@@ -97,7 +91,6 @@ export default function SignInPage() {
 
       router.refresh();
 
-      console.timeEnd("LOGIN redirect");
     } catch {
       setError(
         "Something went wrong. Please try again.",
