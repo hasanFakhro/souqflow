@@ -53,9 +53,7 @@ export default function UpdateRate() {
 
       // Tell currency.ts:
       // "The exchange rate changed. Get the new value."
-      window.dispatchEvent(
-        new Event("souqflow:exchange-rate-change"),
-      );
+      window.dispatchEvent(new Event("souqflow:exchange-rate-change"));
 
       toast.success("Exchange rate updated successfully");
 
@@ -64,8 +62,7 @@ export default function UpdateRate() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.error ||
-            "Could not update exchange rate",
+          error.response?.data?.error || "Could not update exchange rate",
         );
       } else {
         toast.error("Something went wrong");
@@ -149,9 +146,7 @@ export default function UpdateRate() {
                   min="1"
                   step="1"
                   value={rate}
-                  onChange={(event) =>
-                    setRate(event.target.value)
-                  }
+                  onChange={(event) => setRate(event.target.value)}
                   className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                   placeholder="89500"
                 />
@@ -167,18 +162,30 @@ export default function UpdateRate() {
                 type="button"
                 onClick={closeModal}
                 disabled={isLoading || isUpdating}
-                className="rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                className="group flex items-center gap-2 rounded-xl border border-rose-200 bg-gradient-to-r from-rose-50 via-red-50 to-white px-4 py-2.5 text-sm font-semibold text-rose-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-rose-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Cancel
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 to-red-500 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+                  <X className="h-4 w-4" />
+                </span>
+
+                <span>Cancel</span>
               </button>
 
               <button
                 type="button"
                 onClick={handleUpdate}
                 disabled={isLoading || isUpdating || !rate}
-                className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="group flex items-center gap-2 rounded-xl border border-purple-200 bg-gradient-to-r from-blue-50 via-purple-50 to-white px-4 py-2.5 text-sm font-semibold text-purple-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isUpdating ? "Updating..." : "Update"}
+                <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+                  {isUpdating ? (
+                    <ArrowLeftRight className="h-4 w-4 animate-pulse" />
+                  ) : (
+                    <ArrowLeftRight className="h-4 w-4" />
+                  )}
+                </span>
+
+                <span>{isUpdating ? "Updating..." : "Update"}</span>
               </button>
             </div>
           </div>

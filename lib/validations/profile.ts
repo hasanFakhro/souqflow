@@ -1,45 +1,50 @@
 import { z } from "zod";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 export const profileSchema = z
-    .object({
-        name: z
-            .string()
-            .min(2, "Name must be at least 2 characters")
-            .max(50, "Name is too long"),
+  .object({
+    name: z
+      .string()
+      .min(2, "Name must be at least 2 characters")
+      .max(50, "Name is too long"),
 
-        email: z
-            .string()
-            .email("Please enter a valid email"),
+    email: z
+      .string()
+      .email("Please enter a valid email"),
 
-        phone: z
-            .string()
-            .regex(
-                /^\+961\d{8}$/,
-                "Phone must be in the format +961XXXXXXXX"
-            ),
+    phone: z
+      .string()
+      .refine(
+        (phone) => isValidPhoneNumber(phone),
+        "Please enter a valid phone number"
+      ),
 
-        image: z
-            .string()
-            .url("Please enter a valid image URL")
-            .optional()
-            .or(z.literal("")),
+    image: z
+      .string()
+      .url("Please enter a valid image URL")
+      .optional()
+      .or(z.literal("")),
 
-        currentPassword: z.string().optional(),
+    currentPassword: z
+      .string()
+      .optional(),
 
-        newPassword: z
-            .string()
-            .min(6, "Password must be at least 6 characters")
-            .optional()
-            .or(z.literal("")),
+    newPassword: z
+      .string()
+      .min(6, "Password must be at least 6 characters")
+      .optional()
+      .or(z.literal("")),
 
-        confirmPassword: z.string().optional(),
-    })
-    .refine(
-        (data) => data.newPassword === data.confirmPassword,
-        {
-            message: "Passwords do not match",
-            path: ["confirmPassword"],
-        }
-    );
+    confirmPassword: z
+      .string()
+      .optional(),
+  })
+  .refine(
+    (data) => data.newPassword === data.confirmPassword,
+    {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    }
+  );
 
 export type ProfileFormData = z.infer<typeof profileSchema>;

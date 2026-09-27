@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Copy } from "lucide-react";
+import { Copy, FolderUp } from "lucide-react";
 
 import {
   businessSchema,
@@ -46,9 +46,7 @@ export default function BusinessForm({
 
   const whatsappPhone = business?.user.phone.replace(/\D/g, "");
 
-  const whatsappLink = whatsappPhone
-    ? `https://wa.me/${whatsappPhone}`
-    : "";
+  const whatsappLink = whatsappPhone ? `https://wa.me/${whatsappPhone}` : "";
 
   const {
     register,
@@ -107,8 +105,7 @@ export default function BusinessForm({
     } catch (error) {
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message ||
-            "Failed to update business profile",
+          error.response?.data?.message || "Failed to update business profile",
         );
       } else {
         toast.error("Something went wrong");
@@ -119,10 +116,7 @@ export default function BusinessForm({
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="mt-6 space-y-5"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="mt-6 space-y-5">
       <div>
         <label
           htmlFor="name"
@@ -139,9 +133,7 @@ export default function BusinessForm({
         />
 
         {errors.name && (
-          <p className="mt-1 text-sm text-red-500">
-            {errors.name.message}
-          </p>
+          <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
         )}
       </div>
 
@@ -195,9 +187,7 @@ export default function BusinessForm({
 
       <div className="border-t border-gray-200 pt-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
-            Social Links
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900">Social Links</h3>
 
           <p className="mt-1 text-sm text-gray-500">
             Add your business social media links.
@@ -278,9 +268,7 @@ export default function BusinessForm({
 
       <div className="border-t border-gray-200 pt-6">
         <div className="mb-4">
-          <h3 className="text-lg font-semibold text-gray-900">
-            WhatsApp
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900">WhatsApp</h3>
 
           <p className="mt-1 text-sm text-gray-500">
             This link is automatically generated from your phone number.
@@ -312,9 +300,13 @@ export default function BusinessForm({
         <button
           type="submit"
           disabled={isSaving}
-          className="rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+          className="group flex items-center gap-2 rounded-xl border border-purple-200 bg-gradient-to-r from-blue-50 via-purple-50 to-white px-4 py-2.5 text-sm font-semibold text-purple-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
         >
-          {isSaving ? "Saving..." : "Save & Update"}
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+            <FolderUp className="h-4 w-4" />
+          </span>
+
+          <span>{isSaving ? "Saving..." : "Save & Update"}</span>
         </button>
       </div>
     </form>

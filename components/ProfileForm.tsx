@@ -2,18 +2,17 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import {
-  profileSchema,
-  type ProfileFormData,
-} from "@/lib/validations/profile";
-import { FolderUp, Pencil } from "lucide-react";
+import { profileSchema, type ProfileFormData } from "@/lib/validations/profile";
+import { FolderUp, Pencil, X } from "lucide-react";
 import { toast } from "sonner";
 import DisableAccount from "./DisableAccount";
 import { useSession } from "next-auth/react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
 
 type ProfileUser = {
   id: string;
@@ -23,11 +22,7 @@ type ProfileUser = {
   image: string | null;
 };
 
-export default function ProfileForm({
-  user,
-}: {
-  user: ProfileUser;
-}) {
+export default function ProfileForm({ user }: { user: ProfileUser }) {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -40,6 +35,7 @@ export default function ProfileForm({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -96,20 +92,9 @@ export default function ProfileForm({
 
       router.refresh();
     } catch (error) {
-      reset({
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        image: data.image,
-        currentPassword: "",
-        newPassword: "",
-        confirmPassword: "",
-      });
-
       if (axios.isAxiosError(error)) {
         toast.error(
-          error.response?.data?.message ||
-            "Failed to update profile"
+          error.response?.data?.message || "Failed to update profile",
         );
       } else {
         toast.error("Something went wrong");
@@ -190,9 +175,7 @@ export default function ProfileForm({
             />
 
             {errors.name && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.name.message}
-              </p>
+              <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
             )}
           </div>
 
@@ -223,14 +206,24 @@ export default function ProfileForm({
               htmlFor="phone"
               className="mb-2 block text-sm font-medium text-gray-700"
             >
-              Phone
+              Phone Number
             </label>
 
-            <input
-              id="phone"
-              type="text"
-              {...register("phone")}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
+            <Controller
+              name="phone"
+              control={control}
+              render={({ field }) => (
+                <PhoneInput
+                  id="phone"
+                  international
+                  defaultCountry="LB"
+                  value={field.value}
+                  onChange={(value) => field.onChange(value ?? "")}
+                  onBlur={field.onBlur}
+                  placeholder="Enter phone number"
+                  className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100"
+                />
+              )}
             />
 
             {errors.phone && (
@@ -271,8 +264,7 @@ export default function ProfileForm({
           </h2>
 
           <p className="mb-5 text-sm text-gray-500">
-            Leave these fields empty if you do not want to change
-            your password.
+            Leave these fields empty if you do not want to change your password.
           </p>
 
           <div className="space-y-5">
@@ -354,24 +346,25 @@ export default function ProfileForm({
             type="button"
             onClick={handleCancel}
             disabled={isSaving}
-            className="rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+            className="group flex items-center gap-2 rounded-xl border border-rose-200 bg-gradient-to-r from-rose-50 via-red-50 to-white px-5 py-3 text-sm font-semibold text-rose-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-rose-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Cancel
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-rose-500 to-red-500 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+              <X className="h-4 w-4" />
+            </span>
+
+            <span>Cancel</span>
           </button>
 
           <button
             type="submit"
             disabled={isSaving}
-            className="flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-3 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-70"
+            className="group flex items-center gap-2 rounded-xl border border-purple-200 bg-gradient-to-r from-blue-50 via-purple-50 to-white px-4 py-2.5 text-sm font-semibold text-purple-700 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSaving ? (
-              <>
-                <FolderUp className="h-5 w-5 animate-bounce" />
-                Saving...
-              </>
-            ) : (
-              "Save Changes"
-            )}
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+              <FolderUp className="h-4 w-4 animate-bounce" />
+            </span>
+
+            <span>{isSaving ? "Saving..." : "Save Changes"}</span>
           </button>
         </div>
       )}
