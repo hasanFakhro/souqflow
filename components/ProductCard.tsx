@@ -16,9 +16,10 @@ type ProductCardProps = {
         costPrice: number;
         quantity: number;
     };
+    hideStockCount?: boolean;
 };
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, hideStockCount = false }: ProductCardProps) => {
     const [isPressed, setIsPressed] = useState(false);
     const cartQuantity = useCartStore(
         (state) => state.items.find((i) => i.productId === product.id)?.quantity ?? 0
@@ -80,9 +81,16 @@ const ProductCard = ({ product }: ProductCardProps) => {
                     <span className="text-base sm:text-lg font-semibold">
                         <Price amountUsd={product.sellPrice} />
                     </span>
-                    <span className="text-xs sm:text-sm text-gray-500">
-                        {isOutOfStock ? "Out of stock" : `${remainingQuantity} left`}
-                    </span>
+                    {!hideStockCount && (
+                        <span className="text-xs sm:text-sm text-gray-500">
+                            {isOutOfStock ? "Out of stock" : `${remainingQuantity} left`}
+                        </span>
+                    )}
+                    {hideStockCount && isOutOfStock && (
+                        <span className="text-xs sm:text-sm text-gray-500">
+                            Out of stock
+                        </span>
+                    )}
                 </div>
             </div>
         </div>

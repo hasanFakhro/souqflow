@@ -15,6 +15,58 @@ function refreshProductViews() {
   revalidatePath("/sales");
 }
 
+function getSkuPart(value?: string | null) {
+  if (!value?.trim()) {
+    return "NA";
+  }
+
+  const cleaned = value
+    .trim()
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toUpperCase();
+
+  if (!cleaned) {
+    return "NA";
+  }
+
+  return cleaned.slice(0, 2).padEnd(2, "X");
+}
+
+async function generateUniqueSku(
+  ownerId: string,
+  categoryName: string | null,
+  color: string | null,
+  size: string | null
+) {
+  const categoryCode = getSkuPart(categoryName);
+  const colorCode = getSkuPart(color);
+  const sizeCode = getSkuPart(size);
+
+  const prefix = `${categoryCode}-${colorCode}-${sizeCode}`;
+
+  for (let attempt = 0; attempt < 20; attempt++) {
+    const number = Math.floor(1000 + Math.random() * 9000);
+
+    const sku = `${prefix}-${number}`;
+
+    const existingProduct = await prisma.product.findFirst({
+      where: {
+        ownerId,
+        sku,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!existingProduct) {
+      return sku;
+    }
+  }
+
+  throw new Error("Could not generate a unique SKU");
+}
+
 export async function GET() {
   const session = await auth();
   const userId = session?.user?.id;
@@ -63,8 +115,10 @@ export async function POST(request: NextRequest) {
       name: formData.get("name") as string,
       description: (formData.get("description") as string) || "",
       imageUrl: "",
-      sku: (formData.get("sku") as string) || "",
+      sku: "",
       categoryId: (formData.get("categoryId") as string) || "",
+      color: (formData.get("color") as string) || "",
+      size: (formData.get("size") as string) || "",
       costPrice: Number(formData.get("costPrice")),
       sellPrice: Number(formData.get("sellPrice")),
       quantity: Number(formData.get("quantity")),
@@ -85,10 +139,18 @@ export async function POST(request: NextRequest) {
 
     const { categoryId } = parsed.data;
 
+    let categoryName: string | null = null;
+
     if (categoryId) {
       const category = await prisma.category.findFirst({
-        where: { id: categoryId, ownerId: userId },
-        select: { id: true },
+        where: {
+          id: categoryId,
+          ownerId: userId,
+        },
+        select: {
+          id: true,
+          name: true,
+        },
       });
 
       if (!category) {
@@ -97,7 +159,19 @@ export async function POST(request: NextRequest) {
           { status: 400 }
         );
       }
+
+      categoryName = category.name;
     }
+
+    const color = parsed.data.color || null;
+    const size = parsed.data.size || null;
+
+    const generatedSku = await generateUniqueSku(
+      userId,
+      categoryName,
+      color,
+      size
+    );
 
     let imageUrl: string | null = null;
 
@@ -131,8 +205,10 @@ export async function POST(request: NextRequest) {
         name: parsed.data.name.trim(),
         description: parsed.data.description || null,
         imageUrl,
-        sku: parsed.data.sku || null,
+        sku: generatedSku,
         categoryId: parsed.data.categoryId || null,
+        color,
+        size,
         costPrice: parsed.data.costPrice,
         sellPrice: parsed.data.sellPrice,
         quantity: parsed.data.quantity,

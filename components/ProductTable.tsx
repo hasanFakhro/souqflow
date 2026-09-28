@@ -5,9 +5,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { RefreshCw, Trash2 } from "lucide-react";
 
-import type { Product } from "@prisma/client";
 import { EditProductSection } from "./EditProductButton";
-import ManageCategories from "@/components/ManageCategories";
 import { ProductData } from "./ProductsGrid";
 
 
@@ -134,11 +132,9 @@ export default function ProductTable({
             <p className="text-sm text-red-600">
               {lowStockProducts.length === 0
                 ? "All products are sufficiently stocked."
-                : `${lowStockProducts.length} product${
-                    lowStockProducts.length === 1 ? "" : "s"
-                  } need${
-                    lowStockProducts.length === 1 ? "s" : ""
-                  } restocking.`}
+                : `${lowStockProducts.length} product${lowStockProducts.length === 1 ? "" : "s"
+                } need${lowStockProducts.length === 1 ? "s" : ""
+                } restocking.`}
             </p>
           </div>
 
@@ -148,14 +144,14 @@ export default function ProductTable({
         </button>
       )}
 
-      <div className="mb-6 flex items-center gap-3">
+      <div className="flex items-center gap-3">
         <input
           type="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full max-w-xs rounded-lg bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40"        />
+          className="w-full max-w-xs rounded-lg bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40" />
 
         <select
           value={category ?? ""}
@@ -193,12 +189,6 @@ export default function ProductTable({
         </select>
       </div>
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Products</h1>
-
-        <ManageCategories />
-      </div>
-
       <div className="overflow-x-auto">
         <table className="w-full border-collapse">
           <thead>
@@ -217,6 +207,14 @@ export default function ProductTable({
 
               <th className="px-4 py-3 font-semibold text-gray-700">
                 Category
+              </th>
+
+              <th className="px-4 py-3 font-semibold text-gray-700">
+                Color
+              </th>
+
+              <th className="px-4 py-3 font-semibold text-gray-700">
+                Size
               </th>
 
               <th className="px-4 py-3 font-semibold text-gray-700">
@@ -269,12 +267,21 @@ export default function ProductTable({
                   {product.name}
                 </td>
 
-                <td className="px-4 py-4 text-gray-600">
+                <td className="px-4 py-4 text-gray-600 max-w-[95px] truncate hover:max-w-none hover:overflow-x-auto whitespace-nowrap">
                   {product.sku || "-"}
                 </td>
 
+
                 <td className="px-4 py-4 text-gray-600">
                   {product.category?.name || "-"}
+                </td>
+
+                <td className="px-4 py-4 text-gray-600">
+                  {product.color || "-"}
+                </td>
+
+                <td className="px-4 py-4 text-gray-600">
+                  {product.size || "-"}
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">
@@ -294,12 +301,19 @@ export default function ProductTable({
                 </td>
 
                 <td className="px-4 py-3">
-                  {product.quantity === 0
-                    ? "Out of stock"
-                    : product.lowStockAt !== null &&
-                        product.quantity <= product.lowStockAt
-                      ? "Low stock"
-                      : "Stocked"}
+                  {product.quantity === 0 ? (
+                    <span className="inline-flex rounded-md bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                      Out of stock
+                    </span>
+                  ) : product.lowStockAt !== null && product.quantity <= product.lowStockAt ? (
+                    <span className="inline-flex rounded-md bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                      Low stock
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-md bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                      Stocked
+                    </span>
+                  )}
                 </td>
 
                 <td className="px-4 py-4">
@@ -339,7 +353,7 @@ export default function ProductTable({
         )}
       </div>
 
-        {showLowStock && (
+      {showLowStock && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
             <div className="mb-5 flex items-center justify-between">

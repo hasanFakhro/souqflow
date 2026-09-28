@@ -31,17 +31,15 @@ model User {
 model Business {
   id          String   @id @default(cuid())
   name        String
-  phone       String?
   logo        String?
-  description String?
-  instagram   String?
-  facebook    String?
-  tiktok      String?
   userId      String   @unique
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  description String?
+  facebook    String?
+  instagram   String?
+  tiktok      String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   @@map("businesses")
 }
 
@@ -72,6 +70,9 @@ model Product {
 
   categoryId String?
   category   Category? @relation(fields: [categoryId], references: [id])
+
+  color String?
+  size  String?
 
   costPrice  Float
   sellPrice  Float
@@ -159,20 +160,19 @@ model ExchangeRate {
 }
 
 model Notification {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
   message   String
-  isRead    Boolean   @default(false)
+  isRead    Boolean  @default(false)
   readAt    DateTime?
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId, isRead])
   @@map("notifications")
 }
-
 enum Role {
   USER
   ADMIN

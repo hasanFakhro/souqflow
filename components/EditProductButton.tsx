@@ -20,6 +20,8 @@ export function EditProductSection({ product }: { product: Product }) {
     formData.append("description", updatedProduct.description || "");
     formData.append("sku", updatedProduct.sku || "");
     formData.append("categoryId", updatedProduct.categoryId || "");
+    formData.append("color", updatedProduct.color || "");
+    formData.append("size", updatedProduct.size || "");
     formData.append("costPrice", String(updatedProduct.costPrice));
     formData.append("sellPrice", String(updatedProduct.sellPrice));
     formData.append("quantity", String(updatedProduct.quantity));
@@ -70,6 +72,8 @@ export function EditProductSection({ product }: { product: Product }) {
           imageUrl: product.imageUrl ?? "",
           sku: product.sku ?? "",
           categoryId: product.categoryId ?? "",
+          color: product.color ?? "",
+          size: product.size ?? "",
           lowStockAt: product.lowStockAt ?? undefined,
         }}
       />
