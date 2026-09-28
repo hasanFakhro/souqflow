@@ -21,7 +21,7 @@ export default async function DashboardPage() {
   });
 
   return (
-    <div className="lg:flex lg:items-start lg:min-h-screen">
+    <div className="pb-24">
       <section className="flex-1 min-w-0 space-y-6">
         <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
         <ProductsGrid products={products} />

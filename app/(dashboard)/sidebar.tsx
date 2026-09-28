@@ -6,6 +6,7 @@ import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
+  BookOpen,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -27,6 +28,7 @@ const links = [
   { href: "/inventory", label: "Inventory", icon: Package },
   { href: "/orders", label: "Orders", icon: ShoppingCart },
   { href: "/sales", label: "Sales", icon: TrendingUp },
+  { href: "/catalog-management", label: "Catalog Management", icon: BookOpen },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -197,7 +199,7 @@ const { businessName } = useBusiness();
       )}
 
       {/* Desktop Sidebar */}
-      <aside className="hidden flex-col border-r border-gray-100 bg-white p-5 shadow-xl shadow-blue-100/40 md:sticky md:top-0 md:flex md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto">
+      <aside className="hidden flex-col border-r border-gray-100 bg-white p-5 shadow-xl shadow-blue-100/40 md:sticky md:top-0 md:z-30 md:flex md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto">
         <Link
           href="/dashboard"
           className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent"
