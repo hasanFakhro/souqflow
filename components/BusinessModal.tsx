@@ -1,7 +1,6 @@
 "use client";
 
 import { X } from "lucide-react";
-
 import BusinessForm from "./BusinessForm";
 
 type BusinessUser = {
@@ -30,7 +29,6 @@ export default function BusinessModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="relative flex max-h-[90vh] w-full max-w-lg flex-col rounded-2xl bg-white shadow-xl">
-        {/* Header */}
         <div className="flex shrink-0 items-center justify-between border-b border-gray-100 p-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-900">
@@ -51,7 +49,6 @@ export default function BusinessModal({
           </button>
         </div>
 
-        {/* Scrollable Content */}
         <div className="overflow-y-auto p-6">
           <BusinessForm
             business={business}

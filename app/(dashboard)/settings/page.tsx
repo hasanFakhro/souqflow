@@ -5,6 +5,9 @@ import { redirect } from "next/navigation";
 
 import CatalogShareLink from "@/components/CatalogShareLink";
 import ProfileForm from "@/components/ProfileForm";
+import SubscriptionSection from "@/components/SubscriptionSection";
+import BusinessSection from "@/components/BusinessSection";
+import UpdateRate from "@/components/UpdateRate";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -15,7 +18,7 @@ export default async function ProfilePage() {
 
   const userId = session.user.id;
 
-  const [user, business] = await Promise.all([
+  const [user, business, subscription] = await Promise.all([
     prisma.user.findUnique({
       where: {
         id: userId,
@@ -39,6 +42,15 @@ export default async function ProfilePage() {
             phone: true,
           },
         },
+      },
+    }),
+
+    prisma.subscription.findUnique({
+      where: {
+        userId,
+      },
+      select: {
+        endDate: true,
       },
     }),
   ]);
@@ -73,9 +85,15 @@ export default async function ProfilePage() {
         <span className="text-3xl">👋</span>
       </div>
 
-      <ProfileForm user={user} business={business} />
+      <ProfileForm user={user} />
+
+      <BusinessSection business={business} />
 
       <CatalogShareLink catalogUrl={catalogUrl} />
+
+      <UpdateRate />
+
+      <SubscriptionSection subscription={subscription} />
     </div>
   );
 }

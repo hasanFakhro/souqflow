@@ -13,6 +13,11 @@ import {
 } from "@/lib/order-pagination";
 import { redirect } from "next/navigation";
 
+<<<<<<< HEAD
+=======
+const pageSize = 6;
+
+>>>>>>> settings-page
 export default async function OrdersPage({
   searchParams,
 }: {
@@ -38,11 +43,19 @@ export default async function OrdersPage({
       ? params.search
       : "";
 
+<<<<<<< HEAD
   const state = orderStates.includes(
     params.state as OrderState
   )
     ? (params.state as OrderState)
     : "ALL";
+=======
+  const [orders, totalOrders] = await Promise.all([
+    prisma.order.findMany({
+      where: { ownerId: userId },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+>>>>>>> settings-page
 
   // Search uses this compact index; full details load only as needed.
   const summaries = await prisma.order.findMany({
@@ -67,6 +80,7 @@ export default async function OrdersPage({
     ],
   });
 
+<<<<<<< HEAD
   const index = summaries.map((order) => ({
     id: order.id,
     status: order.status,
@@ -82,12 +96,24 @@ export default async function OrdersPage({
       .join("\n")
       .toLowerCase(),
   }));
+=======
+      orderBy: {
+        orderedAt: "desc",
+      },
+    }),
+
+    prisma.order.count({
+      where: { ownerId: userId },
+    }),
+  ]);
+>>>>>>> settings-page
 
   const matches = filterOrderIndex(
     index,
     search,
     state
   );
+<<<<<<< HEAD
 
   const { firstPageSize } = orderPage(
     matches.length,
@@ -132,6 +158,18 @@ export default async function OrdersPage({
         key={randomUUID()}
         index={index}
         initialOrders={orders.map(serializeOrder)}
+=======
+
+  return (
+    <section className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-900">Orders</h1>
+
+      <OrderTable
+        orders={serializedOrders}
+        currentPage={page}
+        totalPages={totalPages}
+        totalOrders={totalOrders}
+>>>>>>> settings-page
       />
     </section>
   );

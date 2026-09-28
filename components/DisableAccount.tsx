@@ -49,9 +49,13 @@ export default function DisableAccount() {
         type="button"
         onClick={() => setShowModal(true)}
         disabled={isDisabling}
-        className="rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-sm font-medium text-red-600 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+        className="group flex items-center gap-2 rounded-xl border border-red-200 bg-gradient-to-r from-red-50 via-rose-50 to-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-red-300 hover:shadow-md disabled:cursor-not-allowed disabled:opacity-50"
       >
-        Disable Account
+        <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-sm transition-transform duration-200 group-hover:scale-105">
+          <Power className="h-4 w-4" />
+        </span>
+
+        <span>Disable Account</span>
       </button>
 
       {showModal && (
