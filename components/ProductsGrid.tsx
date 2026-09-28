@@ -67,7 +67,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                         onClick={() => setCategory(null)}
                         className={`px-3 py-1.5 rounded-full text-sm cursor-pointer transition ${
                             category === null
-                                ? 'bg-primary text-white'
+                                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-blue-200 hover:from-blue-700 hover:to-purple-700'
                                 : 'bg-white text-gray-600 shadow-sm hover:bg-gray-100'
                         }`}
                     >
@@ -79,7 +79,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                             onClick={() => setCategory(cat)}
                             className={`px-3 py-1.5 rounded-full text-sm cursor-pointer transition ${
                                 category === cat
-                                    ? 'bg-primary text-white'
+                                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-blue-200 hover:from-blue-700 hover:to-purple-700'
                                     : 'bg-white text-gray-600 shadow-sm hover:bg-gray-100'
                             }`}
                         >

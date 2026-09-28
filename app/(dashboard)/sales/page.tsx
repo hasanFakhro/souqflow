@@ -1,12 +1,21 @@
+import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import SalesAnalytics from "./SalesAnalytics";
+import { redirect } from "next/navigation";
 
 export const dynamic = "force-dynamic";
 
 export default async function SalesPage() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    redirect("/signin");
+  }
+
   const [orders, products] = await Promise.all([
     prisma.order.findMany({
-      where: { status: "DONE" },
+      where: { ownerId: userId, status: "DONE" },
       orderBy: { orderedAt: "asc" },
       select: {
         id: true,
@@ -24,6 +33,7 @@ export default async function SalesPage() {
       },
     }),
     prisma.product.findMany({
+      where: { ownerId: userId },
       select: {
         id: true,
         sku: true,
@@ -50,11 +60,11 @@ export default async function SalesPage() {
           ...order,
           orderedAt: order.orderedAt.toISOString(),
         }))}
-        products={products.map((p) => ({
-          ...p,
-          category: p.category?.name ?? null,
-          costPrice: Number(p.costPrice),
-          sellPrice: Number(p.sellPrice),
+        products={products.map((product) => ({
+          ...product,
+          category: product.category?.name ?? null,
+          costPrice: Number(product.costPrice),
+          sellPrice: Number(product.sellPrice),
         }))}
       />
     </section>

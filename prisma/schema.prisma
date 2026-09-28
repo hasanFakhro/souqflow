@@ -8,23 +8,41 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  name         String?
-  email        String        @unique
-  password     String
-  image        String?
-  role         Role          @default(USER)
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  phone        String        @unique
-  business     Business?
-  categories   Category[]
-  orders       Order[]
-  products     Product[]
-  subscription Subscription?
+  id        String   @id @default(cuid())
+  name      String?
+  email     String   @unique
+  password  String
+  phone     String   @unique
+  image     String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subscription  Subscription?
+  products      Product[]      @relation("UserProducts")
+  orders        Order[]        @relation("UserOrders")
+  categories    Category[]     @relation("UserCategories")
+  business      Business?
   notifications Notification[]
 
   @@map("users")
+}
+
+model Business {
+  id          String  @id @default(cuid())
+  name        String
+  logo        String?
+  userId      String  @unique
+  description String?
+  facebook    String?
+  instagram   String?
+  tiktok      String?
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("businesses")
 }
 
 model Subscription {
@@ -35,28 +53,39 @@ model Subscription {
   isActive  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("subscription")
 }
 
 model Product {
-  id          String      @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
   description String?
   imageUrl    String?
   sku         String?
-  costPrice   Float
-  sellPrice   Float
-  quantity    Int         @default(0)
-  lowStockAt  Int?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  categoryId  String?
-  ownerId     String?
-  orderItems  OrderItem[]
-  category    Category?   @relation(fields: [categoryId], references: [id])
-  users       User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  // Nullable only for records that existed before ownership was introduced.
+  // New products are always created with an ownerId by the API.
+  ownerId String?
+  owner   User?   @relation("UserProducts", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  color String?
+  size  String?
+
+  costPrice  Float
+  sellPrice  Float
+  quantity   Int   @default(0)
+  lowStockAt Int?
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([ownerId, sku])
   @@index([categoryId])
@@ -65,13 +94,17 @@ model Product {
 }
 
 model Category {
-  id        String    @id @default(cuid())
-  name      String
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  ownerId   String?
-  users     User?     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  products  Product[]
+  id   String @id @default(cuid())
+  name String
+
+  // Nullable only for records that existed before ownership was introduced.
+  ownerId String?
+  owner   User?   @relation("UserCategories", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  products Product[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([ownerId, name])
   @@index([ownerId, name])
@@ -83,32 +116,38 @@ model Order {
   orderNumber  String      @unique
   customerName String?
   status       OrderStatus @default(PENDING)
-  orderedAt    DateTime    @default(now())
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
-  total        Float       @default(0)
-  ownerId      String?
   source       OrderSource @default(MANUAL)
-  items        OrderItem[]
-  users        User?       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
-  @@index([orderedAt, status])
+  // Nullable only for records that existed before ownership was introduced.
+  ownerId String?
+  owner   User?   @relation("UserOrders", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  total     Float    @default(0)
+  orderedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+
   @@index([ownerId, orderedAt])
+  @@index([orderedAt, status])
   @@map("orders")
 }
 
 model OrderItem {
-  id          String   @id @default(cuid())
-  orderId     String
-  productId   String?
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
   productName String
   category    String?
   quantity    Int
   unitCost    Float
   unitPrice   Float
   createdAt   DateTime @default(now())
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product     Product? @relation(fields: [productId], references: [id])
 
   @@index([orderId])
   @@index([productId])
@@ -125,41 +164,20 @@ model ExchangeRate {
   @@map("exchange_rates")
 }
 
-model Business {
-  id          String   @id @default(cuid())
-  name        String
-  logo        String?
-  description String?
-  instagram   String?
-  facebook    String?
-  tiktok      String?
-  userId      String   @unique
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-   
-   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("businesses")
-}
-
 model Notification {
-  id        String   @id @default(cuid())
+  id        String    @id @default(cuid())
   userId    String
   message   String
   isRead    Boolean   @default(false)
   readAt    DateTime?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
-  @@index([userId,isRead])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
   @@map("notifications")
 }
-
-
-
-
 
 enum Role {
   USER

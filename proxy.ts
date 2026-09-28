@@ -10,8 +10,7 @@ const publicPaths = new Set([
 export default auth(async (request) => {
   const { pathname } = request.nextUrl;
 
-  // Public pages
-  if (publicPaths.has(pathname)) {
+  if (publicPaths.has(pathname) || pathname.startsWith("/catalog/")) {
     return NextResponse.next();
   }
 
@@ -35,6 +34,6 @@ export default auth(async (request) => {
 
 export const config = {
   matcher: [
-    "/((?!api/auth|api/register|api/subscription|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!api/auth|api/register|api/subscription|api/catalog|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

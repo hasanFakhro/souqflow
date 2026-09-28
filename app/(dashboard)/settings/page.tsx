@@ -1,9 +1,9 @@
 import { auth } from "@/lib/auth";
-
 import prisma from "@/lib/prisma";
-
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
+import CatalogShareLink from "@/components/CatalogShareLink";
 import ProfileForm from "@/components/ProfileForm";
 import SubscriptionSection from "@/components/SubscriptionSection";
 import BusinessSection from "@/components/BusinessSection";
@@ -44,6 +44,7 @@ export default async function ProfilePage() {
         },
       },
     }),
+
     prisma.subscription.findUnique({
       where: {
         userId,
@@ -57,6 +58,19 @@ export default async function ProfilePage() {
   if (!user) {
     redirect("/signin");
   }
+
+  const requestHeaders = await headers();
+
+  const host =
+    requestHeaders.get("x-forwarded-host") ??
+    requestHeaders.get("host") ??
+    "localhost:3000";
+
+  const protocol =
+    requestHeaders.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") ? "http" : "https");
+
+  const catalogUrl = `${protocol}://${host}/catalog/${user.id}`;
 
   return (
     <div className="mx-auto max-w-5xl">
@@ -72,7 +86,11 @@ export default async function ProfilePage() {
       </div>
 
       <ProfileForm user={user} />
-      <BusinessSection business={business}  />
+
+      <BusinessSection business={business} />
+
+      <CatalogShareLink catalogUrl={catalogUrl} />
+
       <UpdateRate />
 
       <SubscriptionSection subscription={subscription} />

@@ -1,17 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { incrementQuantity, decrementQuantity, useCartStore, clearCart } from '@/stores/cartStore'
 import { toast } from "sonner";
 
 const CartBar = () => {
+    const router = useRouter();
+    const [isPending, startTransition] = useTransition();
+    const pendingClear = useRef(false);
+
     const items = useCartStore((state) => state.items);
     const [isOpen, setIsOpen] = useState(false);
+    const hasItems = items.length > 0;
 
-    if (items.length === 0) return null;
+    const [mounted, setMounted] = useState(hasItems);
+    const [snapshot, setSnapshot] = useState(items);
 
-    const totalPrice = items.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
-    const totalQuantity = items.reduce((acc, item) => acc + item.quantity, 0);
+    useEffect(() => {
+        if (hasItems) {
+            setSnapshot(items);
+            setMounted(true);
+        } else {
+            setIsOpen(false);
+            const timeout = setTimeout(() => setMounted(false), 300);
+            return () => clearTimeout(timeout);
+        }
+    }, [hasItems, items]);
+
+    useEffect(() => {
+        if (pendingClear.current && !isPending) {
+            clearCart();
+            pendingClear.current = false;
+        }
+    }, [isPending]);
+
+    if (!mounted) return null;
+
+    const displayItems = hasItems ? items : snapshot;
+    const totalPrice = displayItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
+    const totalQuantity = displayItems.reduce((acc, item) => acc + item.quantity, 0);
 
     const handleCreateOrder = async () => {
         try {
@@ -19,8 +47,11 @@ const CartBar = () => {
             const result = await response.json();
             if (response.ok) {
                 setIsOpen(false);
-                clearCart();
                 toast.success(result.message);
+                pendingClear.current = true;
+                startTransition(() => {
+                    router.refresh();
+                });
             }
             else {
                 toast.error(result.error || "Something went wrong");
@@ -32,31 +63,54 @@ const CartBar = () => {
         }
     }
 
+    const handleClearCart = () => {
+        clearCart();
+        setIsOpen(false);
+    }
+
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.08)] rounded-t-2xl">
-            <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="w-full flex items-center justify-between px-5 py-4 active:bg-gray-50 transition"
-            >
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-white text-xs font-semibold">
+        <div className={`fixed bottom-0 left-0 right-0 rounded-t-2xl shadow-[0_-4px_20px_rgba(0,0,0,0.08)] bg-white z-50 transition-transform duration-300 ease-out lg:sticky lg:top-0 lg:bottom-auto lg:left-auto lg:right-auto lg:w-96 lg:shrink-0 lg:h-dvh lg:rounded-none lg:shadow-none lg:border-l lg:border-gray-100 lg:flex lg:flex-col lg:overflow-hidden ${
+            hasItems ? "translate-y-0 lg:translate-x-0" : "translate-y-full lg:translate-y-0 lg:translate-x-full"
+        }`}>
+            <div className="w-full flex items-center justify-between px-5 py-4">
+                <button
+                    onClick={() => setIsOpen(!isOpen)}
+                    className="flex-1 flex items-center gap-3 active:opacity-70 transition lg:cursor-default"
+                >
+                    <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-semibold">
                         {totalQuantity}
                     </div>
                     <span className="text-base font-semibold text-gray-900">
                         ${totalPrice.toFixed(2)}
                     </span>
-                </div>
-                <span className="flex items-center gap-1 text-sm font-medium text-primary">
-                    {isOpen ? "Hide" : "View order"}
-                    <span className={`transition-transform ${isOpen ? "rotate-180" : ""}`}>⌃</span>
-                </span>
-            </button>
+                </button>
 
-            {isOpen && (
-                <div className="flex flex-col max-h-[55vh]">
-                    <div className="px-5 pb-3 overflow-y-auto border-t border-gray-100">
+                <div className="flex items-center gap-3">
+                    <button
+                        onClick={handleClearCart}
+                        className="text-sm font-medium text-gray-400 hover:text-red-600 transition"
+                    >
+                        Clear
+                    </button>
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="flex items-center gap-1 text-sm font-medium text-blue-600 lg:hidden"
+                    >
+                        {isOpen ? "Hide" : "View order"}
+                        <span className={`transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}>⌃</span>
+                    </button>
+                </div>
+            </div>
+
+            <div
+                className={`grid transition-[grid-template-rows] duration-300 ease-in-out lg:grid-rows-[1fr] lg:flex-1 lg:min-h-0 ${
+                    isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+            >
+                <div className="overflow-hidden flex flex-col min-h-0 max-h-[70dvh] lg:max-h-none lg:h-full">
+                    <div className="px-5 pb-3 overflow-y-auto border-t border-gray-100 flex-1 min-h-0">
                         <ul className="divide-y divide-gray-100">
-                            {items.map(item => (
+                            {displayItems.map(item => (
                                 <li key={item.productId} className="flex items-center justify-between py-3.5">
                                     <div className="min-w-0 flex-1 pr-3">
                                         <p className="text-sm font-medium text-gray-900 truncate">{item.name}</p>
@@ -84,18 +138,19 @@ const CartBar = () => {
                         </ul>
                     </div>
 
-                    <div className="px-5 py-4 border-t border-gray-100">
+                    <div className="px-5 py-4 border-t border-gray-100 shrink-0">
                         <button
                             onClick={() => handleCreateOrder()}
-                            className="w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-white shadow-sm hover:opacity-90 active:scale-[0.98] transition disabled:opacity-50"
+                            disabled={isPending}
+                            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 py-3.5 text-sm font-semibold text-white shadow-sm hover:from-blue-700 hover:to-purple-700 active:scale-[0.98] transition disabled:opacity-50"
                         >
-                            Create Order · ${totalPrice.toFixed(2)}
+                            {isPending ? "Placing order…" : `Create Order · $${totalPrice.toFixed(2)}`}
                         </button>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     )
 }
 
-export default CartBar
+export default CartBar;

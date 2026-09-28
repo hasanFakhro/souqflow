@@ -1,14 +1,10 @@
 import type { Metadata } from "next";
-
 import { Geist, Geist_Mono } from "next/font/google";
-
 import "./globals.css";
-
 import Providers from "./providers";
-
 import { Toaster } from "sonner";
-
 import EnableEruda from "@/components/EnableEruda";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,6 +15,17 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+const themeBootstrapScript = `
+  try {
+    const storedTheme = localStorage.getItem("souqflow-theme");
+    const theme = storedTheme === "dark" ? "dark" : "light";
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+  } catch {
+    document.documentElement.dataset.theme = "light";
+  }
+`;
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -31,15 +38,21 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-theme="light"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <Providers>
-        <body className="min-h-full flex flex-col">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBootstrapScript }} />
+      </head>
+      <body className="flex min-h-full flex-col">
+        <Providers>
           <EnableEruda />
           {children}
+          <ThemeToggle />
           <Toaster position="top-right" />
-        </body>
-      </Providers>
+        </Providers>
+      </body>
     </html>
   );
 }
