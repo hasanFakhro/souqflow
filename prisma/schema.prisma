@@ -7,18 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  DELIVERING
-  DONE       @map("COMPLETED")
-  PROBLEM    @map("CANCELED")
-}
-
 model User {
   id        String   @id @default(cuid())
   name      String?
@@ -30,24 +18,29 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  subscription Subscription?
-  products     Product[]     @relation("UserProducts")
-  orders       Order[]       @relation("UserOrders")
-  categories   Category[]    @relation("UserCategories")
-  business     Business?
+  subscription  Subscription?
+  products      Product[]      @relation("UserProducts")
+  orders        Order[]        @relation("UserOrders")
+  categories    Category[]     @relation("UserCategories")
+  business      Business?
+  notifications Notification[]
 
   @@map("users")
 }
 
 model Business {
-  id        String   @id @default(cuid())
-  name      String
-  phone     String?
-  logo      String?
-  userId    String   @unique
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(cuid())
+  name        String
+  phone       String?
+  logo        String?
+  description String?
+  instagram   String?
+  facebook    String?
+  tiktok      String?
+  userId      String   @unique
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   @@map("businesses")
 }
@@ -60,8 +53,7 @@ model Subscription {
   isActive  Boolean   @default(false)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("subscription")
 }
@@ -91,8 +83,8 @@ model Product {
   updatedAt  DateTime    @updatedAt
 
   @@unique([ownerId, sku])
-  @@index([ownerId, createdAt])
   @@index([categoryId])
+  @@index([ownerId, createdAt])
   @@map("products")
 }
 
@@ -113,16 +105,10 @@ model Category {
   @@map("categories")
 }
 
-enum OrderSource {
-  STOREFRONT
-  MANUAL
-}
-
 model Order {
   id           String      @id @default(cuid())
   orderNumber  String      @unique
   customerName String?
-  total        Float       @default(0)
   status       OrderStatus @default(PENDING)
   source       OrderSource @default(MANUAL)
 
@@ -130,10 +116,12 @@ model Order {
   ownerId String?
   owner   User?   @relation("UserOrders", fields: [ownerId], references: [id], onDelete: Cascade)
 
-  orderedAt DateTime    @default(now())
-  createdAt DateTime    @default(now())
-  updatedAt DateTime    @updatedAt
-  items     OrderItem[]
+  total     Float    @default(0)
+  orderedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
 
   @@index([ownerId, orderedAt])
   @@index([orderedAt, status])
@@ -150,9 +138,9 @@ model OrderItem {
 
   productName String
   category    String?
+  quantity    Int
   unitCost    Float
   unitPrice   Float
-  quantity    Int
   createdAt   DateTime @default(now())
 
   @@index([orderId])
@@ -168,4 +156,36 @@ model ExchangeRate {
   updatedAt DateTime @updatedAt
 
   @@map("exchange_rates")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  message   String
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  DONE       @map("COMPLETED")
+  PROBLEM    @map("CANCELED")
+  DELIVERING
+}
+
+enum OrderSource {
+  STOREFRONT
+  MANUAL
 }

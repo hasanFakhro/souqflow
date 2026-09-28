@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useState, useTransition } from "react";
+import { Fragment, useState, useTransition, memo } from "react";
 import { useRouter } from "next/navigation";
 import { Download, ChevronDown, Trash2 } from "lucide-react";
 import EditOrderPopup from "@/components/EditOrderPopup";
@@ -11,7 +11,7 @@ import { orderStateLabels, orderStateStyles, orderStateTransitions, type OrderSt
 
 const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
 
-export default function OrderTableRow({ order }: { order: SerializedOrder }) {
+function OrderTableRow({ order }: { order: SerializedOrder }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [refreshing, startTransition] = useTransition();
@@ -130,3 +130,5 @@ export default function OrderTableRow({ order }: { order: SerializedOrder }) {
     </Fragment>
   );
 }
+
+export default memo(OrderTableRow);

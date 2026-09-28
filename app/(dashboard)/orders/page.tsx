@@ -22,7 +22,11 @@ export default async function OrdersPage({
     state?: string;
   }>;
 }) {
-  const [session, params] = await Promise.all([auth(), searchParams]);
+  const [session, params] = await Promise.all([
+    auth(),
+    searchParams,
+  ]);
+
   const userId = session?.user?.id;
 
   if (!userId) {
@@ -30,9 +34,13 @@ export default async function OrdersPage({
   }
 
   const search =
-    typeof params.search === "string" ? params.search : "";
+    typeof params.search === "string"
+      ? params.search
+      : "";
 
-  const state = orderStates.includes(params.state as OrderState)
+  const state = orderStates.includes(
+    params.state as OrderState
+  )
     ? (params.state as OrderState)
     : "ALL";
 
@@ -75,15 +83,23 @@ export default async function OrdersPage({
       .toLowerCase(),
   }));
 
-  const matches = filterOrderIndex(index, search, state);
+  const matches = filterOrderIndex(
+    index,
+    search,
+    state
+  );
 
-  const { firstPageSize } = orderPage(matches.length, 1);
+  const { firstPageSize } = orderPage(
+    matches.length,
+    1
+  );
 
   const ids = matches
     .slice(
       0,
       firstPageSize +
-        (preloadedOrderPages - 1) * ordersPerPage
+        (preloadedOrderPages - 1) *
+          ordersPerPage
     )
     .map((order) => order.id);
 

@@ -1,10 +1,19 @@
 import NextAuth from "next-auth";
+
 import CredentialsProvider from "next-auth/providers/credentials";
+
 import { PrismaAdapter } from "@auth/prisma-adapter";
+
 import prisma from "@/lib/prisma";
+
 import bcrypt from "bcryptjs";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   adapter: PrismaAdapter(prisma),
 
   providers: [
@@ -16,6 +25,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           label: "Email",
           type: "text",
         },
+
         password: {
           label: "Password",
           type: "password",
@@ -23,30 +33,43 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       },
 
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
+        if (
+          !credentials?.email ||
+          !credentials?.password
+        ) {
+          throw new Error(
+            "Invalid credentials",
+          );
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email as string,
-          },
-          include: {
-            subscription: true,
-          },
-        });
+        const user =
+          await prisma.user.findUnique({
+            where: {
+              email:
+                credentials.email as string,
+            },
+
+            include: {
+              subscription: true,
+            },
+          });
 
         if (!user || !user.password) {
-          throw new Error("Invalid credentials");
+          throw new Error(
+            "Invalid credentials",
+          );
         }
 
-        const isMatch = await bcrypt.compare(
-          credentials.password as string,
-          user.password,
-        );
+        const isMatch =
+          await bcrypt.compare(
+            credentials.password as string,
+            user.password,
+          );
 
         if (!isMatch) {
-          throw new Error("Invalid credentials");
+          throw new Error(
+            "Invalid credentials",
+          );
         }
 
         return {
@@ -54,18 +77,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.name,
           role: user.role,
-          subscriptionActive: user.subscription?.isActive ?? false,
-          subscriptionEndDate: user.subscription?.endDate ?? null,
+
+          subscriptionActive:
+            user.subscription?.isActive ??
+            false,
+
+          subscriptionEndDate:
+            user.subscription?.endDate ??
+            null,
         };
       },
     }),
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({
+      token,
+      user,
+    }) {
       if (user) {
         token.id = user.id;
+
         token.email = user.email;
+
         token.name = user.name;
 
         token.role = (
@@ -82,7 +116,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         token.subscriptionEndDate = (
           user as {
-            subscriptionEndDate?: Date | null;
+            subscriptionEndDate?:
+              | Date
+              | null;
           }
         ).subscriptionEndDate;
       }
@@ -90,29 +126,44 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return token;
     },
 
-    async session({ session, token }) {
+    async session({
+      session,
+      token,
+    }) {
       if (session.user) {
-        session.user.id = token.id as string;
-        session.user.email = token.email as string;
-        session.user.name = token.name as string;
+        session.user.id =
+          token.id as string;
+
+        session.user.email =
+          token.email as string;
+
+        session.user.name =
+          token.name as string;
 
         (
           session.user as {
             role?: string;
           }
-        ).role = token.role as string;
+        ).role =
+          token.role as string;
 
         (
           session.user as {
             subscriptionActive?: boolean;
           }
-        ).subscriptionActive = token.subscriptionActive as boolean;
+        ).subscriptionActive =
+          token.subscriptionActive as boolean;
 
         (
           session.user as {
-            subscriptionEndDate?: Date | null;
+            subscriptionEndDate?:
+              | Date
+              | null;
           }
-        ).subscriptionEndDate = token.subscriptionEndDate as Date | null;
+        ).subscriptionEndDate =
+          token.subscriptionEndDate as
+            | Date
+            | null;
       }
 
       return session;
