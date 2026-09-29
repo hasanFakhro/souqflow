@@ -15,19 +15,6 @@ const CartBar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const hasItems = items.length > 0;
 
-    const [mounted, setMounted] = useState(hasItems);
-    const [snapshot, setSnapshot] = useState(items);
-
-    useEffect(() => {
-        if (hasItems) {
-            setSnapshot(items);
-            setMounted(true);
-        } else {
-            setIsOpen(false);
-            const timeout = setTimeout(() => setMounted(false), 300);
-            return () => clearTimeout(timeout);
-        }
-    }, [hasItems, items]);
 
     useEffect(() => {
         if (pendingClear.current && !isPending) {
@@ -36,9 +23,9 @@ const CartBar = () => {
         }
     }, [isPending]);
 
-    if (!mounted) return null;
+    if (!hasItems) return null;
 
-    const displayItems = hasItems ? items : snapshot;
+    const displayItems = items;
     const totalPrice = displayItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
     const totalQuantity = displayItems.reduce((acc, item) => acc + item.quantity, 0);
 

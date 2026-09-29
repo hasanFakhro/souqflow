@@ -49,7 +49,7 @@ export default function RootLayout({
         <Providers>
           <EnableEruda />
           {children}
-          <ThemeToggle />
+          <ThemeToggle hideOnDashboard className="fixed bottom-5 right-5 z-40" />
           <Toaster position="top-right" />
         </Providers>
       </body>

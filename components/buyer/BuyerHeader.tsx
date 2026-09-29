@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ShoppingBag } from "lucide-react";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface BuyerHeaderProps {
   businessName: string;
@@ -30,7 +31,9 @@ export default function BuyerHeader({
           )}
         </div>
 
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          <ThemeToggle variant="ghost" />
+
           <button
             type="button"
             onClick={onOpenCart}

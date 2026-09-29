@@ -15,7 +15,7 @@ const SearchBar = ({ value, onChange }: SearchBarProps) => {
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Search products..."
-      className="w-full max-w-sm rounded-lg shadow-sm px-3 py-2 sm:px-4 sm:py-2.5 text-sm sm:text-base bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40 transition"
+      className="w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40 sm:px-4 sm:py-2.5 sm:text-base"
     />
   );
 };
