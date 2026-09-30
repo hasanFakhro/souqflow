@@ -1,6 +1,26 @@
 import prisma from "@/lib/prisma";
 
 export const MONTHLY_SUBSCRIPTION_PRICE = 9.99;
+export const YEARLY_SUBSCRIPTION_PRICE = 99.99;
+
+export const SUBSCRIPTION_PLANS = {
+  monthly: {
+    durationInMonths: 1,
+    label: "Monthly",
+    price: MONTHLY_SUBSCRIPTION_PRICE,
+  },
+  yearly: {
+    durationInMonths: 12,
+    label: "Yearly",
+    price: YEARLY_SUBSCRIPTION_PRICE,
+  },
+} as const;
+
+export type SubscriptionPlan = keyof typeof SUBSCRIPTION_PLANS;
+
+export function isSubscriptionPlan(value: unknown): value is SubscriptionPlan {
+  return value === "monthly" || value === "yearly";
+}
 
 export const SUBSCRIPTION_CURRENCY = "USD";
 
@@ -93,20 +113,19 @@ export async function getSubscriptionState(
   };
 }
 
-export function addOneMonth(
+export function addMonths(
   date: Date,
+  months: number,
 ) {
-  const nextMonth = new Date(date);
+  if (!Number.isInteger(months) || months < 1) {
+    throw new Error("Subscription duration must be at least one month.");
+  }
 
-  const day =
-    nextMonth.getUTCDate();
+  const nextMonth = new Date(date);
+  const day = nextMonth.getUTCDate();
 
   nextMonth.setUTCDate(1);
-
-  nextMonth.setUTCMonth(
-    nextMonth.getUTCMonth() + 1,
-  );
-
+  nextMonth.setUTCMonth(nextMonth.getUTCMonth() + months);
   nextMonth.setUTCDate(
     Math.min(
       day,
@@ -123,8 +142,20 @@ export function addOneMonth(
   return nextMonth;
 }
 
+export function addOneMonth(date: Date) {
+  return addMonths(date, SUBSCRIPTION_PLANS.monthly.durationInMonths);
+}
+
+export function addSubscriptionDuration(
+  date: Date,
+  plan: SubscriptionPlan,
+) {
+  return addMonths(date, SUBSCRIPTION_PLANS[plan].durationInMonths);
+}
+
 export async function activateSubscriptionForUser(
   userId: string,
+  plan: SubscriptionPlan,
 ): Promise<SubscriptionActivation | null> {
   return prisma.$transaction(
     async (transaction) => {
@@ -166,7 +197,7 @@ export async function activateSubscriptionForUser(
           : now;
 
       const expiresAt =
-        addOneMonth(startsAt);
+        addSubscriptionDuration(startsAt, plan);
 
       await transaction.subscription.upsert({
         where: {
