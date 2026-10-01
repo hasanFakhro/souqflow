@@ -1,10 +1,9 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
 import axios from "axios";
-
-import { Bell } from "lucide-react";
+import { Bell, X } from "lucide-react";
 
 type Notification = {
   id: string;
@@ -19,12 +18,10 @@ type NotificationResponse = {
 };
 
 export default function NotificationBell() {
-  const [notifications, setNotifications] = useState<
-    Notification[]
-  >([]);
+  const [notifications, setNotifications] =
+    useState<Notification[]>([]);
 
   const [unreadCount, setUnreadCount] = useState(0);
-
   const [isOpen, setIsOpen] = useState(false);
 
   const bellRef = useRef<SVGSVGElement>(null);
@@ -37,7 +34,6 @@ export default function NotificationBell() {
         );
 
       setNotifications(response.data.notifications);
-
       setUnreadCount(response.data.unreadCount);
     } catch (error) {
       console.error(
@@ -48,9 +44,10 @@ export default function NotificationBell() {
   }
 
   async function markDisplayedNotificationsAsRead() {
-    const unreadNotifications = notifications.filter(
-      (notification) => !notification.isRead,
-    );
+    const unreadNotifications =
+      notifications.filter(
+        (notification) => !notification.isRead,
+      );
 
     if (unreadNotifications.length === 0) {
       return;
@@ -89,22 +86,24 @@ export default function NotificationBell() {
   }
 
   async function handleBellClick() {
-    const nextIsOpen = !isOpen;
-
-    setIsOpen(nextIsOpen);
-
-    if (nextIsOpen) {
+    if (!isOpen) {
+      setIsOpen(true);
       await markDisplayedNotificationsAsRead();
-    } else {
-      await getNotifications();
+      return;
     }
+
+    setIsOpen(false);
+    await getNotifications();
+  }
+
+  async function handleClose() {
+    setIsOpen(false);
+    await getNotifications();
   }
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    getNotifications();
+    void getNotifications();
 
-    // Listen for new notifications created elsewhere in the app.
     function handleNotificationCreated() {
       void getNotifications();
     }
@@ -161,16 +160,27 @@ export default function NotificationBell() {
       <button
         type="button"
         onClick={handleBellClick}
-        className="relative mr-10 -translate-y-3 -translate-x-6"
+        aria-label="Notifications"
+        className="
+          relative
+          mr-10
+          -translate-x-6
+          -translate-y-3
+        "
       >
         <Bell
           ref={bellRef}
           strokeWidth={2.5}
-          className={`h-7 w-7 transition-colors ${
-            unreadCount > 0
-              ? "text-yellow-500"
-              : "text-gray-700"
-          }`}
+          className={`
+            h-7
+            w-7
+            transition-colors
+            ${
+              unreadCount > 0
+                ? "text-yellow-500"
+                : "text-gray-400"
+            }
+          `}
         />
 
         {unreadCount > 0 && (
@@ -192,58 +202,258 @@ export default function NotificationBell() {
               text-white
             "
           >
-            {unreadCount > 99 ? "99+" : unreadCount}
+            {unreadCount > 99
+              ? "99+"
+              : unreadCount}
           </span>
         )}
       </button>
 
       {isOpen && (
-        <div
-          className="
-            absolute
-            right-0
-            top-10
-            z-50
-            w-80
-            overflow-hidden
-            rounded-xl
-            border
-            border-gray-200
-            bg-white
-            shadow-xl
-          "
-        >
-          <div className="border-b border-gray-200 px-4 py-3">
-            <h3 className="font-semibold text-gray-900">
-              Notifications
-            </h3>
-          </div>
+        <>
+          <div
+            className="
+              fixed
+              inset-x-0
+              bottom-0
+              top-28
+              z-40
+              bg-black/20
+              backdrop-blur-[1px]
+              md:hidden
+            "
+            onClick={handleClose}
+          />
 
-          <div className="max-h-80 overflow-y-auto">
-            {notifications.length === 0 ? (
-              <p className="px-4 py-6 text-center text-sm text-gray-500">
-                No new notifications
-              </p>
-            ) : (
-              notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className="block w-full border-b border-gray-100 bg-white px-4 py-3 text-left"
+          <div
+            className="
+              fixed
+              left-4
+              right-4
+              top-32
+              z-50
+              overflow-hidden
+              rounded-2xl
+              border
+              border-gray-200
+              bg-white
+              shadow-2xl
+              dark:border-gray-700
+              dark:bg-gray-900
+              md:absolute
+              md:left-auto
+              md:right-0
+              md:top-10
+              md:w-80
+              md:rounded-xl
+            "
+          >
+            <div
+              className="
+                flex
+                items-center
+                justify-between
+                border-b
+                border-gray-200
+                px-4
+                py-3
+                dark:border-gray-700
+              "
+            >
+              <div>
+                <h3
+                  className="
+                    font-semibold
+                    text-gray-900
+                    dark:text-white
+                  "
                 >
-                  <p className="text-sm text-gray-800">
-                    {notification.message}
+                  Notifications
+                </h3>
+
+                {unreadCount > 0 && (
+                  <p
+                    className="
+                      mt-0.5
+                      text-xs
+                      text-gray-500
+                      dark:text-gray-400
+                    "
+                  >
+                    {unreadCount} new{" "}
+                    {unreadCount === 1
+                      ? "notification"
+                      : "notifications"}
+                  </p>
+                )}
+              </div>
+
+              <button
+                type="button"
+                onClick={handleClose}
+                aria-label="Close notifications"
+                className="
+                  flex
+                  h-8
+                  w-8
+                  items-center
+                  justify-center
+                  rounded-full
+                  text-gray-500
+                  transition
+                  hover:bg-gray-100
+                  hover:text-gray-800
+                  dark:text-gray-400
+                  dark:hover:bg-gray-800
+                  dark:hover:text-white
+                "
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            <div
+              className="
+                max-h-[320px]
+                overflow-y-auto
+              "
+            >
+              {notifications.length === 0 ? (
+                <div
+                  className="
+                    flex
+                    flex-col
+                    items-center
+                    justify-center
+                    px-6
+                    py-8
+                    text-center
+                  "
+                >
+                  <div
+                    className="
+                      flex
+                      h-14
+                      w-14
+                      items-center
+                      justify-center
+                      rounded-full
+                      bg-blue-50
+                      dark:bg-blue-500/10
+                    "
+                  >
+                    <Bell
+                      size={30}
+                      strokeWidth={1.7}
+                      className="
+                        text-blue-500
+                        dark:text-blue-400
+                      "
+                    />
+                  </div>
+
+                  <p
+                    className="
+                      mt-3
+                      font-medium
+                      text-gray-800
+                      dark:text-gray-100
+                    "
+                  >
+                    No new notifications
                   </p>
 
-                  <p className="mt-1 text-xs text-gray-400">
-                    {new Date(
-                      notification.createdAt,
-                    ).toLocaleString()}
+                  <p
+                    className="
+                      mt-1
+                      text-sm
+                      text-gray-400
+                    "
+                  >
+                    You&apos;re all caught up.
                   </p>
                 </div>
-              ))
-            )}
+              ) : (
+                notifications.map((notification) => (
+                  <div
+                    key={notification.id}
+                    className="
+                      block
+                      w-full
+                      border-b
+                      border-gray-100
+                      bg-white
+                      px-4
+                      py-3
+                      text-left
+                      transition
+                      last:border-b-0
+                      hover:bg-gray-50
+                      dark:border-gray-800
+                      dark:bg-gray-900
+                      dark:hover:bg-gray-800
+                    "
+                  >
+                    <div
+                      className="
+                        flex
+                        items-start
+                        gap-3
+                      "
+                    >
+                      <div
+                        className="
+                          flex
+                          h-9
+                          w-9
+                          shrink-0
+                          items-center
+                          justify-center
+                          rounded-full
+                          bg-blue-50
+                          dark:bg-blue-500/10
+                        "
+                      >
+                        <Bell
+                          size={18}
+                          className="
+                            text-blue-500
+                            dark:text-blue-400
+                          "
+                        />
+                      </div>
+
+                      <div className="min-w-0 flex-1">
+                        <p
+                          className="
+                            text-sm
+                            leading-5
+                            text-gray-800
+                            dark:text-gray-200
+                          "
+                        >
+                          {notification.message}
+                        </p>
+
+                        <p
+                          className="
+                            mt-1
+                            text-xs
+                            text-gray-400
+                          "
+                        >
+                          {new Date(
+                            notification.createdAt,
+                          ).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );

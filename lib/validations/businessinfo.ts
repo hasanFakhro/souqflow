@@ -4,7 +4,7 @@ export const businessSchema = z.object({
   name: z
     .string()
     .min(1, "Business name is required")
-    .max(100, "Business name is too long"),
+    .max(50, "Business name is too long"),
 
   description: z
     .string()

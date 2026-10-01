@@ -70,8 +70,19 @@ function Sidebar() {
         <Link
           href="/dashboard"
           onClick={closeMobileMenu}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent"
-        >
+className="
+    max-w-[250px]
+    truncate
+    whitespace-nowrap
+    bg-gradient-to-r
+    from-blue-600
+    to-purple-600
+    bg-clip-text
+    text-2xl
+    font-bold
+    text-transparent
+    sm:max-w-[300px]
+  "        >
           {businessName ?? "SouqFlow"}
         </Link>
 

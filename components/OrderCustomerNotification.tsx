@@ -294,21 +294,24 @@ export default function OrderCustomerNotification() {
           dark:hover:bg-gray-800
         "
       >
-        <Package
-          size={27}
-          strokeWidth={2.2}
-          className={`
-            text-amber-500
-            transition-transform
-            duration-300
-            dark:text-amber-400
-            ${
-              isBouncing
-                ? "-translate-y-1"
-                : ""
-            }
-          `}
-        />
+       <Package
+  size={27}
+  strokeWidth={2.2}
+  className={`
+    transition-all
+    duration-300
+    ${
+      unreadCount > 0
+        ? "text-amber-500 dark:text-amber-400"
+        : "text-gray-400 dark:text-gray-500"
+    }
+    ${
+      isBouncing
+        ? "-translate-y-1"
+        : ""
+    }
+  `}
+/>
 
         {unreadCount > 0 && (
           <span
