@@ -523,7 +523,7 @@ export default function SalesAnalytics({ orders, products }: SalesAnalyticsProps
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.length ? (
                 filteredProducts.map((product) => (
-                  <tr key={product.id} className="transition hover:bg-slate-50/70">
+                  <tr key={product.id} className="table-row-hover transition-colors hover:bg-slate-50/70">
                     <td className="whitespace-nowrap px-4 py-3 font-mono text-xs text-slate-500">{product.sku || "—"}</td>
                     <td className="whitespace-nowrap px-4 py-3 font-medium text-slate-900">{product.name}</td>
                     <td className="whitespace-nowrap px-4 py-3 text-slate-600">{product.category}</td>

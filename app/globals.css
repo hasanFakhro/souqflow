@@ -85,6 +85,7 @@
   --color-gray-50-60: rgb(249 250 251 / 0.6);
   --color-slate-50-70: rgb(248 250 252 / 0.7);
   --color-blue-100-40: rgb(219 234 254 / 0.4);
+  --color-table-row-hover: #f3f4f6;
   --sales-summary-blue-bg: #eff6ff;
   --sales-summary-blue-border: #dbeafe;
   --sales-summary-blue-text: #1d4ed8;
@@ -203,6 +204,7 @@
   --color-gray-50-60: rgb(15 23 42 / 0.6);
   --color-slate-50-70: rgb(11 18 32 / 0.7);
   --color-blue-100-40: rgb(23 52 92 / 0.4);
+  --color-table-row-hover: #080f1c;
   --color-primary: #0f766e;
   --color-success: #16a34a;
   --color-warning: #f59e0b;
@@ -331,6 +333,9 @@
   }
   [data-theme] .hover\:bg-slate-50\/70:hover {
     background-color: var(--color-slate-50-70);
+  }
+  [data-theme] .table-row-hover:hover {
+    background-color: var(--color-table-row-hover);
   }
   [data-theme] .bg-red-500 {
     background-color: var(--color-danger);
