@@ -97,7 +97,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                             )
                         }
                         aria-label="Filter by stock state"
-                        className="rounded-lg shadow-sm px-3 py-2 text-sm bg-white"
+                        className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
                     >
                         <option value="">All stock states</option>
                         <option value="stocked">Stocked</option>

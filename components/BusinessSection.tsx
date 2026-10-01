@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { FaInstagram, FaFacebook, FaTiktok, FaWhatsapp } from "react-icons/fa";
-import { Building2, Copy, Check } from "lucide-react";
+import { Building2, Camera, Check, Copy, MessageCircle, Music2, Users } from "lucide-react";
 import { toast } from "sonner";
 import BusinessModal from "./BusinessModal";
 
@@ -95,7 +94,7 @@ export default function BusinessSection({
                     aria-label="Open WhatsApp"
                     className="flex h-9 w-9 items-center justify-center rounded-lg text-green-600 transition hover:bg-green-100"
                   >
-                    <FaWhatsapp className="h-5 w-5" />
+                    <MessageCircle className="h-5 w-5" />
                   </a>
 
                   <button
@@ -122,7 +121,7 @@ export default function BusinessSection({
                     aria-label="Open Instagram"
                     className="flex h-9 w-9 items-center justify-center rounded-lg text-pink-600 transition hover:bg-pink-100"
                   >
-                    <FaInstagram className="h-5 w-5" />
+                    <Camera className="h-5 w-5" />
                   </a>
 
                   <button
@@ -149,7 +148,7 @@ export default function BusinessSection({
                     aria-label="Open Facebook"
                     className="flex h-9 w-9 items-center justify-center rounded-lg text-blue-600 transition hover:bg-blue-100"
                   >
-                    <FaFacebook className="h-5 w-5" />
+                    <Users className="h-5 w-5" />
                   </a>
 
                   <button
@@ -176,7 +175,7 @@ export default function BusinessSection({
                     aria-label="Open TikTok"
                     className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-800 transition hover:bg-gray-200"
                   >
-                    <FaTiktok className="h-5 w-5" />
+                    <Music2 className="h-5 w-5" />
                   </a>
 
                   <button
