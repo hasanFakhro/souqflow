@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import axios from "axios";
+
 import { Bell } from "lucide-react";
 
 type Notification = {
@@ -11,32 +13,121 @@ type Notification = {
   createdAt: string;
 };
 
+type NotificationResponse = {
+  notifications: Notification[];
+  unreadCount: number;
+};
+
 export default function NotificationBell() {
   const [notifications, setNotifications] = useState<
     Notification[]
   >([]);
 
+  const [unreadCount, setUnreadCount] = useState(0);
+
   const [isOpen, setIsOpen] = useState(false);
 
   const bellRef = useRef<SVGSVGElement>(null);
 
-useEffect(() => {
   async function getNotifications() {
-    const response = await axios.get("/api/notifications");
+    try {
+      const response =
+        await axios.get<NotificationResponse>(
+          "/api/notifications",
+        );
 
-    setNotifications(response.data);
+      setNotifications(response.data.notifications);
+
+      setUnreadCount(response.data.unreadCount);
+    } catch (error) {
+      console.error(
+        "Failed to load notifications:",
+        error,
+      );
+    }
   }
 
-  getNotifications();
+  async function markDisplayedNotificationsAsRead() {
+    const unreadNotifications = notifications.filter(
+      (notification) => !notification.isRead,
+    );
 
-  const interval = setInterval(getNotifications, 10 * 60 * 1000);
+    if (unreadNotifications.length === 0) {
+      return;
+    }
 
-  return () => clearInterval(interval);
-}, []);
+    try {
+      await Promise.all(
+        unreadNotifications.map((notification) =>
+          axios.patch("/api/notifications", {
+            notificationId: notification.id,
+          }),
+        ),
+      );
 
-  const unreadCount = notifications.filter(
-    (notification) => !notification.isRead,
-  ).length;
+      setNotifications((currentNotifications) =>
+        currentNotifications.map((notification) => ({
+          ...notification,
+          isRead: true,
+        })),
+      );
+
+      setUnreadCount((currentCount) =>
+        Math.max(
+          0,
+          currentCount - unreadNotifications.length,
+        ),
+      );
+    } catch (error) {
+      console.error(
+        "Failed to mark notifications as read:",
+        error,
+      );
+
+      await getNotifications();
+    }
+  }
+
+  async function handleBellClick() {
+    const nextIsOpen = !isOpen;
+
+    setIsOpen(nextIsOpen);
+
+    if (nextIsOpen) {
+      await markDisplayedNotificationsAsRead();
+    } else {
+      await getNotifications();
+    }
+  }
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    getNotifications();
+
+    // Listen for new notifications created elsewhere in the app.
+    function handleNotificationCreated() {
+      void getNotifications();
+    }
+
+    window.addEventListener(
+      "notification-created",
+      handleNotificationCreated,
+    );
+
+    const interval = setInterval(
+      getNotifications,
+      10 * 60 * 1000,
+    );
+
+    return () => {
+      window.removeEventListener(
+        "notification-created",
+        handleNotificationCreated,
+      );
+
+      clearInterval(interval);
+    };
+  }, []);
 
   useEffect(() => {
     if (unreadCount === 0 || !bellRef.current) {
@@ -65,29 +156,12 @@ useEffect(() => {
     };
   }, [unreadCount]);
 
-  async function markAsRead(notificationId: string) {
-    await axios.patch("/api/notifications", {
-      notificationId,
-    });
-
-    setNotifications((currentNotifications) =>
-      currentNotifications.map((notification) =>
-        notification.id === notificationId
-          ? {
-              ...notification,
-              isRead: true,
-            }
-          : notification,
-      ),
-    );
-  }
-
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={() => setIsOpen(!isOpen)}
-        className="relative"
+        onClick={handleBellClick}
+        className="relative mr-10 -translate-y-3"
       >
         <Bell
           ref={bellRef}
@@ -118,7 +192,7 @@ useEffect(() => {
               text-white
             "
           >
-            {unreadCount}
+            {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
@@ -148,22 +222,13 @@ useEffect(() => {
           <div className="max-h-80 overflow-y-auto">
             {notifications.length === 0 ? (
               <p className="px-4 py-6 text-center text-sm text-gray-500">
-                No notifications
+                No new notifications
               </p>
             ) : (
               notifications.map((notification) => (
-                <button
+                <div
                   key={notification.id}
-                  type="button"
-                  onClick={() =>
-                    !notification.isRead &&
-                    markAsRead(notification.id)
-                  }
-                  className={`block w-full border-b border-gray-100 px-4 py-3 text-left ${
-                    !notification.isRead
-                      ? "bg-yellow-50 hover:bg-yellow-100"
-                      : "bg-white hover:bg-gray-50"
-                  }`}
+                  className="block w-full border-b border-gray-100 bg-white px-4 py-3 text-left"
                 >
                   <p className="text-sm text-gray-800">
                     {notification.message}
@@ -174,7 +239,7 @@ useEffect(() => {
                       notification.createdAt,
                     ).toLocaleString()}
                   </p>
-                </button>
+                </div>
               ))
             )}
           </div>

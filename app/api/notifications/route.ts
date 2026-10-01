@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 
@@ -12,16 +13,35 @@ export async function GET() {
     );
   }
 
-  const notifications = await prisma.notification.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+  const userId = session.user.id as string;
 
-  return NextResponse.json(notifications);
+  const [notifications, unreadCount] =
+    await Promise.all([
+      prisma.notification.findMany({
+        where: {
+          userId,
+          isRead: false,
+          type: "LOW_STOCK",
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 4,
+      }),
+
+      prisma.notification.count({
+        where: {
+          userId,
+          isRead: false,
+          type: "LOW_STOCK",
+        },
+      }),
+    ]);
+
+  return NextResponse.json({
+    notifications,
+    unreadCount,
+  });
 }
 
 export async function PATCH(request: Request) {
@@ -34,6 +54,8 @@ export async function PATCH(request: Request) {
     );
   }
 
+  const userId = session.user.id as string;
+
   const { notificationId } = await request.json();
 
   if (!notificationId) {
@@ -43,20 +65,43 @@ export async function PATCH(request: Request) {
     );
   }
 
+  const result = await prisma.$transaction(
+    async (tx) => {
+      
+      const notification =
+        await tx.notification.findFirst({
+          where: {
+            id: notificationId,
+            userId,
+            isRead: false,
+          },
+        });
 
-  const result = await prisma.notification.updateMany({
-    where: {
-      id: notificationId,
-      userId: session.user.id,
-      isRead: false,
-    },
-    data: {
-      isRead: true,
-      readAt: new Date(),
-    },
-  });
+      if (!notification) {
+        return null;
+      }
 
-  if (result.count === 0) {
+      await tx.notification.update({
+        where: {
+          id: notification.id,
+        },
+        data: {
+          isRead: true,
+          readAt: new Date(),
+        },
+      });
+
+      await tx.notification.delete({
+        where: {
+          id: notification.id,
+        },
+      });
+
+      return notification;
+    },
+  );
+
+  if (!result) {
     return NextResponse.json(
       { error: "Notification not found" },
       { status: 404 },
