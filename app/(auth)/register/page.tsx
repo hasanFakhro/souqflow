@@ -4,8 +4,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import PhoneInput, {isValidPhoneNumber,} from "react-phone-number-input";
+import Image from "next/image";
+import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+
+const inputClass =
+    "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100";
 
 export default function RegisterPage() {
     const router = useRouter();
@@ -64,24 +68,29 @@ export default function RegisterPage() {
     };
 
     return (
-        <main className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 px-4 py-12">
-            <div className="w-full max-w-md">
-                <div className="mb-8 text-center">
-                    <Link href="/" className="inline-block">
-                        <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent">
-                            SouqFlow
-                        </span>
-                    </Link>
+        <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-white px-4 py-12">
+            <div className="pointer-events-none absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-200/50 blur-3xl" />
+            <div className="pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-purple-200/50 blur-3xl" />
 
-                    <p className="mt-3 text-sm text-gray-500">
-                        Create your SouqFlow account
-                    </p>
+            <div className="relative w-full max-w-md">
+                <div className="mb-8 flex justify-center">
+                    <Link href="/" aria-label="SouqFlow home" className="block rounded-lg">
+                        <Image
+                            src="/souqflow-logo.png"
+                            alt="SouqFlow"
+                            width={800}
+                            height={163}
+                            quality={100}
+                            priority
+                            className="h-12 w-auto"
+                        />
+                    </Link>
                 </div>
 
-                <div className="rounded-2xl border border-gray-100 bg-white p-8 shadow-xl shadow-blue-100/40 sm:p-10">
+                <div className="rounded-3xl bg-white p-8 shadow-xl shadow-blue-100/40 ring-1 ring-gray-100 sm:p-10">
                     <div className="mb-6">
-                        <h1 className="text-2xl font-bold text-gray-900">
-                            Create an account
+                        <h1 className="text-2xl font-extrabold tracking-tight text-gray-900">
+                            Create your account
                         </h1>
 
                         <p className="mt-2 text-sm text-gray-500">
@@ -90,7 +99,7 @@ export default function RegisterPage() {
                     </div>
 
                     {error && (
-                        <div className="mb-5 rounded-md border border-red-200 bg-red-50 p-3">
+                        <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-3">
                             <p className="text-sm text-red-800">{error}</p>
                         </div>
                     )}
@@ -112,7 +121,7 @@ export default function RegisterPage() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Your name"
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                className={inputClass}
                             />
                         </div>
 
@@ -133,7 +142,7 @@ export default function RegisterPage() {
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="you@example.com"
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                className={inputClass}
                             />
                         </div>
 
@@ -142,7 +151,7 @@ export default function RegisterPage() {
                                 htmlFor="phone"
                                 className="mb-2 block text-sm font-semibold text-gray-700"
                             >
-                                Phone Number
+                                Phone number
                             </label>
 
                             <PhoneInput
@@ -183,7 +192,7 @@ export default function RegisterPage() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="Create a password"
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                className={inputClass}
                             />
                         </div>
 
@@ -193,14 +202,12 @@ export default function RegisterPage() {
                                     htmlFor="confirmPassword"
                                     className="block text-sm font-semibold text-gray-700"
                                 >
-                                    Confirm Password
+                                    Confirm password
                                 </label>
 
                                 <button
                                     type="button"
-                                    onClick={() =>
-                                        setShowConfirmPassword(!showConfirmPassword)
-                                    }
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                     className="text-xs font-medium text-blue-600 hover:text-blue-700"
                                 >
                                     {showConfirmPassword ? "Hide" : "Show"}
@@ -210,30 +217,22 @@ export default function RegisterPage() {
                             <input
                                 id="confirmPassword"
                                 name="confirmPassword"
-                                type={
-                                    showConfirmPassword
-                                        ? "text"
-                                        : "password"
-                                }
+                                type={showConfirmPassword ? "text" : "password"}
                                 autoComplete="new-password"
                                 required
                                 value={confirmPassword}
-                                onChange={(e) =>
-                                    setConfirmPassword(e.target.value)
-                                }
+                                onChange={(e) => setConfirmPassword(e.target.value)}
                                 placeholder="Confirm your password"
-                                className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 placeholder-gray-400 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-100"
+                                className={inputClass}
                             />
                         </div>
 
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-200 transition hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
+                            className="w-full rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-3.5 text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition hover:from-blue-700 hover:to-purple-700 active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200 disabled:cursor-not-allowed disabled:opacity-60"
                         >
-                            {isLoading
-                                ? "Creating account..."
-                                : "Create account"}
+                            {isLoading ? "Creating account…" : "Create account"}
                         </button>
                     </form>
 

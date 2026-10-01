@@ -96,6 +96,16 @@ export async function POST(request: NextRequest) {
         { status: 400 }
       );
     }
+    const customerName = typeof body?.customerName === "string" ? body.customerName.trim() : "";
+    const customerAddress = typeof body?.customerAddress === "string" ? body.customerAddress.trim() : "";
+    const customerPhone = typeof body?.customerPhone === "string" ? body.customerPhone.trim() : "";
+
+    if (!customerName || !customerAddress || !/^\+?[0-9\s-]{7,15}$/.test(customerPhone)) {
+      return NextResponse.json(
+        { error: "Invalid customer details" },
+        { status: 400 }
+      );
+    }
 
     const requestedQuantities = new Map<string, number>();
 
@@ -170,6 +180,9 @@ export async function POST(request: NextRequest) {
           ownerId: userId,
           orderNumber: `ORD-${Date.now()}-${randomUUID().slice(0, 8)}`,
           total,
+          customerName,
+          customerAddress,
+          customerPhone,
           items: {
             create: orderItems,
           },
