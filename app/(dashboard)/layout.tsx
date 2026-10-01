@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { BusinessProvider } from "@/context/BusinessContext";
 import prisma from "@/lib/prisma";
 import NotificationBell from "@/components/NotificationBell";
+import OrderCustomerNotification from "@/components/OrderCustomerNotification";
 
 export default async function DashboardLayout({
   children,
@@ -36,6 +37,7 @@ export default async function DashboardLayout({
           <SubscriptionWarning />
           <div className="mb-6 flex justify-end">
             <NotificationBell />
+            <OrderCustomerNotification />
           </div>
           {children}
         </main>
