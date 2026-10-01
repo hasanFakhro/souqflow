@@ -22,6 +22,8 @@ export default function OrderTable({
 }) {
   const router = useRouter();
   const params = useSearchParams();
+  const isRequests = params.get("view") === "requests";
+  const orderLabel = isRequests ? "order requests" : "orders";
 
   const search = params.get("search") ?? "";
   const requestedState = params.get("state");
@@ -45,8 +47,9 @@ export default function OrderTable({
   } | null>(null);
 
   const matches = useMemo(
-    () => filterOrderIndex(index, search, state),
-    [index, search, state]
+    // Requests will be supplied separately when the request column is available.
+    () => isRequests ? [] : filterOrderIndex(index, search, state),
+    [index, search, state, isRequests]
   );
 
   const totalOrders = matches.length;
@@ -160,6 +163,8 @@ export default function OrderTable({
   ) {
     const params = new URLSearchParams();
 
+    if (isRequests) params.set("view", "requests");
+
     if (values.search) {
       params.set("search", values.search);
     }
@@ -193,6 +198,26 @@ export default function OrderTable({
 
   return (
     <div className="space-y-4">
+      <nav aria-label="Orders navigation" className="flex gap-2 rounded-xl bg-white p-2 shadow-sm">
+        {[
+          { label: "Orders", href: "/orders", active: !isRequests },
+          { label: "Order requests", href: "/orders?view=requests", active: isRequests },
+        ].map(({ label, href, active }) => (
+          <a
+            key={href}
+            href={href}
+            aria-current={active ? "page" : undefined}
+            onClick={(event) => {
+              if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+              event.preventDefault();
+              window.history.pushState(null, "", href);
+            }}
+            className={`rounded-lg px-4 py-2.5 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 ${active ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-50"}`}
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
       {/* Search + State Filter */}
       <nav
         aria-label="Order filters"
@@ -207,7 +232,7 @@ export default function OrderTable({
 
           <input
             type="search"
-            aria-label="Search orders"
+            aria-label={`Search ${orderLabel}`}
             placeholder="Search order, customer or product..."
             value={filters.search}
             onChange={(event) =>
@@ -262,8 +287,8 @@ export default function OrderTable({
             aria-live="polite"
           >
             {pending
-              ? "Updating orders..."
-              : `${orders.length} of ${totalOrders} orders`}
+              ? `Updating ${orderLabel}...`
+              : `${orders.length} of ${totalOrders} ${orderLabel}`}
           </caption>
 
           <thead>
@@ -353,8 +378,8 @@ export default function OrderTable({
                   className="py-12 text-center text-gray-500"
                 >
                   {!search && state === "ALL"
-                    ? "No orders yet."
-                    : "No orders match your search and state filter."}
+                    ? `No ${orderLabel} yet.`
+                    : `No ${orderLabel} match your search and state filter.`}
                 </td>
               </tr>
             )}

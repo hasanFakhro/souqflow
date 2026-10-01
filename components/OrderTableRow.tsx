@@ -2,7 +2,7 @@
 
 import { Fragment, useState, useTransition, memo } from "react";
 import { useRouter } from "next/navigation";
-import { Download, ChevronDown, Trash2 } from "lucide-react";
+import { Check, X, Download, ChevronDown, Trash2 } from "lucide-react";
 import EditOrderPopup from "@/components/EditOrderPopup";
 import OrderItemsPopup from "@/components/OrderItemsPopup";
 import { Price } from "@/app/(dashboard)/currency";
@@ -11,13 +11,19 @@ import { orderStateLabels, orderStateStyles, orderStateTransitions, type OrderSt
 
 const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
 
-function OrderTableRow({ order }: { order: SerializedOrder }) {
+type RequestActions = {
+  onAccept: () => void;
+  onReject: () => void;
+  pending?: boolean;
+};
+
+function OrderTableRow({ order, requestActions }: { order: SerializedOrder; requestActions?: RequestActions }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [refreshing, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState(false);
-  const disabled = busy || refreshing;
+  const disabled = busy || refreshing || Boolean(requestActions?.pending);
   const transitions = orderStateTransitions[order.status];
   const total = order.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
 
@@ -81,7 +87,11 @@ function OrderTableRow({ order }: { order: SerializedOrder }) {
           <time dateTime={order.orderedAt}>{date.format(new Date(order.orderedAt))}</time>
         </td>
         <td className="min-w-36 px-2 py-3">
-          <div className="relative">
+          {requestActions ? (
+            <span className={`inline-block rounded-lg border px-3 py-2 text-xs font-semibold ${orderStateStyles[order.status]}`}>
+              {orderStateLabels[order.status]}
+            </span>
+          ) : <div className="relative">
             <select
               aria-label={`State for order ${order.orderNumber}`}
               value={order.status}
@@ -96,10 +106,32 @@ function OrderTableRow({ order }: { order: SerializedOrder }) {
               ))}
             </select>
             <ChevronDown size={14} aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
-          </div>
+          </div>}
         </td>
         <td className="px-2 py-3">
             <div className="flex gap-1">
+              {requestActions ? <>
+                <button
+                  type="button"
+                  disabled={disabled}
+                  aria-label={`Accept order request ${order.orderNumber}`}
+                  title="Accept order request"
+                  onClick={requestActions.onAccept}
+                  className="shrink-0 rounded-md p-2 text-green-600 transition hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-500 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Check size={18} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  disabled={disabled}
+                  aria-label={`Reject order request ${order.orderNumber}`}
+                  title="Reject order request"
+                  onClick={requestActions.onReject}
+                  className="shrink-0 rounded-md p-2 text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </> : <>
               <button
                 type="button"
                 disabled={disabled || downloading}
@@ -123,6 +155,7 @@ function OrderTableRow({ order }: { order: SerializedOrder }) {
               >
                 <Trash2 size={18} aria-hidden="true" />
               </button>
+              </>}
             </div>
         </td>
       </tr>
