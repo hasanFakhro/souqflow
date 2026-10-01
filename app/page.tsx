@@ -38,7 +38,7 @@ export default function HomePage() {
     return (
         <div className={`${font.className} min-h-screen bg-white text-gray-900`}>
             {/* Navbar */}
-            <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/80 backdrop-blur">
+            <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/95 backdrop-blur">
                 <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
                     <Logo />
                     <div className="flex items-center gap-2 sm:gap-3">
@@ -145,7 +145,7 @@ export default function HomePage() {
                                             <span>Total</span>
                                             <span>$50.00</span>
                                         </div>
-                                        <p className="mt-3 text-right text-[11px] text-gray-400">Delivery tomorrow ✓✓</p>
+
                                     </div>
                                 </div>
                             </div>
@@ -246,10 +246,10 @@ export default function HomePage() {
                             <div className="rounded-3xl bg-white p-6 shadow-sm ring-1 ring-gray-100 md:col-span-2 md:p-8">
                                 <h3 className="text-xl font-bold">Orders and deliveries, tracked</h3>
                                 <div className="mt-5 flex flex-wrap gap-2 text-xs font-medium">
-                                    <span className="rounded-full bg-gray-100 px-3 py-1.5 text-gray-600">New</span>
-                                    <span className="rounded-full bg-gray-100 px-3 py-1.5 text-gray-600">Preparing</span>
-                                    <span className={`rounded-full ${gradient} px-3 py-1.5 text-white`}>Out for delivery</span>
-                                    <span className="rounded-full bg-gray-100 px-3 py-1.5 text-gray-400">Delivered</span>
+                                    <span className="rounded-full bg-gray-100 px-3 py-1.5 text-gray-600">Pending</span>
+                                    <span className={`rounded-full ${gradient} px-3 py-1.5 text-white`}>Delivering</span>
+                                    <span className="rounded-full bg-gray-100 px-3 py-1.5 text-gray-400">Done</span>
+                                    <span className="rounded-full bg-red-50 px-3 py-1.5 text-red-600">Problem</span>
                                 </div>
                             </div>
 
@@ -260,9 +260,24 @@ export default function HomePage() {
                                     Download it when you&apos;re ready, then send it on WhatsApp, Instagram,
                                     Messenger or any chat app your customer uses.
                                 </p>
-                                <span className={`mt-5 inline-flex items-center rounded-full ${gradient} px-4 py-2 text-sm font-semibold text-white`}>
-                                    Download invoice
+                                <span className="inline-flex items-center justify-center p-2 rounded-lg border border-emerald-500/20 bg-emerald-500/5 text-emerald-400 mt-4 transition-colors hover:bg-emerald-500/10">
+                                    <svg
+                                        className="w-6 h-6"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                        <polyline points="7 10 12 15 17 10" />
+                                        <line x1="12" y1="15" x2="12" y2="3" />
+                                    </svg>
                                 </span>
+
+
+
                             </div>
                         </div>
                     </div>
@@ -407,10 +422,10 @@ export default function HomePage() {
                 <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-8 sm:flex-row">
                     <Logo className="h-9" />
                     <div className="flex items-center gap-5 text-sm text-gray-500">
-                        <Link href="/login" className={`rounded hover:text-gray-900 ${focus}`}>
+                        <Link href="/signin" className={`rounded hover:text-gray-900 ${focus}`}>
                             Log in
                         </Link>
-                        <Link href="/signup" className={`rounded hover:text-gray-900 ${focus}`}>
+                        <Link href="/register" className={`rounded hover:text-gray-900 ${focus}`}>
                             Sign up
                         </Link>
                         <span>© {new Date().getFullYear()} SouqFlow</span>
