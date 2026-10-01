@@ -1,9 +1,9 @@
 "use client";
 
+import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { AlertTriangle, Link, X } from "lucide-react";
+import { AlertTriangle, X } from "lucide-react";
 
 type SessionUserWithSubscription = {
   subscriptionActive?: boolean;
@@ -15,9 +15,8 @@ const getToday = () => {
 };
 
 export default function SubscriptionWarning() {
-  const { data: session } = useSession();
-  const router = useRouter();
 
+  const { data: session } = useSession();
   const sessionUser = session?.user as SessionUserWithSubscription | undefined;
 
   const [timeLeft, setTimeLeft] = useState(0);
@@ -107,13 +106,12 @@ export default function SubscriptionWarning() {
           </span>
         </div>
 
-        <Link
-  href="/subscription"
-  className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-purple-700"
->
-  Renew
-</Link>
-
+        <NextLink
+          href="/settings#subscription"
+          className="shrink-0 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-3 py-2 text-xs font-semibold text-white shadow-sm transition hover:from-blue-700 hover:to-purple-700"
+        >
+          Renew
+        </NextLink>
         <button
           type="button"
           onClick={handleDismiss}

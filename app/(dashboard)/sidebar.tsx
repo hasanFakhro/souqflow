@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toggleCurrency, useCurrency, useExchangeRate } from "./currency";
 import { useBusiness } from "@/context/BusinessContext";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const links = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -85,15 +86,17 @@ className="
   "        >
           {businessName ?? "SouqFlow"}
         </Link>
-
-        <button
-          type="button"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          className="rounded-lg p-2 text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
-        >
-          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
+        <div className="flex items-center gap-1">
+          <ThemeToggle variant="ghost" />
+          <button
+            type="button"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            className="rounded-lg p-2 text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
+          >
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
       </header>
 
       {/* Mobile Navigation */}
@@ -241,6 +244,11 @@ className="
         </nav>
 
         <div className="mt-auto border-t border-gray-100 pt-4">
+          <ThemeToggle
+            showLabel
+            variant="ghost"
+            className="mb-2"
+          />
           {/* Currency */}
           <button
             type="button"

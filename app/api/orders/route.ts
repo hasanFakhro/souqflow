@@ -17,11 +17,10 @@ function refreshOrderViews() {
 }
 
 export async function GET(request: NextRequest) {
-  if (!(await auth())?.user?.id) {
-    return NextResponse.json(
-      { message: "Unauthorized" },
-      { status: 401 },
-    );
+  const userId = (await auth())?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
   const ids = [...new Set(request.nextUrl.searchParams.getAll("id"))];
@@ -40,37 +39,26 @@ export async function GET(request: NextRequest) {
   try {
     const orders = await prisma.order.findMany({
       where: {
-        id: {
-          in: ids,
-        },
+        id: { in: ids },
+        ownerId: userId, // only this user's orders
       },
       include: {
         items: {
-          orderBy: {
-            createdAt: "asc",
-          },
+          orderBy: { createdAt: "asc" },
         },
       },
     });
 
     if (orders.length !== ids.length) {
       return NextResponse.json(
-        {
-          message: "An order was removed. Refresh the orders list.",
-        },
+        { message: "An order was removed. Refresh the orders list." },
         { status: 409 },
       );
     }
 
     return NextResponse.json(
-      {
-        orders: orders.map(serializeOrder),
-      },
-      {
-        headers: {
-          "Cache-Control": "private, no-store",
-        },
-      },
+      { orders: orders.map(serializeOrder) },
+      { headers: { "Cache-Control": "private, no-store" } },
     );
   } catch {
     return NextResponse.json(
@@ -85,19 +73,35 @@ export async function POST(request: NextRequest) {
   const userId = session?.user?.id;
 
   if (!userId) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 },
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const body = await request.json();
     const items = body?.items;
 
-    if (!Array.isArray(items) || items.length === 0) {
+    if (!Array.isArray(items) || items.length === 0 || items.length > 100) {
+      return NextResponse.json({ error: "Invalid cart" }, { status: 400 });
+    }
+
+    const customerName =
+      typeof body?.customerName === "string" ? body.customerName.trim() : "";
+    const customerAddress =
+      typeof body?.customerAddress === "string"
+        ? body.customerAddress.trim()
+        : "";
+    const customerPhone =
+      typeof body?.customerPhone === "string" ? body.customerPhone.trim() : "";
+
+    if (
+      !customerName ||
+      customerName.length > 100 ||
+      !customerAddress ||
+      customerAddress.length > 255 ||
+      !/^\+?[0-9\s-]{7,15}$/.test(customerPhone)
+    ) {
       return NextResponse.json(
-        { error: "Cart is empty" },
+        { error: "Invalid customer details" },
         { status: 400 },
       );
     }
@@ -109,7 +113,8 @@ export async function POST(request: NextRequest) {
         !item ||
         typeof item.productId !== "string" ||
         !Number.isInteger(item.quantity) ||
-        item.quantity <= 0
+        item.quantity <= 0 ||
+        item.quantity > 10000
       ) {
         return NextResponse.json(
           { error: "Invalid cart item" },
@@ -119,8 +124,7 @@ export async function POST(request: NextRequest) {
 
       requestedQuantities.set(
         item.productId,
-        (requestedQuantities.get(item.productId) ?? 0) +
-          item.quantity,
+        (requestedQuantities.get(item.productId) ?? 0) + item.quantity,
       );
     }
 
@@ -129,24 +133,18 @@ export async function POST(request: NextRequest) {
     await prisma.$transaction(async (tx) => {
       const products = await tx.product.findMany({
         where: {
-          id: {
-            in: productIds,
-          },
+          id: { in: productIds },
           ownerId: userId,
         },
         include: {
           category: {
-            select: {
-              name: true,
-            },
+            select: { name: true },
           },
         },
       });
 
       if (products.length !== productIds.length) {
-        throw new Error(
-          "One or more cart products are unavailable",
-        );
+        throw new Error("One or more cart products are unavailable");
       }
 
       const productById = new Map(
@@ -157,9 +155,7 @@ export async function POST(request: NextRequest) {
         const product = productById.get(productId);
 
         if (!product) {
-          throw new Error(
-            "One or more cart products are unavailable",
-          );
+          throw new Error("One or more cart products are unavailable");
         }
 
         return {
@@ -173,21 +169,23 @@ export async function POST(request: NextRequest) {
       });
 
       const total = orderItems.reduce(
-        (sum, item) =>
-          sum + item.unitPrice * item.quantity,
+        (sum, item) => sum + item.unitPrice * item.quantity,
         0,
       );
 
       const order = await tx.order.create({
         data: {
-          ownerId: userId,
-          orderNumber: `ORD-${Date.now()}-${randomUUID().slice(
-            0,
-            8,
-          )}`,
+          owner: { connect: { id: userId } },
+          orderNumber: `ORD-${Date.now()}-${randomUUID().slice(0, 8)}`,
           total,
+          customerName,
+          customerAddress,
+          customerPhone,
           items: {
-            create: orderItems,
+            create: orderItems.map(({ productId, ...rest }) => ({
+              ...rest,
+              product: { connect: { id: productId } },
+            })),
           },
         },
       });
@@ -196,28 +194,24 @@ export async function POST(request: NextRequest) {
         const product = productById.get(item.productId);
 
         if (!product) {
-          throw new Error(
-            "One or more cart products are unavailable",
-          );
+          throw new Error("One or more cart products are unavailable");
         }
 
-        const newQuantity =
-          product.quantity - item.quantity;
-
-        if (newQuantity < 0) {
-          throw new Error(
-            `Not enough stock for ${item.productName}`,
-          );
-        }
-
-        await tx.product.update({
+        // Atomic check + decrement: only succeeds if enough stock remains
+        const result = await tx.product.updateMany({
           where: {
             id: product.id,
+            ownerId: userId,
+            quantity: { gte: item.quantity },
           },
-          data: {
-            quantity: newQuantity,
-          },
+          data: { quantity: { decrement: item.quantity } },
         });
+
+        if (result.count === 0) {
+          throw new Error(`Not enough stock for ${item.productName}`);
+        }
+
+        const newQuantity = product.quantity - item.quantity;
 
         if (product.quantity > 5 && newQuantity <= 5) {
           const message = `${product.name} is low in stock. Only ${newQuantity} left.`;
@@ -237,7 +231,6 @@ export async function POST(request: NextRequest) {
               message,
             },
           });
-
         }
       }
 
@@ -255,30 +248,20 @@ export async function POST(request: NextRequest) {
       error instanceof Error &&
       error.message.startsWith("Not enough stock")
     ) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 409 },
-      );
+      return NextResponse.json({ error: error.message }, { status: 409 });
     }
 
     if (
       error instanceof Error &&
-      error.message ===
-        "One or more cart products are unavailable"
+      error.message === "One or more cart products are unavailable"
     ) {
-      return NextResponse.json(
-        { error: error.message },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: error.message }, { status: 400 });
     }
 
     console.error("Order creation failed:", error);
 
     return NextResponse.json(
-      {
-        error:
-          "Order creation failed. Please try again.",
-      },
+      { error: "Order creation failed. Please try again." },
       { status: 500 },
     );
   }

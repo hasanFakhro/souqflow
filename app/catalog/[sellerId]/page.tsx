@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getCatalogSellerId } from "@/lib/catalog";
 import { prisma } from "@/lib/prisma";
 import CatalogClient from "./CatalogClient";
 
@@ -7,7 +8,8 @@ export default async function CatalogPage({
 }: {
   params: Promise<{ sellerId: string }>;
 }) {
-  const { sellerId } = await params;
+  const { sellerId: catalogPathSegment } = await params;
+  const sellerId = getCatalogSellerId(catalogPathSegment);
 
   const seller = await prisma.user.findUnique({
     where: { id: sellerId },
@@ -26,29 +28,26 @@ export default async function CatalogPage({
   }
 
   return (
-   <CatalogClient
-  sellerId={sellerId} 
-  businessName={seller.business.name}
-  description={seller.business.description ?? undefined}
-  categories={seller.categories.map((c) => ({
-    id: c.id,
-    name: c.name,
-  }))}
-  products={seller.products.map((p) => ({
-    id: p.id,
-    name: p.name,
-    description: p.description,
-    price: p.sellPrice,
-    costPrice: p.costPrice,
-    imageUrl: p.imageUrl,
-    category: p.category
-      ? {
-          id: p.category.id,
-          name: p.category.name,
-        }
-      : null,
-    stock: p.quantity,
-  }))}
-/>
+    <CatalogClient
+      sellerId={seller.id}
+      businessName={seller.business.name}
+      description={seller.business.description ?? undefined}
+      categories={seller.categories.map((category) => ({
+        id: category.id,
+        name: category.name,
+      }))}
+      products={seller.products.map((product) => ({
+        id: product.id,
+        name: product.name,
+        description: product.description,
+        price: product.sellPrice,
+        costPrice: product.costPrice,
+        imageUrl: product.imageUrl,
+        category: product.category
+          ? { id: product.category.id, name: product.category.name }
+          : null,
+        stock: product.quantity,
+      }))}
+    />
   );
 }

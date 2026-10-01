@@ -151,7 +151,8 @@ export default function ProductTable({
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full max-w-xs rounded-lg bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40" />
+          className="w-full max-w-xs rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          />
 
         <select
           value={category ?? ""}
@@ -161,7 +162,7 @@ export default function ProductTable({
             )
           }
           aria-label="Filter by category"
-          className="rounded-lg bg-white px-3 py-2 text-sm shadow-sm"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
         >
           <option value="">All categories</option>
 
@@ -180,7 +181,7 @@ export default function ProductTable({
             )
           }
           aria-label="Filter by stock state"
-          className="rounded-lg bg-white px-3 py-2 text-sm shadow-sm"
+          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
         >
           <option value="">All stock states</option>
           <option value="stocked">Stocked</option>
@@ -302,15 +303,15 @@ export default function ProductTable({
 
                 <td className="px-4 py-3">
                   {product.quantity === 0 ? (
-                    <span className="inline-flex rounded-md bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
+                    <span className="inline-flex rounded-md border border-red-200 bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
                       Out of stock
                     </span>
                   ) : product.lowStockAt !== null && product.quantity <= product.lowStockAt ? (
-                    <span className="inline-flex rounded-md bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
+                    <span className="inline-flex rounded-md border border-yellow-300 bg-yellow-100 px-3 py-1 text-sm font-medium text-yellow-700">
                       Low stock
                     </span>
                   ) : (
-                    <span className="inline-flex rounded-md bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
+                    <span className="inline-flex rounded-md border border-green-200 bg-green-100 px-3 py-1 text-sm font-medium text-green-700">
                       Stocked
                     </span>
                   )}

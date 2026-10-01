@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
+import { createCatalogPathSegment } from "@/lib/catalog";
 import { redirect } from "next/navigation";
 
 import CatalogShareLink from "@/components/CatalogShareLink";
@@ -70,13 +71,13 @@ export default async function ProfilePage() {
     requestHeaders.get("x-forwarded-proto") ??
     (host.startsWith("localhost") ? "http" : "https");
 
-  const catalogUrl = `${protocol}://${host}/catalog/${user.id}`;
+  const catalogUrl = `${protocol}://${host}/catalog/${createCatalogPathSegment(user.name, user.id)}`;
 
   return (
     <div className="mx-auto max-w-5xl">
       <div className="mb-6 flex items-center gap-4">
         <h1 className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-3xl font-bold text-transparent">
-          Good to see you{" "}
+          Good to see you, {" "}
           {user.name
             ? user.name.charAt(0).toUpperCase() + user.name.slice(1)
             : ""}

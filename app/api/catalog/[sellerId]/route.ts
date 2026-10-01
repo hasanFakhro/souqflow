@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import { getCatalogSellerId } from "@/lib/catalog";
 import prisma from "@/lib/prisma";
 
-type Context = { params: Promise<{ userId: string }> };
+type Context = { params: Promise<{ sellerId: string }> };
 
 export async function GET(_request: Request, { params }: Context) {
-  const { sellerId } = await params;
+  const { sellerId: catalogPathSegment } = await params;
+  const sellerId = getCatalogSellerId(catalogPathSegment);
 
   const user = await prisma.user.findUnique({
     where: { id: sellerId },
