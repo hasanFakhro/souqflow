@@ -1,5 +1,7 @@
 "use client";
 
+import { Search } from "lucide-react";
+
 type SearchBarProps = {
   value: string;
   onChange: (value: string) => void;
@@ -9,14 +11,17 @@ type SearchBarProps = {
 
 const SearchBar = ({ value, onChange }: SearchBarProps) => {
   return (
-    <input
+    <div className="relative min-w-0 flex-1">
+      <Search size={18} aria-hidden="true" className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+      <input
       type="search"
       aria-label="Search products"
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Search products..."
-      className="w-full max-w-sm rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm transition placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40 sm:px-4 sm:py-2.5 sm:text-base"
+      className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50/70 pl-10 pr-3 text-sm transition placeholder:text-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
     />
+    </div>
   );
 };
 

@@ -186,7 +186,7 @@ const { businessName } = useBusiness();
               type="button"
               onClick={handleLogout}
               disabled={isLoggingOut}
-              className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-wait disabled:opacity-60"
+              className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-wait disabled:opacity-60"
             >
               <LogOut size={20} aria-hidden="true" />
               {isLoggingOut ? "Logging out..." : "Log out"}
@@ -312,7 +312,7 @@ const { businessName } = useBusiness();
             type="button"
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-wait disabled:opacity-60"
+            className="mt-2 flex w-full items-center gap-3 rounded-lg px-4 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-wait disabled:opacity-60"
           >
             <LogOut size={20} aria-hidden="true" />
             {isLoggingOut ? "Logging out..." : "Log out"}
