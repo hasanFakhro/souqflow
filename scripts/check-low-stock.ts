@@ -49,12 +49,23 @@ export async function checkLowStock() {
       continue;
     }
 
-    await prisma.notification.create({
-      data: {
-        userId: product.ownerId!,
-        message,
-      },
-    });
+    await prisma.$transaction([
+      prisma.notification.create({
+        data: {
+          userId: product.ownerId!,
+          message,
+          type: "LOW_STOCK",
+        },
+      }),
+
+      prisma.notificationHistory.create({
+        data: {
+          userId: product.ownerId!,
+          type: "LOW_STOCK",
+          message,
+        },
+      }),
+    ]);
 
     console.log(
       `Notification created for ${product.name}.`,

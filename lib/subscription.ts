@@ -4,9 +4,7 @@ export const MONTHLY_SUBSCRIPTION_PRICE = 9.99;
 
 export const SUBSCRIPTION_CURRENCY = "USD";
 
-export function isSubscriptionExempt(
-  role?: string,
-) {
+export function isSubscriptionExempt(role?: string) {
   return (
     role === "ADMIN" ||
     role === "SUPERADMIN"
@@ -38,7 +36,6 @@ export async function getSubscriptionState(
   const subscription =
     await prisma.subscription.findUnique({
       where: { userId },
-
       select: {
         isActive: true,
         endDate: true,
@@ -68,12 +65,10 @@ export async function getSubscriptionState(
       where: {
         userId,
         isActive: true,
-
         endDate: {
           lte: now,
         },
       },
-
       data: {
         isActive: false,
       },
@@ -133,11 +128,9 @@ export async function activateSubscriptionForUser(
           where: {
             id: userId,
           },
-
           select: {
             id: true,
             role: true,
-
             subscription: {
               select: {
                 endDate: true,
@@ -172,18 +165,24 @@ export async function activateSubscriptionForUser(
         where: {
           userId: user.id,
         },
-
         create: {
           userId: user.id,
           startDate: now,
           endDate: expiresAt,
           isActive: true,
         },
-
         update: {
           startDate: startsAt,
           endDate: expiresAt,
           isActive: true,
+        },
+      });
+const message = `Subscription activated — ${startsAt.toLocaleDateString()} → ${expiresAt.toLocaleDateString()}.`;
+      await transaction.notificationHistory.create({
+        data: {
+          userId: user.id,
+          type: "SUBSCRIPTION",
+          message
         },
       });
 

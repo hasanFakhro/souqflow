@@ -24,6 +24,7 @@ model User {
   categories    Category[]     @relation("UserCategories")
   business      Business?
   notifications Notification[]
+  notificationHistory NotificationHistory[]
 
   @@map("users")
 }
@@ -167,6 +168,7 @@ model Notification {
   id        String    @id @default(cuid())
   userId    String
   message   String
+  type      NotificationType
   isRead    Boolean   @default(false)
   readAt    DateTime?
   createdAt DateTime  @default(now())
@@ -178,6 +180,24 @@ model Notification {
   @@map("notifications")
 }
 
+model NotificationHistory {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  message   String
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("notification_history")
+}
+
+enum NotificationType {
+  LOW_STOCK
+  ORDER
+  SUBSCRIPTION
+}
 enum Role {
   USER
   ADMIN

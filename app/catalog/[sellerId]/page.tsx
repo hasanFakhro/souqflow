@@ -26,22 +26,29 @@ export default async function CatalogPage({
   }
 
   return (
-    <CatalogClient
-      businessName={seller.business.name}
-      description={seller.business.description ?? undefined}
-      categories={seller.categories.map((c) => ({ id: c.id, name: c.name }))}
-      products={seller.products.map((p) => ({
-        id: p.id,
-        name: p.name,
-        description: p.description,
-        price: p.sellPrice,
-        costPrice: p.costPrice,
-        imageUrl: p.imageUrl,
-        category: p.category
-          ? { id: p.category.id, name: p.category.name }
-          : null,
-        stock: p.quantity,
-      }))}
-    />
+   <CatalogClient
+  sellerId={sellerId} 
+  businessName={seller.business.name}
+  description={seller.business.description ?? undefined}
+  categories={seller.categories.map((c) => ({
+    id: c.id,
+    name: c.name,
+  }))}
+  products={seller.products.map((p) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description,
+    price: p.sellPrice,
+    costPrice: p.costPrice,
+    imageUrl: p.imageUrl,
+    category: p.category
+      ? {
+          id: p.category.id,
+          name: p.category.name,
+        }
+      : null,
+    stock: p.quantity,
+  }))}
+/>
   );
 }

@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import {
   ArrowLeftRight,
   BookOpen,
+  History,
   LayoutDashboard,
   LogOut,
   Menu,
@@ -16,11 +17,7 @@ import {
   TrendingUp,
   X,
 } from "lucide-react";
-import {
-  toggleCurrency,
-  useCurrency,
-  useExchangeRate,
-} from "./currency";
+import { toggleCurrency, useCurrency, useExchangeRate } from "./currency";
 import { useBusiness } from "@/context/BusinessContext";
 
 const links = [
@@ -29,12 +26,17 @@ const links = [
   { href: "/orders", label: "Orders", icon: ShoppingCart },
   { href: "/sales", label: "Sales", icon: TrendingUp },
   { href: "/catalog-management", label: "Catalog Management", icon: BookOpen },
+  {
+    href: "/notification-history",
+    label: "Notification History",
+    icon: History,
+  },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
 function Sidebar() {
   const pathname = usePathname();
-const { businessName } = useBusiness();
+  const { businessName } = useBusiness();
   // Current currency selected by the user.
   const currency = useCurrency();
 
@@ -125,15 +127,12 @@ const { businessName } = useBusiness();
               <span
                 className="pt-0.5 text-lg leading-none"
                 aria-hidden="true"
-              >
-              </span>
+              ></span>
 
               <span className="flex-1">
                 {/* Currency + switch */}
                 <span className="flex items-center gap-2">
-                  <span className="font-medium text-gray-700">
-                    Currency
-                  </span>
+                  <span className="font-medium text-gray-700">Currency</span>
 
                   <span className="flex items-center gap-1 text-xs font-semibold">
                     {/* USD */}
@@ -209,15 +208,13 @@ const { businessName } = useBusiness();
 
         <nav aria-label="Main navigation" className="mt-8 space-y-2">
           {links.map(({ href, label, icon: Icon }) => {
-            const active =
-              pathname === href || pathname.startsWith(`${href}/`);
+            const active = pathname === href || pathname.startsWith(`${href}/`);
 
             return (
               <Link
                 key={href}
                 href={href}
-                        prefetch={false}
-
+                prefetch={false}
                 aria-current={active ? "page" : undefined}
                 className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
                   active
@@ -246,15 +243,12 @@ const { businessName } = useBusiness();
             <span
               className="pt-0.5 text-lg leading-none"
               aria-hidden="true"
-            >
-            </span>
+            ></span>
 
             <span className="flex-1">
               {/* Currency + switch */}
               <span className="flex items-center gap-2">
-                <span className="font-medium text-gray-700">
-                  Currency
-                </span>
+                <span className="font-medium text-gray-700">Currency</span>
 
                 <span className="flex items-center gap-1 text-xs font-semibold">
                   {/* USD */}
@@ -292,9 +286,7 @@ const { businessName } = useBusiness();
               <span className="mt-1 block text-xs text-gray-400">
                 1 USD ={" "}
                 {exchangeRate !== null
-                  ? `${new Intl.NumberFormat("en-US").format(
-                      exchangeRate,
-                    )} LL`
+                  ? `${new Intl.NumberFormat("en-US").format(exchangeRate)} LL`
                   : "..."}
               </span>
             </span>

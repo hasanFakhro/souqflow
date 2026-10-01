@@ -1,9 +1,9 @@
 import cron from "node-cron";
-import prisma from "@/lib/prisma";
-import { checkLowStock } from "./check-low-stock";
-import { cleanupNotifications } from "./cleanup-notifications";
 
-// Check low stock every day at midnight
+import prisma from "@/lib/prisma";
+
+import { checkLowStock } from "./check-low-stock";
+
 cron.schedule("0 0 * * *", async () => {
   console.log("Running low-stock check...");
 
@@ -11,17 +11,6 @@ cron.schedule("0 0 * * *", async () => {
     await checkLowStock();
   } catch (error) {
     console.error("Low-stock check failed:", error);
-  }
-});
-
-// Clean up old notifications every hour
-cron.schedule("0 * * * *", async () => {
-  console.log("Running notification cleanup...");
-
-  try {
-    await cleanupNotifications();
-  } catch (error) {
-    console.error("Notification cleanup failed:", error);
   }
 });
 

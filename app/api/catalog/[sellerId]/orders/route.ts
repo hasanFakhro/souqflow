@@ -64,6 +64,12 @@ export async function POST(
         },
         include: { category: { select: { name: true } } },
       });
+console.log("sellerId:", sellerId);
+console.log("productIds:", productIds);
+console.log(
+  "products found:",
+  products.map((product) => product.id)
+);
 
       if (products.length !== productIds.length) {
         throw new Error("One or more cart products are unavailable");
@@ -117,6 +123,25 @@ export async function POST(
           throw new Error(`Not enough stock for ${item.productName}`);
         }
       }
+      await tx.notificationHistory.create({
+  data: {
+    userId: sellerId,
+    type: "ORDER",
+    message: customerName
+      ? `New order ${order.orderNumber} from ${customerName}.`
+      : `New order ${order.orderNumber} received.`,
+  },
+});
+
+ await tx.notification.create({
+  data: {
+    userId: sellerId,
+    type: "ORDER",
+    message: customerName
+      ? `New order ${order.orderNumber} from ${customerName}.`
+      : `New order ${order.orderNumber} received.`,
+  },
+});
 
       return order;
     });
