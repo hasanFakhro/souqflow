@@ -47,9 +47,9 @@ const ProductCard = ({ product, hideStockCount = false }: ProductCardProps) => {
         <div
             onClick={handleAdd}
             aria-disabled={isOutOfStock}
-            className={`relative rounded-lg shadow-sm overflow-hidden flex flex-col select-none transition-all duration-150 ease-out ${isOutOfStock
-                ? "opacity-40 cursor-not-allowed"
-                : "cursor-pointer hover:shadow-md"
+            className={`relative flex select-none flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-150 ease-out ${isOutOfStock
+                ? "cursor-not-allowed opacity-40"
+                : "cursor-pointer hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
                 } ${isPressed ? "scale-95 shadow-sm" : "scale-100"
                 }`}
         >

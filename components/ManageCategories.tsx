@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 
 type Category = {
@@ -17,13 +17,8 @@ export default function ManageCategories() {
 
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (isOpen) {
-      fetchCategories();
-    }
-  }, [isOpen]);
 
-  const fetchCategories = async () => {
+  async function fetchCategories() {
     try {
       const response = await fetch("/api/categories");
 
@@ -36,6 +31,11 @@ export default function ManageCategories() {
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
+  }
+
+  const handleOpen = () => {
+    setIsOpen(true);
+    void fetchCategories();
   };
 
   const handleSaveCategory = async () => {
@@ -122,7 +122,7 @@ export default function ManageCategories() {
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
         className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 transition hover:from-blue-700 hover:to-purple-700"
       >
         Manage Categories

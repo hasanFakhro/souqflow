@@ -1,10 +1,27 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
 const themeStorageKey = "souqflow-theme";
+const dashboardPaths = [
+  "/dashboard",
+  "/inventory",
+  "/orders",
+  "/sales",
+  "/catalog",
+  "/settings",
+  "/catalog-management",
+];
+
 type Theme = "light" | "dark";
+type ThemeToggleProps = {
+  className?: string;
+  hideOnDashboard?: boolean;
+  showLabel?: boolean;
+  variant?: "surface" | "ghost";
+};
 
 function getTheme(): Theme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
@@ -30,9 +47,26 @@ function applyTheme(theme: Theme) {
   window.dispatchEvent(new Event("souqflow-theme-change"));
 }
 
-export default function ThemeToggle() {
+function isDashboardPath(pathname: string) {
+  return dashboardPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  );
+}
+
+export default function ThemeToggle({
+  className = "",
+  hideOnDashboard = false,
+  showLabel = false,
+  variant = "surface",
+}: ThemeToggleProps) {
+  const pathname = usePathname();
   const theme = useSyncExternalStore(subscribeToTheme, getTheme, getServerTheme);
   const isDark = theme === "dark";
+  const label = `Switch to ${isDark ? "light" : "dark"} mode`;
+
+  if (hideOnDashboard && isDashboardPath(pathname)) {
+    return null;
+  }
 
   function toggleTheme() {
     const nextTheme: Theme = isDark ? "light" : "dark";
@@ -45,12 +79,18 @@ export default function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      title={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className="fixed right-5 top-5 z-[60] inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-700 shadow-lg shadow-blue-100/40 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 max-md:right-20"
+      aria-label={label}
+      title={label}
+      className={`inline-flex items-center justify-center rounded-xl text-gray-700 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${
+        showLabel ? "min-h-10 w-full justify-start gap-2 px-3 py-2 text-sm font-medium" : "h-10 w-10"
+      } ${
+        variant === "surface"
+          ? "border border-gray-200 bg-white shadow-lg shadow-blue-100/40 hover:bg-blue-50 hover:text-blue-700"
+          : "border border-transparent bg-transparent hover:bg-blue-50 hover:text-blue-700"
+      } ${className}`}
     >
       {isDark ? <Sun size={18} aria-hidden="true" /> : <Moon size={18} aria-hidden="true" />}
-      <span className="sr-only">Switch to {isDark ? "light" : "dark"} mode</span>
+      <span className={showLabel ? "" : "sr-only"}>{label}</span>
     </button>
   );
 }
