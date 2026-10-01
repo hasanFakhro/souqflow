@@ -161,7 +161,7 @@ export default function NotificationBell() {
       <button
         type="button"
         onClick={handleBellClick}
-        className="relative mr-10 -translate-y-3"
+        className="relative mr-10 -translate-y-3 -translate-x-6"
       >
         <Bell
           ref={bellRef}
