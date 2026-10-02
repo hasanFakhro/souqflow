@@ -244,7 +244,7 @@ export default function ProductTable({
             {filteredProducts.map((product) => (
               <tr
                 key={product.id}
-                className="border-b border-gray-100 hover:bg-gray-50"
+                className="table-row-hover border-b border-gray-100 transition-colors hover:bg-gray-50"
               >
                 <td className="px-4 py-3">
                   {product.imageUrl ? (

@@ -66,7 +66,7 @@ function OrderTableRow({ order }: { order: SerializedOrder }) {
 
   return (
     <Fragment>
-      <tr className="border-b border-gray-100 align-top hover:bg-gray-50/60" aria-busy={disabled}>
+      <tr className="table-row-hover border-b border-gray-100 align-top transition-colors hover:bg-gray-50/60" aria-busy={disabled}>
         <td className="max-w-36 break-words px-2 py-3 font-medium text-gray-900">
           {order.orderNumber}
         </td>
