@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { orderStateTransitions } from "@/lib/order-state";
 import { serializeOrder } from "@/lib/orders";
-import { orderEditSchema, orderStateSchema } from "@/lib/validations/order";
+import { orderEditSchema, orderRequestActionSchema, orderStateSchema } from "@/lib/validations/order";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -78,7 +78,26 @@ export async function PATCH(request: Request, { params }: Context) {
 
   try {
     const { id } = await params;
-    const parsed = orderStateSchema.safeParse(await request.json());
+    const body = await request.json();
+    const requestAction = orderRequestActionSchema.safeParse(body);
+
+    if (requestAction.success) {
+      // Source and ownership are checked atomically so a stale request cannot
+      // reject an order that has already been accepted.
+      const where = { id, ownerId: userId, source: "STOREFRONT" as const };
+      const result = requestAction.data.action === "accept"
+        ? await prisma.order.updateMany({ where, data: { source: "MANUAL" } })
+        : await prisma.order.deleteMany({ where });
+
+      if (result.count === 0) {
+        return NextResponse.json({ message: "Request is no longer available. Refresh and try again." }, { status: 409 });
+      }
+
+      refreshOrders();
+      return NextResponse.json({ message: requestAction.data.action === "accept" ? "Request accepted" : "Request deleted" });
+    }
+
+    const parsed = orderStateSchema.safeParse(body);
 
     if (!parsed.success) {
       return NextResponse.json({ message: "Invalid order state" }, { status: 400 });

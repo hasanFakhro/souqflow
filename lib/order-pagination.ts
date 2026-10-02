@@ -1,12 +1,13 @@
 import type { OrderState } from "./order-state";
+import type { OrderSource } from "@prisma/client";
 
 export const ordersPerPage = 10;
 export const preloadedOrderPages = 5;
-export type OrderSearchEntry = { id: string; status: OrderState; searchText: string };
+export type OrderSearchEntry = { id: string; status: OrderState; source: OrderSource; searchText: string };
 
-export function filterOrderIndex(index: OrderSearchEntry[], search: string, state: OrderState | "ALL") {
+export function filterOrderIndex(index: OrderSearchEntry[], search: string, state: OrderState | "ALL", source: OrderSource) {
   const query = search.trim().toLowerCase();
-  return index.filter((order) => (state === "ALL" || order.status === state) && order.searchText.includes(query));
+  return index.filter((order) => order.source === source && (state === "ALL" || order.status === state) && order.searchText.includes(query));
 }
 
 export function orderPage(total: number, requestedPage: number) {

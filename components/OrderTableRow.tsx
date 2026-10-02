@@ -11,19 +11,13 @@ import { orderStateLabels, orderStateStyles, orderStateTransitions, type OrderSt
 
 const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
 
-type RequestActions = {
-  onAccept: () => void;
-  onReject: () => void;
-  pending?: boolean;
-};
-
-function OrderTableRow({ order, requestActions }: { order: SerializedOrder; requestActions?: RequestActions }) {
+function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; isRequest?: boolean }) {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [refreshing, startTransition] = useTransition();
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState(false);
-  const disabled = busy || refreshing || Boolean(requestActions?.pending);
+  const disabled = busy || refreshing;
   const transitions = orderStateTransitions[order.status];
   const total = order.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
 
@@ -47,6 +41,7 @@ function OrderTableRow({ order, requestActions }: { order: SerializedOrder; requ
   }
 
   async function mutate(method: "PATCH" | "DELETE", body?: object) {
+    if (disabled) return;
     setBusy(true);
     setError("");
     try {
@@ -87,7 +82,7 @@ function OrderTableRow({ order, requestActions }: { order: SerializedOrder; requ
           <time dateTime={order.orderedAt}>{date.format(new Date(order.orderedAt))}</time>
         </td>
         <td className="min-w-36 px-2 py-3">
-          {requestActions ? (
+          {isRequest ? (
             <span className={`inline-block rounded-lg border px-3 py-2 text-xs font-semibold ${orderStateStyles[order.status]}`}>
               {orderStateLabels[order.status]}
             </span>
@@ -110,13 +105,13 @@ function OrderTableRow({ order, requestActions }: { order: SerializedOrder; requ
         </td>
         <td className="px-2 py-3">
             <div className="flex gap-1">
-              {requestActions ? <>
+              {isRequest ? <>
                 <button
                   type="button"
                   disabled={disabled}
                   aria-label={`Accept order request ${order.orderNumber}`}
                   title="Accept order request"
-                  onClick={requestActions.onAccept}
+                  onClick={() => void mutate("PATCH", { action: "accept" })}
                   className="shrink-0 rounded-md p-2 text-green-600 transition hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <Check size={18} aria-hidden="true" />
@@ -126,7 +121,7 @@ function OrderTableRow({ order, requestActions }: { order: SerializedOrder; requ
                   disabled={disabled}
                   aria-label={`Reject order request ${order.orderNumber}`}
                   title="Reject order request"
-                  onClick={requestActions.onReject}
+                  onClick={() => void mutate("PATCH", { action: "reject" })}
                   className="shrink-0 rounded-md p-2 text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <X size={18} aria-hidden="true" />

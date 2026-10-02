@@ -11,3 +11,7 @@ export const orderStateSchema = z.object({
   status: z.enum(orderStates),
   previousStatus: z.enum(orderStates),
 }).strict();
+
+export const orderRequestActionSchema = z.object({
+  action: z.enum(["accept", "reject"]),
+}).strict();

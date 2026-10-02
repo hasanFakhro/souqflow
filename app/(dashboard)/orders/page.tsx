@@ -20,6 +20,7 @@ export default async function OrdersPage({
     page?: string;
     search?: string;
     state?: string;
+    view?: string;
   }>;
 }) {
   const [session, params] = await Promise.all([
@@ -54,6 +55,7 @@ export default async function OrdersPage({
       orderNumber: true,
       customerName: true,
       status: true,
+      source: true,
       items: {
         select: {
           productName: true,
@@ -70,6 +72,7 @@ export default async function OrdersPage({
   const index = summaries.map((order) => ({
     id: order.id,
     status: order.status,
+    source: order.source,
     searchText: [
       order.orderNumber,
       order.customerName,
@@ -86,7 +89,8 @@ export default async function OrdersPage({
   const matches = filterOrderIndex(
     index,
     search,
-    state
+    state,
+    params.view === "requests" ? "STOREFRONT" : "MANUAL"
   );
 
   const { firstPageSize } = orderPage(

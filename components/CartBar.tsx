@@ -17,51 +17,27 @@ import {
 import { toast } from "sonner";
 
 const CartBar = () => {
-    const router = useRouter();
-    const [isPending, startTransition] = useTransition();
-    const pendingClear = useRef(false);
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const pendingClear = useRef(false);
 
-    const items = useCartStore((state) => state.items);
-    const [isOpen, setIsOpen] = useState(false);
-    const hasItems = items.length > 0;
+  const items = useCartStore((state) => state.items);
+  const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [snapshot, setSnapshot] = useState<typeof items>([]);
+  const hasItems = items.length > 0;
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    useEffect(() => {
-        if (pendingClear.current && !isPending) {
-            clearCart();
-            pendingClear.current = false;
-        }
-    }, [isPending]);
-
-    if (!hasItems) return null;
-
-    const displayItems = items;
-    const totalPrice = displayItems.reduce((acc, item) => acc + item.unitPrice * item.quantity, 0);
-    const totalQuantity = displayItems.reduce((acc, item) => acc + item.quantity, 0);
-
-    const handleCreateOrder = async () => {
-        try {
-            const response = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items }) });
-            const result = await response.json();
-            if (response.ok) {
-                setIsOpen(false);
-                toast.success(result.message);
-                pendingClear.current = true;
-                startTransition(() => {
-                    router.refresh();
-                });
-            }
-            else {
-                toast.error(result.error || "Something went wrong");
-            }
-
-        } catch (error) {
-            console.error('Couldnt send request: ' + error);
-            toast.error("Couldn't reach the server");
-        }
+  useEffect(() => {
+    if (hasItems) {
+      setSnapshot(items);
+    } else {
+      setIsOpen(false);
     }
   }, [hasItems, items]);
-
   useEffect(() => {
     if (pendingClear.current && !isPending) {
       clearCart();

@@ -47,8 +47,7 @@ export default function OrderTable({
   } | null>(null);
 
   const matches = useMemo(
-    // Requests will be supplied separately when the request column is available.
-    () => isRequests ? [] : filterOrderIndex(index, search, state),
+    () => filterOrderIndex(index, search, state, isRequests ? "STOREFRONT" : "MANUAL"),
     [index, search, state, isRequests]
   );
 
@@ -320,6 +319,7 @@ export default function OrderTable({
                 <OrderTableRow
                   key={order.id}
                   order={order}
+                  isRequest={isRequests}
                 />
               ))}
 
