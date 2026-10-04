@@ -1,8 +1,8 @@
 /* eslint-disable react-hooks/set-state-in-effect */
-
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import axios from "axios";
 import { Package, X } from "lucide-react";
 
@@ -19,17 +19,14 @@ type NotificationResponse = {
 };
 
 export default function OrderCustomerNotification() {
-  const [notifications, setNotifications] =
-    useState<Notification[]>([]);
-
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const [isBouncing, setIsBouncing] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const processedNotificationIds =
-    useRef<Set<string>>(new Set());
+  const processedNotificationIds = useRef<Set<string>>(new Set());
 
   async function getNotifications() {
     try {
@@ -282,7 +279,7 @@ export default function OrderCustomerNotification() {
           flex
           h-10
           w-10
-          -translate-x-7
+          translate-x-2
           -translate-y-5
           items-center
           justify-center
@@ -294,24 +291,24 @@ export default function OrderCustomerNotification() {
           dark:hover:bg-gray-800
         "
       >
-       <Package
-  size={27}
-  strokeWidth={2.2}
-  className={`
-    transition-all
-    duration-300
-    ${
-      unreadCount > 0
-        ? "text-amber-500 dark:text-amber-400"
-        : "text-gray-400 dark:text-gray-500"
-    }
-    ${
-      isBouncing
-        ? "-translate-y-1"
-        : ""
-    }
-  `}
-/>
+        <Package
+          size={27}
+          strokeWidth={2.2}
+          className={`
+            transition-all
+            duration-300
+            ${
+              unreadCount > 0
+                ? "text-amber-500 dark:text-amber-400"
+                : "text-gray-400 dark:text-gray-500"
+            }
+            ${
+              isBouncing
+                ? "-translate-y-1"
+                : ""
+            }
+          `}
+        />
 
         {unreadCount > 0 && (
           <span
@@ -469,16 +466,16 @@ export default function OrderCustomerNotification() {
                       items-center
                       justify-center
                       rounded-full
-                      bg-amber-50
-                      dark:bg-amber-500/10
+                      bg-gray-100
+                      dark:bg-gray-800
                     "
                   >
                     <Package
                       size={30}
                       strokeWidth={1.7}
                       className="
-                        text-amber-500
-                        dark:text-amber-400
+                        text-gray-400
+                        dark:text-gray-500
                       "
                     />
                   </div>
@@ -527,13 +524,7 @@ export default function OrderCustomerNotification() {
                         dark:hover:bg-gray-800
                       "
                     >
-                      <div
-                        className="
-                          flex
-                          items-start
-                          gap-3
-                        "
-                      >
+                      <div className="flex items-start gap-3">
                         <div
                           className="
                             flex
@@ -565,9 +556,7 @@ export default function OrderCustomerNotification() {
                               dark:text-gray-200
                             "
                           >
-                            {
-                              notification.message
-                            }
+                            {notification.message}
                           </p>
 
                           <p
@@ -601,6 +590,34 @@ export default function OrderCustomerNotification() {
                 )
               )}
             </div>
+
+            <Link
+              href="/orders"
+              onClick={() => setIsOpen(false)}
+              className="
+                flex
+                items-center
+                justify-center
+                border-t
+                border-gray-200
+                bg-white
+                px-4
+                py-3
+                text-sm
+                font-medium
+                text-violet-600
+                transition
+                hover:bg-gray-50
+                hover:text-violet-700
+                dark:border-gray-700
+                dark:bg-gray-900
+                dark:text-violet-400
+                dark:hover:bg-gray-800
+                dark:hover:text-violet-300
+              "
+            >
+              View orders →
+            </Link>
           </div>
         </>
       )}

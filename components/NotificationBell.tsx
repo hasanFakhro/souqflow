@@ -2,6 +2,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import axios from "axios";
 import { Bell, X } from "lucide-react";
 
@@ -18,9 +19,7 @@ type NotificationResponse = {
 };
 
 export default function NotificationBell() {
-  const [notifications, setNotifications] =
-    useState<Notification[]>([]);
-
+  const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -29,25 +28,19 @@ export default function NotificationBell() {
   async function getNotifications() {
     try {
       const response =
-        await axios.get<NotificationResponse>(
-          "/api/notifications",
-        );
+        await axios.get<NotificationResponse>("/api/notifications");
 
       setNotifications(response.data.notifications);
       setUnreadCount(response.data.unreadCount);
     } catch (error) {
-      console.error(
-        "Failed to load notifications:",
-        error,
-      );
+      console.error("Failed to load notifications:", error);
     }
   }
 
   async function markDisplayedNotificationsAsRead() {
-    const unreadNotifications =
-      notifications.filter(
-        (notification) => !notification.isRead,
-      );
+    const unreadNotifications = notifications.filter(
+      (notification) => !notification.isRead,
+    );
 
     if (unreadNotifications.length === 0) {
       return;
@@ -70,16 +63,10 @@ export default function NotificationBell() {
       );
 
       setUnreadCount((currentCount) =>
-        Math.max(
-          0,
-          currentCount - unreadNotifications.length,
-        ),
+        Math.max(0, currentCount - unreadNotifications.length),
       );
     } catch (error) {
-      console.error(
-        "Failed to mark notifications as read:",
-        error,
-      );
+      console.error("Failed to mark notifications as read:", error);
 
       await getNotifications();
     }
@@ -164,16 +151,20 @@ export default function NotificationBell() {
         className="
           relative
           mr-10
-          -translate-x-6
-          -translate-y-3
+          flex h-10 w-10
+          translate-x-5 -translate-y-5
+          items-center justify-center
+          rounded-full
+          transition-colors
+          hover:bg-gray-100
+          dark:hover:bg-gray-800
         "
       >
         <Bell
           ref={bellRef}
           strokeWidth={2.5}
           className={`
-            h-7
-            w-7
+            h-7 w-7
             transition-colors
             ${
               unreadCount > 0
@@ -187,24 +178,17 @@ export default function NotificationBell() {
           <span
             className="
               absolute
-              -right-2
-              -top-2
-              flex
-              h-5
-              min-w-5
-              items-center
-              justify-center
+              -right-2 -top-2
+              flex h-5 min-w-5
+              items-center justify-center
               rounded-full
               bg-red-500
               px-1
-              text-xs
-              font-semibold
+              text-xs font-semibold
               text-white
             "
           >
-            {unreadCount > 99
-              ? "99+"
-              : unreadCount}
+            {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
       </button>
@@ -240,6 +224,7 @@ export default function NotificationBell() {
               shadow-2xl
               dark:border-gray-700
               dark:bg-gray-900
+
               md:absolute
               md:left-auto
               md:right-0
@@ -338,16 +323,16 @@ export default function NotificationBell() {
                       items-center
                       justify-center
                       rounded-full
-                      bg-blue-50
-                      dark:bg-blue-500/10
+                      bg-gray-100
+                      dark:bg-gray-800
                     "
                   >
                     <Bell
                       size={30}
                       strokeWidth={1.7}
                       className="
-                        text-blue-500
-                        dark:text-blue-400
+                        text-gray-400
+                        dark:text-gray-500
                       "
                     />
                   </div>
@@ -394,13 +379,7 @@ export default function NotificationBell() {
                       dark:hover:bg-gray-800
                     "
                   >
-                    <div
-                      className="
-                        flex
-                        items-start
-                        gap-3
-                      "
-                    >
+                    <div className="flex items-start gap-3">
                       <div
                         className="
                           flex
@@ -410,15 +389,15 @@ export default function NotificationBell() {
                           items-center
                           justify-center
                           rounded-full
-                          bg-blue-50
-                          dark:bg-blue-500/10
+                          bg-amber-50
+                          dark:bg-amber-500/10
                         "
                       >
                         <Bell
                           size={18}
                           className="
-                            text-blue-500
-                            dark:text-blue-400
+                            text-amber-500
+                            dark:text-amber-400
                           "
                         />
                       </div>
@@ -447,11 +426,52 @@ export default function NotificationBell() {
                           ).toLocaleString()}
                         </p>
                       </div>
+
+                      {!notification.isRead && (
+                        <span
+                          className="
+                            mt-2
+                            h-2
+                            w-2
+                            shrink-0
+                            rounded-full
+                            bg-violet-500
+                          "
+                        />
+                      )}
                     </div>
                   </div>
                 ))
               )}
             </div>
+
+            <Link
+              href="/inventory"
+              onClick={() => setIsOpen(false)}
+              className="
+                flex
+                items-center
+                justify-center
+                border-t
+                border-gray-200
+                bg-white
+                px-4
+                py-3
+                text-sm
+                font-medium
+                text-violet-600
+                transition
+                hover:bg-gray-50
+                hover:text-violet-700
+                dark:border-gray-700
+                dark:bg-gray-900
+                dark:text-violet-400
+                dark:hover:bg-gray-800
+                dark:hover:text-violet-300
+              "
+            >
+              View inventory →
+            </Link>
           </div>
         </>
       )}
