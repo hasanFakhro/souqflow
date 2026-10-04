@@ -11,6 +11,8 @@ export function serializeOrder(order: OrderWithItems): SerializedOrder {
     id: order.id,
     orderNumber: order.orderNumber,
     customerName: order.customerName,
+    customerAddress: order.customerAddress,
+    customerPhone: order.customerPhone,
     total: order.total,
     status: order.status,
     source: order.source,
