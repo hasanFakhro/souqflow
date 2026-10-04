@@ -210,12 +210,8 @@ export default function ProductTable({
                 Category
               </th>
 
-              <th className="px-4 py-3 font-semibold text-gray-700">
-                Color
-              </th>
-
-              <th className="px-4 py-3 font-semibold text-gray-700">
-                Size
+               <th className="whitespace-nowrap px-4 py-3 font-semibold text-gray-700">
+                Color / Size
               </th>
 
               <th className="px-4 py-3 font-semibold text-gray-700">
@@ -278,11 +274,9 @@ export default function ProductTable({
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">
-                  {product.color || "-"}
-                </td>
-
-                <td className="px-4 py-4 text-gray-600">
-                  {product.size || "-"}
+                  {product.color || product.size
+                    ? [product.color, product.size].filter(Boolean).join(" / ")
+                    : "-"}
                 </td>
 
                 <td className="px-4 py-4 text-gray-600">

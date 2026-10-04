@@ -6,6 +6,7 @@ import { Pencil, Plus, Trash2, X } from "lucide-react";
 type Category = {
   id: string;
   name: string;
+  catalogOrder: number;
 };
 
 export default function ManageCategories() {
@@ -187,7 +188,61 @@ export default function ManageCategories() {
                     key={category.id}
                     className="flex items-center justify-between rounded-lg border p-3"
                   >
-                    <span className="font-medium">{category.name}</span>
+                    <div className="flex items-center gap-3">
+                      <span className="font-medium">{category.name}</span>
+
+                      <input
+                        type="number"
+                        min="1"
+                        value={category.catalogOrder || ""}
+                        onChange={(e) => {
+                          const value = Number(e.target.value);
+
+                          setCategories((currentCategories) =>
+                            currentCategories.map((item) =>
+                              item.id === category.id
+                                ? { ...item, catalogOrder: value }
+                                : item
+                            )
+                          );
+                        }}
+                        onBlur={async (e) => {
+                          const value = Number(e.target.value);
+
+                          if (!Number.isInteger(value) || value < 1) {
+                            return;
+                          }
+
+                          try {
+                            const response = await fetch(`/api/categories/${category.id}`, {
+                              method: "PATCH",
+                              headers: {
+                                "Content-Type": "application/json",
+                              },
+                              body: JSON.stringify({
+                                catalogOrder: value,
+                              }),
+                            });
+
+                            const data = await response.json();
+
+                            if (!response.ok) {
+                              throw new Error(
+                                data.message || "Failed to update category order"
+                              );
+                            }
+                          } catch (error) {
+                            console.error("Error updating category order:", error);
+                            alert(
+                              error instanceof Error
+                                ? error.message
+                                : "Something went wrong"
+                            );
+                          }
+                        }}
+                        className="w-20 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      />
+                    </div>
 
                     <div className="flex items-center gap-1">
                       <button

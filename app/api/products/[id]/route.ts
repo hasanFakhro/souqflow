@@ -145,31 +145,128 @@ export async function PATCH(request: NextRequest, { params }: Context) {
 
   try {
     const { id } = await params;
-    const amount = Number((await request.json()).amount);
-
-    if (!Number.isInteger(amount) || amount <= 0) {
-      return NextResponse.json(
-        { message: "Restock amount must be a positive whole number" },
-        { status: 400 }
-      );
-    }
+    const body = await request.json();
 
     const existingProduct = await getOwnedProduct(id, userId);
 
     if (!existingProduct) {
-      return NextResponse.json({ message: "Product not found" }, { status: 404 });
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
     }
 
-    const product = await prisma.product.update({
-      where: { id },
-      data: { quantity: { increment: amount } },
-    });
+    if (body.amount !== undefined) {
+      const amount = Number(body.amount);
 
-    refreshProductViews();
-    return NextResponse.json({ message: "Product restocked successfully", product });
+      if (!Number.isInteger(amount) || amount <= 0) {
+        return NextResponse.json(
+          { message: "Restock amount must be a positive whole number" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          quantity: { increment: amount },
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: "Product restocked successfully",
+        product,
+      });
+    }
+
+    if (body.isHidden !== undefined) {
+      if (typeof body.isHidden !== "boolean") {
+        return NextResponse.json(
+          { message: "isHidden must be a boolean" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          isHidden: body.isHidden,
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: body.isHidden
+          ? "Product hidden successfully"
+          : "Product is visible again",
+        product,
+      });
+    }
+
+    if (body.isPopular !== undefined) {
+      if (typeof body.isPopular !== "boolean") {
+        return NextResponse.json(
+          { message: "isPopular must be a boolean" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          isPopular: body.isPopular,
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: body.isPopular
+          ? "Product marked as popular"
+          : "Product removed from popular products",
+        product,
+      });
+    }
+
+    if (body.catalogOrder !== undefined) {
+      const catalogOrder = Number(body.catalogOrder);
+
+      if (!Number.isInteger(catalogOrder) || catalogOrder < 1) {
+        return NextResponse.json(
+          { message: "Catalog order must be a non-negative whole number" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          catalogOrder,
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: "Catalog order updated successfully",
+        product,
+      });
+    }
+
+    return NextResponse.json(
+      { message: "No valid update provided" },
+      { status: 400 }
+    );
   } catch (error) {
-    console.error("Error restocking product:", error);
-    return NextResponse.json({ message: "Failed to restock product" }, { status: 500 });
+    console.error("Error updating product:", error);
+
+    return NextResponse.json(
+      { message: "Failed to update product" },
+      { status: 500 }
+    );
   }
 }
 
