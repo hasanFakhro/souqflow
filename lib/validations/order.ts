@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { orderStates } from "@/lib/order-state";
+import { orderStates, paymentStates } from "@/lib/order-state";
 
 export const orderEditSchema = z.object({
   orderNumber: z.string().trim().min(1, "Order number is required").max(100),
@@ -14,4 +14,9 @@ export const orderStateSchema = z.object({
 
 export const orderRequestActionSchema = z.object({
   action: z.enum(["accept", "reject"]),
+}).strict();
+
+export const paymentStateSchema = z.object({
+  paymentStatus: z.enum(paymentStates),
+  previousPaymentStatus: z.enum(paymentStates),
 }).strict();

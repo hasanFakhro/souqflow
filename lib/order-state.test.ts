@@ -1,13 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { orderStateTransitions } from "./order-state";
-import { orderEditSchema, orderStateSchema } from "./validations/order";
+import { orderStates } from "./order-state";
+import { orderEditSchema, orderStateSchema, paymentStateSchema } from "./validations/order";
 
-test("orders follow delivery stages and can recover from problems", () => {
-  assert.deepEqual(orderStateTransitions.PENDING, ["DELIVERING", "PROBLEM"]);
-  assert.deepEqual(orderStateTransitions.DELIVERING, ["DONE", "PROBLEM"]);
-  assert.deepEqual(orderStateTransitions.PROBLEM, ["PENDING", "DELIVERING"]);
-  assert.deepEqual(orderStateTransitions.DONE, []);
+test("delivery states can change freely, including reopening completed orders", () => {
+  for (const previousStatus of orderStates) {
+    for (const status of orderStates) {
+      assert.equal(orderStateSchema.safeParse({ status, previousStatus }).success, true);
+    }
+  }
 });
 
 test("state updates require a recognized current and next state", () => {
@@ -22,4 +23,13 @@ test("order edits trim text and reject empty numbers, invalid dates and state by
   assert.equal(orderEditSchema.safeParse({ ...values, orderNumber: " " }).success, false);
   assert.equal(orderEditSchema.safeParse({ ...values, orderedAt: "invalid" }).success, false);
   assert.equal(orderEditSchema.safeParse({ ...values, status: "DONE" }).success, false);
+});
+
+test("payment updates validate independently and require the previous payment state", () => {
+  for (const paymentStatus of ["UNPAID", "PAID", "REFUNDED"]) {
+    assert.equal(paymentStateSchema.safeParse({ paymentStatus, previousPaymentStatus: "UNPAID" }).success, true);
+  }
+  assert.equal(paymentStateSchema.safeParse({ paymentStatus: "PAID" }).success, false);
+  assert.equal(paymentStateSchema.safeParse({ paymentStatus: "DONE", previousPaymentStatus: "UNPAID" }).success, false);
+  assert.equal(paymentStateSchema.safeParse({ paymentStatus: "PAID", previousPaymentStatus: "UNPAID", status: "DONE" }).success, false);
 });

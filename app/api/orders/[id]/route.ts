@@ -3,9 +3,8 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { orderStateTransitions } from "@/lib/order-state";
 import { serializeOrder } from "@/lib/orders";
-import { orderEditSchema, orderRequestActionSchema, orderStateSchema } from "@/lib/validations/order";
+import { orderEditSchema, orderRequestActionSchema, orderStateSchema, paymentStateSchema } from "@/lib/validations/order";
 
 type Context = { params: Promise<{ id: string }> };
 
@@ -97,6 +96,19 @@ export async function PATCH(request: Request, { params }: Context) {
       return NextResponse.json({ message: requestAction.data.action === "accept" ? "Request accepted" : "Request deleted" });
     }
 
+    const payment = paymentStateSchema.safeParse(body);
+    if (payment.success) {
+      const result = await prisma.order.updateMany({
+        where: { id, ownerId: userId, paymentStatus: payment.data.previousPaymentStatus },
+        data: { paymentStatus: payment.data.paymentStatus },
+      });
+      if (!result.count) {
+        return NextResponse.json({ message: "Order changed or is unavailable. Refresh and try again." }, { status: 409 });
+      }
+      refreshOrders();
+      return NextResponse.json({ message: "Payment state updated" });
+    }
+
     const parsed = orderStateSchema.safeParse(body);
 
     if (!parsed.success) {
@@ -115,10 +127,6 @@ export async function PATCH(request: Request, { params }: Context) {
         { message: "Order changed. Refresh and try again." },
         { status: 409 }
       );
-    }
-
-    if (!orderStateTransitions[previousStatus].includes(status)) {
-      return NextResponse.json({ message: "This state change is not allowed." }, { status: 400 });
     }
 
     const order = await prisma.order.update({

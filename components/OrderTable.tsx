@@ -245,7 +245,7 @@ export default function OrderTable({
         </div>
 
         <label className="flex items-center gap-3 text-sm font-medium text-gray-600">
-          State
+          Delivery state
 
           <select
             value={filters.state}
@@ -298,7 +298,8 @@ export default function OrderTable({
                 "Items",
                 "Total",
                 "Ordered at",
-                "State",
+                "Payment state",
+                "Delivery state",
                 "Actions",
               ].map((column) => (
                 <th
@@ -326,7 +327,7 @@ export default function OrderTable({
             {pending && (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={8}
                   className="py-12 text-center text-gray-500"
                   role="status"
                 >
@@ -338,7 +339,7 @@ export default function OrderTable({
             {error && (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={8}
                   className="py-8 text-center"
                 >
                   <p
@@ -374,7 +375,7 @@ export default function OrderTable({
             {totalOrders === 0 && (
               <tr>
                 <td
-                  colSpan={7}
+                  colSpan={8}
                   className="py-12 text-center text-gray-500"
                 >
                   {!search && state === "ALL"

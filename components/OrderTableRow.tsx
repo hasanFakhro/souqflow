@@ -7,7 +7,7 @@ import EditOrderPopup from "@/components/EditOrderPopup";
 import OrderItemsPopup from "@/components/OrderItemsPopup";
 import { Price } from "@/app/(dashboard)/currency";
 import type { SerializedOrder } from "@/lib/orders";
-import { orderStateLabels, orderStateStyles, orderStateTransitions, type OrderState } from "@/lib/order-state";
+import { paymentStates, paymentStateLabels, orderStateLabels, orderStates, type OrderState } from "@/lib/order-state";
 
 const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
 
@@ -18,7 +18,6 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
   const [error, setError] = useState("");
   const [downloading, setDownloading] = useState(false);
   const disabled = busy || refreshing;
-  const transitions = orderStateTransitions[order.status];
   const total = order.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
 
   async function downloadReceipt() {
@@ -81,27 +80,33 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
         <td className="whitespace-nowrap px-2 py-3 text-gray-600">
           <time dateTime={order.orderedAt}>{date.format(new Date(order.orderedAt))}</time>
         </td>
-        <td className="min-w-36 px-2 py-3">
-          {isRequest ? (
-            <span className={`inline-block rounded-lg border px-3 py-2 text-xs font-semibold ${orderStateStyles[order.status]}`}>
-              {orderStateLabels[order.status]}
-            </span>
-          ) : <div className="relative">
+        <td className="min-w-32 px-2 py-3">
             <select
-              aria-label={`State for order ${order.orderNumber}`}
-              value={order.status}
-              disabled={disabled || transitions.length === 0}
-              title={transitions.length === 0 ? "This order is complete" : "Change order state"}
-              onChange={(event) => changeState(event.target.value as OrderState)}
-              className={`w-full cursor-pointer appearance-none rounded-lg border py-2 pl-3 pr-9 text-xs font-semibold outline-none focus:ring-2 disabled:cursor-default ${disabled ? "opacity-60" : ""} ${orderStateStyles[order.status]}`}
+              aria-label={`Payment state for order ${order.orderNumber}`}
+              value={order.paymentStatus}
+              disabled={disabled}
+              onChange={(event) => void mutate("PATCH", { paymentStatus: event.target.value, previousPaymentStatus: order.paymentStatus })}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold disabled:opacity-60"
             >
-              <option value={order.status}>{orderStateLabels[order.status]}</option>
-              {transitions.map((status) => (
+              {paymentStates.map((state) => <option key={state} value={state}>{paymentStateLabels[state]}</option>)}
+            </select>
+        </td>
+        <td className="min-w-36 px-2 py-3">
+          <div className="relative">
+            <select
+              aria-label={`Delivery state for order ${order.orderNumber}`}
+              value={order.status}
+              disabled={disabled}
+              title="Change delivery state"
+              onChange={(event) => changeState(event.target.value as OrderState)}
+              className={`w-full cursor-pointer appearance-none rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-gray-900 text-xs font-semibold outline-none focus:ring-2 focus:ring-gray-200 disabled:cursor-default ${disabled ? "opacity-60" : ""}`}
+            >
+              {orderStates.map((status) => (
                 <option key={status} value={status}>{orderStateLabels[status]}</option>
               ))}
             </select>
             <ChevronDown size={14} aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
-          </div>}
+          </div>
         </td>
         <td className="px-2 py-3">
             <div className="flex gap-1">
@@ -154,7 +159,7 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
             </div>
         </td>
       </tr>
-      {error && <tr><td colSpan={7} className="px-4 py-3 text-sm text-red-600" role="alert">{error}</td></tr>}
+      {error && <tr><td colSpan={8} className="px-4 py-3 text-sm text-red-600" role="alert">{error}</td></tr>}
     </Fragment>
   );
 }

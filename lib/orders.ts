@@ -15,6 +15,7 @@ export function serializeOrder(order: OrderWithItems): SerializedOrder {
     customerPhone: order.customerPhone,
     total: order.total,
     status: order.status,
+    paymentStatus: order.paymentStatus,
     source: order.source,
     orderedAt: order.orderedAt.toISOString(),
     items: order.items.map(({ id, orderId, productId, productName, category, quantity, unitCost, unitPrice }) => ({

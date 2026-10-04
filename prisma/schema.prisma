@@ -119,6 +119,7 @@ model Order {
   customerPhone   String?
   status       OrderStatus @default(PENDING)
   source       OrderSource @default(MANUAL)
+  paymentStatus PaymentStatus @default(UNPAID)
 
   // Nullable only for records that existed before ownership was introduced.
   ownerId String?
@@ -215,4 +216,10 @@ enum OrderStatus {
 enum OrderSource {
   STOREFRONT
   MANUAL
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
 }

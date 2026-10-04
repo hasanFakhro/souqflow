@@ -1,7 +1,7 @@
 import { jsPDF } from "jspdf";
 import { autoTable } from "jspdf-autotable";
 import type { SerializedOrder } from "@/lib/orders";
-import { orderStateLabels } from "@/lib/order-state";
+import { orderStateLabels, paymentStateLabels } from "@/lib/order-state";
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
@@ -24,7 +24,8 @@ export function createOrderReceipt(order: SerializedOrder, usdToLbp: number) {
       ["Order", order.orderNumber],
       ["Customer", order.customerName || "Guest"],
       ["Ordered at", date.format(new Date(order.orderedAt))],
-      ["Order status", orderStateLabels[order.status]],
+      ["Payment state", paymentStateLabels[order.paymentStatus]],
+      ["Delivery state", orderStateLabels[order.status]],
     ],
     columnStyles: { 0: { cellWidth: 35, fontStyle: "bold" } },
     styles: { fontSize: 10, cellPadding: 3, overflow: "linebreak" },
