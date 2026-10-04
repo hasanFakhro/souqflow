@@ -71,8 +71,19 @@ function Sidebar() {
         <Link
           href="/dashboard"
           onClick={closeMobileMenu}
-          className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent"
-        >
+className="
+    max-w-[250px]
+    truncate
+    whitespace-nowrap
+    bg-gradient-to-r
+    from-blue-600
+    to-purple-600
+    bg-clip-text
+    text-2xl
+    font-bold
+    text-transparent
+    sm:max-w-[300px]
+  "        >
           {businessName ?? "SouqFlow"}
         </Link>
         <div className="flex items-center gap-1">
@@ -204,7 +215,7 @@ function Sidebar() {
       <aside className="hidden flex-col border-r border-gray-100 bg-white p-5 shadow-xl shadow-blue-100/40 md:sticky md:top-0 md:z-30 md:flex md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto">
         <Link
           href="/dashboard"
-          className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent"
+          className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent max-lg:text-xl"
         >
           {businessName ?? "SouqFlow"}
         </Link>

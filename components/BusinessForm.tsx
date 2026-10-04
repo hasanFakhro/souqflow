@@ -128,6 +128,7 @@ export default function BusinessForm({
         <input
           id="name"
           type="text"
+          maxLength={50}
           {...register("name")}
           className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
         />
