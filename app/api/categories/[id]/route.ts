@@ -54,6 +54,65 @@ export async function PUT(request: NextRequest, { params }: Context) {
   }
 }
 
+export async function PATCH(request: NextRequest, { params }: Context) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json(
+      { message: "Unauthorized" },
+      { status: 401 }
+    );
+  }
+
+  try {
+    const { id } = await params;
+    const body = await request.json();
+
+    const catalogOrder = Number(body.catalogOrder);
+
+    if (!Number.isInteger(catalogOrder) || catalogOrder < 1) {
+      return NextResponse.json(
+        { message: "Catalog order must be a positive whole number" },
+        { status: 400 }
+      );
+    }
+
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        id,
+        ownerId: userId,
+      },
+    });
+
+    if (!existingCategory) {
+      return NextResponse.json(
+        { message: "Category not found" },
+        { status: 404 }
+      );
+    }
+
+    const category = await prisma.category.update({
+      where: { id },
+      data: {
+        catalogOrder,
+      },
+    });
+
+    return NextResponse.json({
+      message: "Category order updated successfully",
+      category,
+    });
+  } catch (error) {
+    console.error("Error updating category order:", error);
+
+    return NextResponse.json(
+      { message: "Failed to update category order" },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(_request: NextRequest, { params }: Context) {
   const session = await auth();
   const userId = session?.user?.id;
