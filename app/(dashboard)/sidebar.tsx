@@ -67,12 +67,13 @@ function Sidebar() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between border-b border-gray-100 bg-white px-5 py-4 shadow-sm md:hidden">
+      <header className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-gray-100 bg-white px-5 py-4 shadow-sm md:hidden">
         <Link
           href="/dashboard"
           onClick={closeMobileMenu}
 className="
     max-w-[250px]
+    min-w-0
     truncate
     whitespace-nowrap
     bg-gradient-to-r
@@ -86,7 +87,7 @@ className="
   "        >
           {businessName ?? "SouqFlow"}
         </Link>
-        <div className="flex items-center gap-1">
+        <div className="flex shrink-0 items-center gap-1">
           <ThemeToggle variant="ghost" />
           <button
             type="button"
@@ -215,7 +216,7 @@ className="
       <aside className="hidden flex-col border-r border-gray-100 bg-white p-5 shadow-xl shadow-blue-100/40 md:sticky md:top-0 md:z-30 md:flex md:h-screen md:w-64 md:shrink-0 md:overflow-y-auto">
         <Link
           href="/dashboard"
-          className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent max-lg:text-xl"
+          className="block w-full min-w-0 shrink-0 truncate bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-2xl font-bold text-transparent max-lg:text-xl"
         >
           {businessName ?? "SouqFlow"}
         </Link>
