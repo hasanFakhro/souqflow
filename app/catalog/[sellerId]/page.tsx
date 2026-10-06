@@ -16,8 +16,9 @@ export default async function CatalogPage({
     include: {
       business: true,
       products: {
+        where: { isHidden: false },
         include: { category: true },
-        orderBy: { createdAt: "desc" },
+        orderBy: [{ isPopular: "desc" }, { createdAt: "desc" }],
       },
       categories: true,
     },
@@ -47,6 +48,7 @@ export default async function CatalogPage({
           ? { id: product.category.id, name: product.category.name }
           : null,
         stock: product.quantity,
+        isPopular: product.isPopular,
       }))}
     />
   );

@@ -1,10 +1,6 @@
-import {
-  Bell,
-  Package,
-  Clock,
-  ShoppingCart,
-  CreditCard,
-} from "lucide-react";
+import { Bell } from "lucide-react";
+import { Prisma } from "@prisma/client";
+import NotificationsArea from "@/components/NotificationsArea";
 
 import { auth } from "@/lib/auth";
 
@@ -17,46 +13,6 @@ type NotificationFilter =
   | "SUBSCRIPTION";
 
 const NOTIFICATIONS_PER_PAGE = 7;
-
-function getNotificationType(type: string) {
-  switch (type) {
-    case "LOW_STOCK":
-      return {
-        label: "Low Stock",
-        icon: Package,
-        iconStyle: "bg-yellow-100 text-yellow-600",
-        badgeStyle:
-          "bg-yellow-50 text-yellow-700 border-yellow-200",
-      };
-
-    case "ORDER":
-      return {
-        label: "Order",
-        icon: ShoppingCart,
-        iconStyle: "bg-blue-100 text-blue-600",
-        badgeStyle:
-          "bg-blue-50 text-blue-700 border-blue-200",
-      };
-
-    case "SUBSCRIPTION":
-      return {
-        label: "Subscription",
-        icon: CreditCard,
-        iconStyle: "bg-purple-100 text-purple-600",
-        badgeStyle:
-          "bg-purple-50 text-purple-700 border-purple-200",
-      };
-
-    default:
-      return {
-        label: "Notification",
-        icon: Bell,
-        iconStyle: "bg-gray-100 text-gray-600",
-        badgeStyle:
-          "bg-gray-50 text-gray-700 border-gray-200",
-      };
-  }
-}
 
 function isValidFilter(
   type: string | undefined,
@@ -75,6 +31,7 @@ export default async function NotificationHistoryPage({
   searchParams: Promise<{
     type?: string;
     page?: string;
+    q?: string;
   }>;
 }) {
   const session = await auth();
@@ -92,6 +49,8 @@ export default async function NotificationHistoryPage({
       ? params.type
       : "ALL";
 
+  const searchTerm = params.q?.trim() ?? "";
+
   const requestedPage = Number(params.page);
 
   const currentPage =
@@ -99,8 +58,9 @@ export default async function NotificationHistoryPage({
       ? requestedPage
       : 1;
 
-  const where = {
+  const where: Prisma.NotificationHistoryWhereInput = {
     userId,
+    ...(searchTerm ? { message: { contains: searchTerm, mode: "insensitive" } } : {}),
     ...(selectedType !== "ALL"
       ? {
           type: selectedType,
@@ -160,11 +120,10 @@ export default async function NotificationHistoryPage({
   function getFilterUrl(
     filter: NotificationFilter,
   ) {
-    if (filter === "ALL") {
-      return "/notification-history";
-    }
-
-    return `/notification-history?type=${filter}`;
+    const params = new URLSearchParams();
+    if (filter !== "ALL") params.set("type", filter);
+    if (searchTerm) params.set("q", searchTerm);
+    return `/notification-history?${params.toString()}`;
   }
 
   function getPageUrl(pageNumber: number) {
@@ -174,6 +133,7 @@ export default async function NotificationHistoryPage({
       params.set("type", selectedType);
     }
 
+    if (searchTerm) params.set("q", searchTerm);
     params.set("page", pageNumber.toString());
 
     return `/notification-history?${params.toString()}`;
@@ -201,6 +161,11 @@ export default async function NotificationHistoryPage({
 
       <div className="rounded-2xl border border-gray-100 bg-white shadow-sm">
         <div className="border-b border-gray-100 px-6 py-4">
+          <form action="/notification-history" className="mb-4 flex gap-2">
+            {selectedType !== "ALL" && <input type="hidden" name="type" value={selectedType} />}
+            <input type="search" name="q" defaultValue={searchTerm} aria-label="Search notifications" placeholder="Search notifications?" className="min-w-0 flex-1 rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            <button type="submit" className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">Search</button>
+          </form>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h2 className="text-lg font-semibold text-gray-900">
@@ -219,7 +184,7 @@ export default async function NotificationHistoryPage({
                   href={getFilterUrl(filter.value)}
                   className={`rounded-lg border px-3 py-2 text-sm font-medium transition-colors ${
                     selectedType === filter.value
-                      ? "border-purple-200 bg-gradient-to-r from-blue-50 via-purple-50 to-white text-purple-700 shadow-sm"
+                      ? "border-blue-600 bg-blue-600 text-white shadow-sm"
                       : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                   }`}
                 >
@@ -230,65 +195,7 @@ export default async function NotificationHistoryPage({
           </div>
         </div>
 
-        <div className="divide-y divide-gray-100">
-          {notifications.length === 0 ? (
-            <div className="px-6 py-12 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 text-gray-400">
-                <Bell className="h-6 w-6" />
-              </div>
-
-              <p className="mt-4 text-sm font-medium text-gray-700">
-                No notification history
-              </p>
-
-              <p className="mt-1 text-sm text-gray-500">
-                Your previous notifications will appear here.
-              </p>
-            </div>
-          ) : (
-            notifications.map((notification) => {
-              const notificationType =
-                getNotificationType(notification.type);
-
-              const Icon = notificationType.icon;
-
-              return (
-                <div
-                  key={notification.id}
-                  className="flex items-start gap-4 px-6 py-5 transition-colors hover:bg-gray-50"
-                >
-                  <span
-                    className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${notificationType.iconStyle}`}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </span>
-
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span
-                        className={`rounded-lg border px-2.5 py-1 text-xs font-semibold ${notificationType.badgeStyle}`}
-                      >
-                        {notificationType.label}
-                      </span>
-                    </div>
-
-                    <p className="mt-2 text-sm font-medium text-gray-800">
-                      {notification.message}
-                    </p>
-
-                    <div className="mt-2 flex items-center gap-1.5 text-xs text-gray-400">
-                      <Clock className="h-3.5 w-3.5" />
-
-                      <span>
-                        {notification.createdAt.toLocaleString()}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+        <NotificationsArea notifications={notifications} />
 
         {totalNotifications > NOTIFICATIONS_PER_PAGE && (
           <div className="flex items-center justify-center gap-2 border-t border-gray-100 px-6 py-4">

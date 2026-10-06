@@ -89,7 +89,7 @@ const CustomerCartBar = ({ isOpen, onClose, sellerId }: CustomerCartBarProps) =>
                                             -
                                         </button>
                                         <span className="text-sm font-medium w-5 text-center">{item.quantity}</span>
-                                        <button className="w-9 h-9 sm:w-7 sm:h-7 rounded-full border border-gray-200 text-gray-500 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition disabled:opacity-40" onClick={() => incrementQuantity(item.productId)}>
+                                        <button className="w-9 h-9 sm:w-7 sm:h-7 rounded-full border border-gray-200 text-gray-500 flex items-center justify-center hover:bg-gray-50 active:scale-95 transition disabled:opacity-40" onClick={() => incrementQuantity(item.productId, { allowBeyondStock: true })}>
                                             +
                                         </button>
                                         <span className="text-sm font-semibold text-gray-900 w-14 text-right">

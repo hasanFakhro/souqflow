@@ -22,7 +22,7 @@ export async function GET(_request: Request, { params }: Context) {
   }
 
   const products = await prisma.product.findMany({
-    where: { ownerId: user.id },
+    where: { ownerId: user.id, isHidden: false },
     orderBy: { createdAt: "desc" },
     select: {
       id: true,

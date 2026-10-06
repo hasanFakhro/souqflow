@@ -17,15 +17,17 @@ type ProductCardProps = {
         quantity: number;
     };
     hideStockCount?: boolean;
+    allowBeyondStock?: boolean;
+    showPopularBadge?: boolean;
 };
 
-const ProductCard = ({ product, hideStockCount = false }: ProductCardProps) => {
+const ProductCard = ({ product, hideStockCount = false, allowBeyondStock = false, showPopularBadge = false }: ProductCardProps) => {
     const [isPressed, setIsPressed] = useState(false);
     const cartQuantity = useCartStore(
         (state) => state.items.find((i) => i.productId === product.id)?.quantity ?? 0
     );
     const remainingQuantity = product.quantity - cartQuantity;
-    const isOutOfStock = remainingQuantity === 0;
+    const isOutOfStock = !allowBeyondStock && remainingQuantity <= 0;
 
     const handleAdd = () => {
         if (isOutOfStock) return;
@@ -37,7 +39,7 @@ const ProductCard = ({ product, hideStockCount = false }: ProductCardProps) => {
             unitPrice: product.sellPrice,
             costPrice: product.costPrice,
             stock: product.quantity,
-        });
+        }, { allowBeyondStock });
 
         setIsPressed(true);
         setTimeout(() => setIsPressed(false), 150);
@@ -53,6 +55,11 @@ const ProductCard = ({ product, hideStockCount = false }: ProductCardProps) => {
                 } ${isPressed ? "scale-95 shadow-sm" : "scale-100"
                 }`}
         >
+            {showPopularBadge && (
+                <span className="absolute left-2 top-2 z-10 rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-800">
+                    Popular
+                </span>
+            )}
             {cartQuantity > 0 && (
                 <div className="absolute top-2 right-2 z-10 flex items-center justify-center min-w-[22px] h-[22px] px-1 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 text-white text-xs font-semibold shadow-sm transition-transform duration-200 scale-100 animate-in">
                     {cartQuantity}
@@ -84,11 +91,6 @@ const ProductCard = ({ product, hideStockCount = false }: ProductCardProps) => {
                     {!hideStockCount && (
                         <span className="text-xs sm:text-sm text-gray-500">
                             {isOutOfStock ? "Out of stock" : `${remainingQuantity} left`}
-                        </span>
-                    )}
-                    {hideStockCount && isOutOfStock && (
-                        <span className="text-xs sm:text-sm text-gray-500">
-                            Out of stock
                         </span>
                     )}
                 </div>

@@ -61,6 +61,7 @@ export async function POST(
         where: {
           id: { in: productIds },
           ownerId: sellerId,
+          isHidden: false,
         },
         include: { category: { select: { name: true } } },
       });
@@ -114,13 +115,12 @@ console.log(
           where: {
             id: item.productId,
             ownerId: sellerId,
-            quantity: { gte: item.quantity },
           },
           data: { quantity: { decrement: item.quantity } },
         });
 
         if (updated.count === 0) {
-          throw new Error(`Not enough stock for ${item.productName}`);
+          throw new Error("One or more cart products are unavailable");
         }
       }
       await tx.notificationHistory.create({

@@ -15,6 +15,7 @@ function refreshProductViews() {
   revalidatePath("/inventory");
   revalidatePath("/products", "layout");
   revalidatePath("/dashboard");
+  revalidatePath("/catalog/[sellerId]", "page");
   revalidatePath("/sales");
 }
 

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 
 import { auth } from "@/lib/auth";
+import { createCatalogPathSegment } from "@/lib/catalog";
 import prisma from "@/lib/prisma";
 import CatalogProductTable from "@/components/CatalogProductTable";
 
@@ -35,7 +36,7 @@ export default async function CatalogManagementPage() {
         </h1>
 
         <Link
-          href="/catalog"
+          href={`/catalog/${createCatalogPathSegment(session?.user?.name, userId)}`}
           className="inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 text-sm font-medium text-white transition hover:from-blue-700 hover:to-purple-700"
         >
           Go to Catalog

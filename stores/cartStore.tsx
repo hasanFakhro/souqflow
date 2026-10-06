@@ -21,18 +21,18 @@ export const useCartStore = create<CartState>(() => {
     }
 });
 
-export function addItem(item: Omit<CartItem, "quantity">) {
+export function addItem(item: Omit<CartItem, "quantity">, { allowBeyondStock = false } = {}) {
     useCartStore.setState(state => {
         const existing = state.items.find(i => i.productId === item.productId);
         if (existing) {
-            if (existing.quantity >= existing.stock) return state;
+            if (!allowBeyondStock && existing.quantity >= existing.stock) return state;
             return {
                 items: state.items.map(i =>
                     i.productId === item.productId ? { ...i, quantity: i.quantity + 1 } : i
                 ),
             };
         }
-        if (item.stock <= 0) return state;
+        if (!allowBeyondStock && item.stock <= 0) return state;
         return { items: [...state.items, { ...item, quantity: 1 }] };
     });
 }
@@ -45,12 +45,12 @@ export function removeItem(productId: string) {
     })
 }
 
-export function incrementQuantity(productId: string) {
+export function incrementQuantity(productId: string, { allowBeyondStock = false } = {}) {
     useCartStore.setState(state => {
         return {
             items: state.items.map(i =>
                 i.productId === productId
-                    ? (i.stock > i.quantity ? { ...i, quantity: i.quantity + 1 } : i)
+                    ? (allowBeyondStock || i.stock > i.quantity ? { ...i, quantity: i.quantity + 1 } : i)
                     : i
             )
         };
