@@ -150,9 +150,7 @@ export default function NotificationBell() {
         aria-label="Notifications"
         className="
           relative
-          mr-10
           flex h-10 w-10
-          translate-x-5 -translate-y-5
           items-center justify-center
           rounded-full
           transition-colors

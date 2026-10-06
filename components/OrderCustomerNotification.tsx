@@ -279,8 +279,6 @@ export default function OrderCustomerNotification() {
           flex
           h-10
           w-10
-          translate-x-2
-          -translate-y-5
           items-center
           justify-center
           rounded-full

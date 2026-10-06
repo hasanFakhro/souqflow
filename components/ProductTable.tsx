@@ -144,16 +144,17 @@ export default function ProductTable({
         </button>
       )}
 
-      <div className="flex items-center gap-3">
+      <div className="mb-4 space-y-3 sm:flex sm:items-center sm:gap-3 sm:space-y-0">
         <input
           type="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search products..."
           aria-label="Search products"
-          className="w-full max-w-xs rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40"
+          className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40 sm:flex-1"
           />
 
+        <div className="grid grid-cols-1 gap-3 sm:flex sm:min-w-0 sm:shrink-0 sm:items-center">
         <select
           value={category ?? ""}
           onChange={(e) =>
@@ -162,7 +163,7 @@ export default function ProductTable({
             )
           }
           aria-label="Filter by category"
-          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+          className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
         >
           <option value="">All categories</option>
 
@@ -181,13 +182,14 @@ export default function ProductTable({
             )
           }
           aria-label="Filter by stock state"
-          className="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
+          className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm"
         >
           <option value="">All stock states</option>
           <option value="stocked">Stocked</option>
           <option value="low">Low stock</option>
           <option value="out">Out of stock</option>
         </select>
+        </div>
       </div>
 
       <div className="overflow-x-auto">

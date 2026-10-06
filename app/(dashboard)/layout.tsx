@@ -33,9 +33,9 @@ export default async function DashboardLayout({
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 md:flex">
         <Sidebar />
 
-        <main className="min-w-0 flex-1 p-6 md:p-10">
+        <main className="min-w-0 flex-1 p-4 sm:p-6 lg:p-10">
           <SubscriptionWarning />
-          <div className="mb-6 flex justify-end">
+          <div className="mb-4 flex items-center justify-end gap-3 sm:mb-6">
             <NotificationBell />
             <OrderCustomerNotification />
           </div>

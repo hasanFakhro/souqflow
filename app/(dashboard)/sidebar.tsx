@@ -67,7 +67,7 @@ function Sidebar() {
   return (
     <>
       {/* Mobile Header */}
-      <header className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-gray-100 bg-white px-5 py-4 shadow-sm md:hidden">
+      <header className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-gray-100 bg-white px-4 py-4 shadow-sm sm:px-5 md:hidden">
         <Link
           href="/dashboard"
           onClick={closeMobileMenu}
@@ -102,7 +102,7 @@ className="
 
       {/* Mobile Navigation */}
       {isMobileMenuOpen && (
-        <div className="border-b border-gray-100 bg-white px-5 pb-5 shadow-lg md:hidden">
+        <div className="max-h-[calc(100dvh-5rem)] overflow-y-auto border-b border-gray-100 bg-white px-4 pb-5 shadow-lg sm:px-5 md:hidden">
           <nav aria-label="Mobile navigation" className="space-y-2">
             {links.map(({ href, label, icon: Icon }) => {
               const active =

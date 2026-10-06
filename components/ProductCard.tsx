@@ -49,7 +49,7 @@ const ProductCard = ({ product, hideStockCount = false, allowBeyondStock = false
         <div
             onClick={handleAdd}
             aria-disabled={isOutOfStock}
-            className={`relative flex select-none flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-150 ease-out ${isOutOfStock
+            className={`relative flex min-w-0 select-none flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-150 ease-out ${isOutOfStock
                 ? "cursor-not-allowed opacity-40"
                 : "cursor-pointer hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
                 } ${isPressed ? "scale-95 shadow-sm" : "scale-100"
@@ -84,7 +84,7 @@ const ProductCard = ({ product, hideStockCount = false, allowBeyondStock = false
                 <div className="text-sm sm:text-base font-medium truncate">
                     {product.name}
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex flex-wrap justify-between items-center gap-x-2 gap-y-1">
                     <span className="text-base sm:text-lg font-semibold">
                         <Price amountUsd={product.sellPrice} />
                     </span>
