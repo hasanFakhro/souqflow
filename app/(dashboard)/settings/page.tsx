@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { headers } from "next/headers";
+import { getRequestOrigin } from "@/lib/request-origin";
 import { createCatalogPathSegment } from "@/lib/catalog";
 import { redirect } from "next/navigation";
 
@@ -62,16 +63,11 @@ export default async function ProfilePage() {
 
   const requestHeaders = await headers();
 
-  const host =
-    requestHeaders.get("x-forwarded-host") ??
-    requestHeaders.get("host") ??
-    "localhost:3000";
-
-  const protocol =
-    requestHeaders.get("x-forwarded-proto") ??
-    (host.startsWith("localhost") ? "http" : "https");
-
-  const catalogUrl = `${protocol}://${host}/catalog/${createCatalogPathSegment(user.name, user.id)}`;
+  const fallbackOrigin = process.env.VERCEL_URL
+    ? `https://${process.env.VERCEL_URL}`
+    : "http://localhost:3000";
+  const origin = getRequestOrigin(requestHeaders, fallbackOrigin);
+  const catalogUrl = `${origin}/catalog/${createCatalogPathSegment(user.name, user.id)}`;
 
   return (
     <div className="mx-auto max-w-5xl">

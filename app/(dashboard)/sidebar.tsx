@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import Link from "@/components/NavigationLink";
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
@@ -46,7 +46,13 @@ function Sidebar() {
 
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [logoutError, setLogoutError] = useState("");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileMenuPath, setMobileMenuPath] = useState<string | null>(null);
+  const isMobileMenuOpen = mobileMenuPath === pathname;
+
+  // Keep the clicked link mounted while pending, then close on arrival.
+  if (mobileMenuPath !== null && mobileMenuPath !== pathname) {
+    setMobileMenuPath(null);
+  }
 
   async function handleLogout() {
     setIsLoggingOut(true);
@@ -60,17 +66,12 @@ function Sidebar() {
     }
   }
 
-  function closeMobileMenu() {
-    setIsMobileMenuOpen(false);
-  }
-
   return (
     <>
       {/* Mobile Header */}
       <header className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-gray-100 bg-white px-4 py-4 shadow-sm sm:px-5 md:hidden">
         <Link
           href="/dashboard"
-          onClick={closeMobileMenu}
 className="
     max-w-[250px]
     min-w-0
@@ -91,7 +92,7 @@ className="
           <ThemeToggle variant="ghost" />
           <button
             type="button"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={() => setMobileMenuPath(isMobileMenuOpen ? null : pathname)}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             className="rounded-lg p-2 text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
           >
@@ -113,7 +114,6 @@ className="
                   key={href}
                   href={href}
                   prefetch={false}
-                  onClick={closeMobileMenu}
                   aria-current={active ? "page" : undefined}
                   className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-medium transition ${
                     active

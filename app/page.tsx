@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Link from "@/components/NavigationLink";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { Plus_Jakarta_Sans } from "next/font/google";
@@ -82,7 +82,7 @@ export default function HomePage() {
                             </p>
                             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                                 <Link
-                                    href="/signup"
+                                    href="/register"
                                     className={`rounded-xl ${gradient} ${gradientHover} px-6 py-3.5 text-center text-sm font-semibold text-white shadow-lg shadow-blue-600/20 transition active:scale-[0.98] ${focus}`}
                                 >
                                     Create your account

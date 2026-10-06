@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getRequestOrigin } from "@/lib/request-origin";
 import {
   getSubscriptionState,
   isSubscriptionExempt,
@@ -13,6 +14,7 @@ const publicPaths = new Set([
 
 export default auth(async (request) => {
   const { pathname } = request.nextUrl;
+  const origin = getRequestOrigin(request.headers, request.url);
 
   if (publicPaths.has(pathname) || pathname.startsWith("/catalog/")) {
     return NextResponse.next();
@@ -27,7 +29,7 @@ export default auth(async (request) => {
     | undefined;
 
   if (!user?.id) {
-    return NextResponse.redirect(new URL("/signin", request.url));
+    return NextResponse.redirect(new URL("/signin", origin));
   }
 
   // The checkout price needs conversion before a subscription is activated.
@@ -37,7 +39,7 @@ export default auth(async (request) => {
 
   if (isSubscriptionExempt(user.role)) {
     return pathname === "/subscription"
-      ? NextResponse.redirect(new URL("/", request.url))
+      ? NextResponse.redirect(new URL("/", origin))
       : NextResponse.next();
   }
 
@@ -45,12 +47,12 @@ export default auth(async (request) => {
 
   if (!subscription.isActive && pathname !== "/subscription") {
     return NextResponse.redirect(
-      new URL("/subscription", request.url)
+      new URL("/subscription", origin)
     );
   }
 
   if (subscription.isActive && pathname === "/subscription") {
-    return NextResponse.redirect(new URL("/", request.url));
+    return NextResponse.redirect(new URL("/", origin));
   }
 
   // User is authenticated → allow navigation

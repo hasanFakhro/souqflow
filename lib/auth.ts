@@ -8,6 +8,23 @@ import prisma from "@/lib/prisma";
 
 import bcrypt from "bcryptjs";
 
+// Auth.js URL overrides also rewrite proxy requests. Ignore accidentally
+// deployed development URLs so Vercel's forwarded host can be inferred.
+if (process.env.VERCEL) {
+  for (const key of ["AUTH_URL", "NEXTAUTH_URL"] as const) {
+    const value = process.env[key];
+    if (!value) continue;
+    try {
+      const host = new URL(value).hostname;
+      if (host === "localhost" || host.endsWith(".localhost") || host === "127.0.0.1" || host === "[::1]") {
+        delete process.env[key];
+      }
+    } catch {
+      // Leave invalid configuration to Auth.js's normal error handling.
+    }
+  }
+}
+
 export const {
   handlers,
   auth,

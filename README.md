@@ -31,6 +31,8 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 ## Deploy on Vercel
 
+Set `DATABASE_URL` and `AUTH_SECRET` (or `NEXTAUTH_SECRET`) in the Vercel project's environment variables. Leave `AUTH_URL` and `NEXTAUTH_URL` unset to let Auth.js infer the current deployment domain, including preview deployments. If you set either URL explicitly, use your public HTTPS domain, never localhost. Redeploy after changing environment variables.
+
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

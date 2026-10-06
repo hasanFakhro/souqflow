@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { signIn, getSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import Link from "@/components/NavigationLink";
 import Image from "next/image";
 
 const inputClass =
