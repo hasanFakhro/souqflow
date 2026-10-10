@@ -16,6 +16,7 @@ import {
 import { Bar, Pie } from "react-chartjs-2";
 import { BarChart3, CalendarDays, PackageOpen } from "lucide-react";
 import { formatPrice, useCurrency, useExchangeRate } from "../currency";
+import { useTheme } from "@/components/ThemeToggle";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, ArcElement, Tooltip, Legend);
 
@@ -130,6 +131,9 @@ function round(value: number) {
 }
 
 export default function SalesAnalytics({ orders, products }: SalesAnalyticsProps) {
+  const isDark = useTheme() === "dark";
+  const chartText = isDark ? "#aaaab3" : "#64748b";
+  const chartGrid = isDark ? "#323235" : "#e2e8f0";
   const [timeRange, setTimeRange] = useState<TimeRange>("monthly");
   const [breakdown, setBreakdown] = useState<SalesBreakdown>("category-money");
   const [barVisibility, setBarVisibility] = useState<Record<BarMetric, boolean>>({ sales: true, cost: true, profit: true });
@@ -305,13 +309,13 @@ export default function SalesAnalytics({ orders, products }: SalesAnalyticsProps
         {
           data: visibleEntries.map((entry) => entry.value),
           backgroundColor: visibleEntries.map((entry) => entry.color),
-          borderColor: "#ffffff",
+          borderColor: isDark ? "#1b1b1d" : "#ffffff",
           borderWidth: 2,
           hoverOffset: 6,
         },
       ],
     };
-  }, [hiddenPieLabels, pieEntries]);
+  }, [hiddenPieLabels, pieEntries, isDark]);
 
   const barOptions = useMemo<ChartOptions<"bar">>(
     () => ({
@@ -327,15 +331,15 @@ export default function SalesAnalytics({ orders, products }: SalesAnalyticsProps
         },
       },
       scales: {
-        x: { grid: { display: false }, ticks: { color: "#64748b", maxRotation: 0 } },
+        x: { grid: { display: false }, ticks: { color: chartText, maxRotation: 0 } },
         y: {
           beginAtZero: true,
-          grid: { color: "#e2e8f0" },
-          ticks: { color: "#64748b", callback: (value) => formatAmount(Number(value)) },
+          grid: { color: chartGrid },
+          ticks: { color: chartText, callback: (value) => formatAmount(Number(value)) },
         },
       },
     }),
-    [formatAmount],
+    [formatAmount, chartText, chartGrid],
   );
 
   const pieOptions = useMemo<ChartOptions<"pie">>(

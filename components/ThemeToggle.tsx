@@ -10,9 +10,9 @@ const dashboardPaths = [
   "/inventory",
   "/orders",
   "/sales",
-  "/catalog",
   "/settings",
   "/catalog-management",
+  "/notification-history",
 ];
 
 type Theme = "light" | "dark";
@@ -23,20 +23,25 @@ type ThemeToggleProps = {
   variant?: "surface" | "ghost";
 };
 
-function getTheme(): Theme {
+export function getTheme(): Theme {
   return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
 }
 
-function getServerTheme(): Theme {
+export function getServerTheme(): Theme {
   return "light";
 }
 
-function subscribeToTheme(onStoreChange: () => void) {
-  window.addEventListener("storage", onStoreChange);
+export function subscribeToTheme(onStoreChange: () => void) {
+  function handleStorage(event: StorageEvent) {
+    if (event.key === themeStorageKey || event.key === null) {
+      applyTheme(event.newValue === "dark" ? "dark" : "light");
+    }
+  }
+  window.addEventListener("storage", handleStorage);
   window.addEventListener("souqflow-theme-change", onStoreChange);
 
   return () => {
-    window.removeEventListener("storage", onStoreChange);
+    window.removeEventListener("storage", handleStorage);
     window.removeEventListener("souqflow-theme-change", onStoreChange);
   };
 }
@@ -53,6 +58,10 @@ function isDashboardPath(pathname: string) {
   );
 }
 
+export function useTheme() {
+  return useSyncExternalStore(subscribeToTheme, getTheme, getServerTheme);
+}
+
 export default function ThemeToggle({
   className = "",
   hideOnDashboard = false,
@@ -60,7 +69,7 @@ export default function ThemeToggle({
   variant = "surface",
 }: ThemeToggleProps) {
   const pathname = usePathname();
-  const theme = useSyncExternalStore(subscribeToTheme, getTheme, getServerTheme);
+  const theme = useTheme();
   const isDark = theme === "dark";
   const label = `Switch to ${isDark ? "light" : "dark"} mode`;
 
@@ -71,8 +80,12 @@ export default function ThemeToggle({
   function toggleTheme() {
     const nextTheme: Theme = isDark ? "light" : "dark";
 
-    window.localStorage.setItem(themeStorageKey, nextTheme);
     applyTheme(nextTheme);
+    try {
+      window.localStorage.setItem(themeStorageKey, nextTheme);
+    } catch {
+      // The theme still works when the browser blocks local storage.
+    }
   }
 
   return (

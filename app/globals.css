@@ -112,36 +112,36 @@
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --color-white: #141d2e;
-  --color-black: #020617;
-  --color-gray-50: #0c1322;
-  --color-gray-100: #1b273b;
-  --color-gray-200: #29364b;
-  --color-gray-300: #3b4c66;
-  --color-gray-400: #94a3b8;
-  --color-gray-500: #a7b3c5;
-  --color-gray-600: #b9c7dc;
-  --color-gray-700: #d2dced;
-  --color-gray-800: #e2eaf6;
-  --color-gray-900: #edf2fa;
-  --color-slate-50: #0b1220;
-  --color-slate-100: #111c2f;
-  --color-slate-200: #263449;
-  --color-slate-300: #475569;
-  --color-slate-400: #94a3b8;
-  --color-slate-500: #a8b7c9;
-  --color-slate-600: #cbd5e1;
-  --color-slate-700: #e2e8f0;
-  --color-slate-900: #f8fafc;
-  --color-blue-50: #13213a;
-  --color-blue-100: #17345c;
-  --color-blue-200: #245080;
+  --color-white: #1b1b1d;
+  --color-black: #090909;
+  --color-gray-50: #111113;
+  --color-gray-100: #242426;
+  --color-gray-200: #323235;
+  --color-gray-300: #49494e;
+  --color-gray-400: #a1a1aa;
+  --color-gray-500: #aaaab3;
+  --color-gray-600: #c4c4cc;
+  --color-gray-700: #dddde3;
+  --color-gray-800: #ebebef;
+  --color-gray-900: #f4f4f5;
+  --color-slate-50: #151517;
+  --color-slate-100: #242426;
+  --color-slate-200: #323235;
+  --color-slate-300: #49494e;
+  --color-slate-400: #a1a1aa;
+  --color-slate-500: #aaaab3;
+  --color-slate-600: #c4c4cc;
+  --color-slate-700: #dddde3;
+  --color-slate-900: #f4f4f5;
+  --color-blue-50: #232326;
+  --color-blue-100: #2b2b30;
+  --color-blue-200: #414149;
   --color-blue-300: #60a5fa;
   --color-blue-500: #60a5fa;
   --color-blue-600: #93c5fd;
   --color-blue-700: #bfdbfe;
-  --color-purple-50: #211e36;
-  --color-purple-200: #553c7c;
+  --color-purple-50: #232326;
+  --color-purple-200: #414149;
   --color-purple-300: #a78bfa;
   --color-purple-600: #c4b5fd;
   --color-purple-700: #ddd6fe;
@@ -158,17 +158,17 @@
   --color-red-500: #fb7185;
   --color-red-600: #fca5a5;
   --color-red-700: #fecaca;
-  --sales-summary-blue-bg: #182a43;
-  --sales-summary-blue-border: #2c4667;
+  --sales-summary-blue-bg: #202022;
+  --sales-summary-blue-border: #36363b;
   --sales-summary-blue-text: #bfdbfe;
-  --sales-summary-orange-bg: #30251e;
-  --sales-summary-orange-border: #57402f;
+  --sales-summary-orange-bg: #202022;
+  --sales-summary-orange-border: #36363b;
   --sales-summary-orange-text: #fed7aa;
-  --sales-summary-emerald-bg: #142d2b;
-  --sales-summary-emerald-border: #2a4c43;
+  --sales-summary-emerald-bg: #202022;
+  --sales-summary-emerald-border: #36363b;
   --sales-summary-emerald-text: #bbf7d0;
-  --sales-summary-violet-bg: #27233f;
-  --sales-summary-violet-border: #44395f;
+  --sales-summary-violet-bg: #202022;
+  --sales-summary-violet-border: #36363b;
   --sales-summary-violet-text: #ddd6fe;
   --color-red-800: #fee2e2;
   --color-yellow-50: #352d11;
@@ -197,24 +197,24 @@
   --color-rose-300: #a94767;
   --color-rose-500: #fb7185;
   --color-rose-600: #fecdd3;
-  --color-input: #101a2b;
-  --color-input-disabled: #172033;
-  --color-input-border: #34445e;
-  --color-white-95: rgb(20 29 46 / 0.95);
-  --color-gray-50-60: rgb(15 23 42 / 0.6);
-  --color-slate-50-70: rgb(11 18 32 / 0.7);
-  --color-blue-100-40: rgb(2 6 23 / 0.3);
-  --color-table-row-hover: #1d2b41;
+  --color-input: #151517;
+  --color-input-disabled: #242426;
+  --color-input-border: #414146;
+  --color-white-95: rgb(27 27 29 / 0.95);
+  --color-gray-50-60: rgb(36 36 38 / 0.6);
+  --color-slate-50-70: rgb(36 36 38 / 0.7);
+  --color-blue-100-40: rgb(0 0 0 / 0.3);
+  --color-table-row-hover: #27272b;
   --color-primary: #0f766e;
   --color-success: #16a34a;
   --color-warning: #f59e0b;
   --color-danger: #dc2626;
-  --color-inverse: #020617;
+  --color-inverse: #090909;
   --color-action-blue: #2563eb;
   --color-action-blue-hover: #1d4ed8;
   --color-action-purple: #7c3aed;
   --color-action-purple-hover: #6d28d9;
-  --shadow-color: rgb(2 6 23 / 0.5);
+  --shadow-color: rgb(0 0 0 / 0.5);
 }
 
 @layer base {
@@ -309,22 +309,22 @@
 @layer utilities {
   /* Shared dark surfaces stay tied to the explicit website theme. */
   [data-theme="dark"] .dashboard-shell {
-    background-image:
-      radial-gradient(ellipse at 10% 0%, rgb(59 130 246 / 0.09), transparent 45%),
-      radial-gradient(ellipse at 100% 100%, rgb(139 92 246 / 0.07), transparent 45%);
+    background-image: none;
     background-color: var(--color-gray-50);
   }
   [data-theme="dark"] .dashboard-shell > aside,
   [data-theme="dark"] .dashboard-shell > header {
-    background-color: #10192a;
+    background-color: #171719;
     border-color: var(--color-gray-200);
   }
   [data-theme="dark"] .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
-  [data-theme="dark"] .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {
+  [data-theme="dark"] .divide-gray-200 > :not([hidden]) ~ :not([hidden]),
+  [data-theme="dark"] .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+  [data-theme="dark"] .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
     border-color: var(--color-gray-200);
   }
   [data-theme="dark"] thead {
-    background-color: #101a2b;
+    background-color: #18181b;
     color: var(--color-gray-500);
   }
   [data-theme="dark"] dialog {
@@ -332,7 +332,7 @@
     box-shadow: 0 24px 80px rgb(0 0 0 / 0.5);
   }
   [data-theme="dark"] dialog::backdrop {
-    background-color: rgb(3 7 18 / 0.65);
+    background-color: rgb(0 0 0 / 0.65);
     backdrop-filter: blur(4px);
   }
   [data-theme="dark"] input:focus-visible,
@@ -351,11 +351,99 @@
     color: var(--color-gray-700);
   }
   [data-theme="dark"] {
-    scrollbar-color: #3b4c66 #10192a;
+    scrollbar-color: #49494e #171719;
   }
   [data-theme="dark"] ::selection {
     background-color: rgb(96 165 250 / 0.3);
     color: #ffffff;
+  }
+  [data-theme="dark"] .bg-blue-200\/50,
+  [data-theme="dark"] .bg-purple-200\/50 {
+    background-color: rgb(255 255 255 / 0.025);
+  }
+  [data-theme="dark"] .bg-gray-50\/70 {
+    background-color: rgb(17 17 19 / 0.7);
+  }
+  [data-theme="dark"] .bg-amber-100 {
+    background-color: var(--color-yellow-100);
+  }
+  [data-theme="dark"] .bg-purple-100 {
+    background-color: #303034;
+  }
+  [data-theme="dark"] .ring-gray-100,
+  [data-theme="dark"] .ring-gray-200,
+  [data-theme="dark"] .focus\:ring-gray-200:focus {
+    --tw-ring-color: var(--color-gray-200);
+  }
+  [data-theme="dark"] .ring-white {
+    --tw-ring-color: var(--color-white);
+  }
+  [data-theme="dark"] .border-gray-900 {
+    border-color: #090909;
+  }
+  [data-theme="dark"] .border-yellow-200 {
+    border-color: #615329;
+  }
+  [data-theme="dark"] .text-amber-600,
+  [data-theme="dark"] .text-amber-800,
+  [data-theme="dark"] .text-yellow-600 {
+    color: #fcd34d;
+  }
+  [data-theme="dark"] .text-violet-600 {
+    color: #c4b5fd;
+  }
+  [data-theme="dark"] .text-blue-100 {
+    color: #dbeafe;
+  }
+  [data-theme="dark"] .bg-red-700,
+  [data-theme="dark"] .hover\:bg-red-700:hover {
+    background-color: #b91c1c;
+  }
+  [data-theme="dark"] .PhoneInputInput {
+    background-color: transparent;
+  }
+  [data-theme="dark"] .btn-primary {
+    --tw-shadow-color: rgb(0 0 0 / 0.3);
+    --tw-shadow: var(--tw-shadow-colored);
+  }
+  [data-theme="dark"] .hover\:bg-blue-100:hover {
+    background-color: var(--color-blue-100);
+  }
+  [data-theme="dark"] .hover\:bg-gray-200:hover {
+    background-color: var(--color-gray-200);
+  }
+  [data-theme="dark"] .focus\:bg-white:focus {
+    background-color: var(--color-white);
+  }
+  [data-theme="dark"] .hover\:text-gray-700:hover {
+    color: var(--color-gray-700);
+  }
+  [data-theme="dark"] .hover\:text-gray-800:hover {
+    color: var(--color-gray-800);
+  }
+  [data-theme="dark"] .hover\:text-blue-600:hover {
+    color: var(--color-blue-600);
+  }
+  [data-theme="dark"] .hover\:text-red-600:hover {
+    color: var(--color-red-600);
+  }
+  [data-theme="dark"] .hover\:text-violet-700:hover {
+    color: var(--color-violet-700);
+  }
+  [data-theme="dark"] .shadow-blue-600\/20,
+  [data-theme="dark"] .shadow-purple-600\/20 {
+    --tw-shadow-color: rgb(0 0 0 / 0.3);
+  }
+  [data-theme="dark"] [data-sonner-toast][data-styled="true"] {
+    background-color: var(--color-white);
+    border-color: var(--color-gray-200);
+    color: var(--color-gray-900);
+    --normal-bg: var(--color-white);
+    --normal-border: var(--color-gray-200);
+    --normal-text: var(--color-gray-900);
+  }
+  [data-theme="dark"] [data-sonner-toast] [data-description] {
+    color: var(--color-gray-600);
   }
   [data-theme] .bg-green-100 {
     background-color: var(--color-green-100);
