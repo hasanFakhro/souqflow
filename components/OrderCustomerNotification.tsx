@@ -290,7 +290,6 @@ export default function OrderCustomerNotification() {
           rounded-full
           transition-colors
           hover:bg-gray-100
-          dark:hover:bg-gray-800
         "
       >
         <Package
@@ -359,8 +358,6 @@ export default function OrderCustomerNotification() {
               border-gray-200
               bg-white
               shadow-2xl
-              dark:border-gray-700
-              dark:bg-gray-900
 
               md:absolute
               md:left-auto
@@ -379,7 +376,6 @@ export default function OrderCustomerNotification() {
                 border-gray-200
                 px-4
                 py-3
-                dark:border-gray-700
               "
             >
               <div>
@@ -387,7 +383,6 @@ export default function OrderCustomerNotification() {
                   className="
                     font-semibold
                     text-gray-900
-                    dark:text-white
                   "
                 >
                   Orders
@@ -399,7 +394,6 @@ export default function OrderCustomerNotification() {
                       mt-0.5
                       text-xs
                       text-gray-500
-                      dark:text-gray-400
                     "
                   >
                     {unreadCount} new{" "}
@@ -425,9 +419,6 @@ export default function OrderCustomerNotification() {
                   transition
                   hover:bg-gray-100
                   hover:text-gray-800
-                  dark:text-gray-400
-                  dark:hover:bg-gray-800
-                  dark:hover:text-white
                 "
               >
                 <X size={18} />
@@ -463,7 +454,6 @@ export default function OrderCustomerNotification() {
                       justify-center
                       rounded-full
                       bg-gray-100
-                      dark:bg-gray-800
                     "
                   >
                     <Package
@@ -471,7 +461,6 @@ export default function OrderCustomerNotification() {
                       strokeWidth={1.7}
                       className="
                         text-gray-400
-                        dark:text-gray-500
                       "
                     />
                   </div>
@@ -481,7 +470,6 @@ export default function OrderCustomerNotification() {
                       mt-3
                       font-medium
                       text-gray-800
-                      dark:text-gray-100
                     "
                   >
                     No new orders
@@ -515,9 +503,6 @@ export default function OrderCustomerNotification() {
                         transition
                         last:border-b-0
                         hover:bg-gray-50
-                        dark:border-gray-800
-                        dark:bg-gray-900
-                        dark:hover:bg-gray-800
                       "
                     >
                       <div className="flex items-start gap-3">
@@ -531,14 +516,12 @@ export default function OrderCustomerNotification() {
                             justify-center
                             rounded-full
                             bg-amber-50
-                            dark:bg-amber-500/10
                           "
                         >
                           <Package
                             size={18}
                             className="
                               text-amber-500
-                              dark:text-amber-400
                             "
                           />
                         </div>
@@ -549,7 +532,6 @@ export default function OrderCustomerNotification() {
                               text-sm
                               leading-5
                               text-gray-800
-                              dark:text-gray-200
                             "
                           >
                             {notification.message}
@@ -605,11 +587,6 @@ export default function OrderCustomerNotification() {
                 transition
                 hover:bg-gray-50
                 hover:text-violet-700
-                dark:border-gray-700
-                dark:bg-gray-900
-                dark:text-violet-400
-                dark:hover:bg-gray-800
-                dark:hover:text-violet-300
               "
             >
               View orders →
