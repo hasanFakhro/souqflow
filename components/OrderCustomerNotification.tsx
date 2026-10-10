@@ -22,7 +22,7 @@ export default function OrderCustomerNotification() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const [isBouncing, setIsBouncing] = useState(false);
+  const iconRef = useRef<SVGSVGElement>(null);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -212,23 +212,32 @@ export default function OrderCustomerNotification() {
   }, [isOpen]);
 
   useEffect(() => {
-    if (unreadCount === 0) {
-      setIsBouncing(false);
+    if (unreadCount === 0 || !iconRef.current) {
       return;
     }
 
-    const interval = setInterval(() => {
-      setIsBouncing(true);
-
-      setTimeout(() => {
-        setIsBouncing(false);
-      }, 600);
-    }, 5000);
+    const animation = iconRef.current.animate(
+      [
+        { transform: "rotate(0deg)" },
+        { transform: "rotate(15deg)" },
+        { transform: "rotate(-15deg)" },
+        { transform: "rotate(12deg)" },
+        { transform: "rotate(-12deg)" },
+        { transform: "rotate(8deg)" },
+        { transform: "rotate(-8deg)" },
+        { transform: "rotate(0deg)" },
+      ],
+      {
+        duration: 1000,
+        iterations: Infinity,
+      },
+    );
 
     return () => {
-      clearInterval(interval);
+      animation.cancel();
     };
   }, [unreadCount]);
+
 
   useEffect(() => {
     function handleOutsideClick(event: MouseEvent) {
@@ -276,34 +285,24 @@ export default function OrderCustomerNotification() {
         aria-label="Orders"
         className="
           relative
-          flex
-          h-10
-          w-10
-          items-center
-          justify-center
+          flex h-10 w-10
+          items-center justify-center
           rounded-full
-          bg-transparent
-          p-0
-          transition
+          transition-colors
           hover:bg-gray-100
           dark:hover:bg-gray-800
         "
       >
         <Package
-          size={27}
-          strokeWidth={2.2}
+          ref={iconRef}
+          strokeWidth={2}
           className={`
-            transition-all
-            duration-300
+            h-5 w-5
+            transition-colors
             ${
               unreadCount > 0
-                ? "text-amber-500 dark:text-amber-400"
-                : "text-gray-400 dark:text-gray-500"
-            }
-            ${
-              isBouncing
-                ? "-translate-y-1"
-                : ""
+                ? "text-yellow-500"
+                : "text-gray-400"
             }
           `}
         />
@@ -312,8 +311,7 @@ export default function OrderCustomerNotification() {
           <span
             className="
               absolute
-              -right-1
-              -top-1
+              right-0 top-0
               flex
               h-5
               min-w-5
@@ -426,8 +424,10 @@ export default function OrderCustomerNotification() {
                   text-gray-500
                   transition
                   hover:bg-gray-100
+                  hover:text-gray-800
                   dark:text-gray-400
                   dark:hover:bg-gray-800
+                  dark:hover:text-white
                 "
               >
                 <X size={18} />
@@ -588,7 +588,7 @@ export default function OrderCustomerNotification() {
             </div>
 
             <Link
-              href="/orders"
+              href="/orders?view=requests"
               onClick={() => setIsOpen(false)}
               className="
                 flex
