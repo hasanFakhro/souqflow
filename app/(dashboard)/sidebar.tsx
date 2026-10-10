@@ -2,6 +2,7 @@
 
 import Link from "@/components/NavigationLink";
 import { useState } from "react";
+import { clearCart } from "@/stores/cartStore";
 import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
 import {
@@ -59,7 +60,9 @@ function Sidebar() {
     setLogoutError("");
 
     try {
-      await signOut({ redirectTo: "/signin" });
+      await signOut({ redirect: false });
+      clearCart();
+      window.location.assign("/");
     } catch {
       setLogoutError("Could not log out. Please try again.");
       setIsLoggingOut(false);

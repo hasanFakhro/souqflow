@@ -66,6 +66,7 @@ const CartBar = () => {
     customerAddress: string,
     customerPhone: string,
   ) => {
+    if (isSubmitting || isPending || pendingClear.current || !items.length) return;
     setIsSubmitting(true);
     try {
       const response = await fetch("/api/orders", {
@@ -227,7 +228,7 @@ const CartBar = () => {
 
       <OrderDetailsDialog
         isOpen={isDialogOpen}
-        onClose={() => setIsDialogOpen(false)}
+        onClose={() => { if (!isSubmitting) setIsDialogOpen(false); }}
         onConfirm={handleCreateOrder}
         isSubmitting={isSubmitting}
       />

@@ -2,6 +2,10 @@ import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { writeFile } from "node:fs/promises";
+import path from "node:path";
+import { randomUUID } from "node:crypto";
+import { revalidatePath } from "next/cache";
 import { profileSchema } from "@/lib/validations/profile";
 
 export async function PUT(request: NextRequest) {
@@ -15,7 +19,14 @@ export async function PUT(request: NextRequest) {
       );
     }
 
-    const body = await request.json();
+    const multipart = request.headers.get("content-type")?.includes("multipart/form-data");
+    const formData = multipart ? await request.formData() : null;
+    const body = formData ? Object.fromEntries([...formData.entries()].filter(([key]) => key !== "imageFile")) : await request.json();
+    const imageFile = formData?.get("imageFile");
+    const extensions: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif" };
+    if (imageFile instanceof File && imageFile.size > 0 && (!extensions[imageFile.type] || imageFile.size > 5 * 1024 * 1024)) {
+      return NextResponse.json({ message: "Choose a JPG, PNG, WebP or GIF under 5 MB." }, { status: 400 });
+    }
 
     const parsed = profileSchema.safeParse(body);
 
@@ -33,7 +44,6 @@ export async function PUT(request: NextRequest) {
       name,
       email,
       phone,
-      image,
       currentPassword,
       newPassword,
     } = parsed.data;
@@ -93,7 +103,7 @@ export async function PUT(request: NextRequest) {
       name,
       email,
       phone,
-      image: image || null,
+      image: user.image,
     };
 
     if (newPassword) {
@@ -124,6 +134,12 @@ export async function PUT(request: NextRequest) {
       updateData.password = hashedPassword;
     }
 
+    if (imageFile instanceof File && imageFile.size > 0) {
+      const filename = `profile-${randomUUID()}.${extensions[imageFile.type]}`;
+      await writeFile(path.join(process.cwd(), "public", filename), Buffer.from(await imageFile.arrayBuffer()));
+      updateData.image = `/${filename}`;
+    }
+
     const updatedUser = await prisma.user.update({
       where: {
         id: user.id,
@@ -138,6 +154,7 @@ export async function PUT(request: NextRequest) {
       },
     });
 
+    revalidatePath("/settings");
     return NextResponse.json(
       {
         message: "Profile updated successfully",

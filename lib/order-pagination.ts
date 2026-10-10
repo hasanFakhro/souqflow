@@ -3,11 +3,12 @@ import type { OrderSource } from "@prisma/client";
 
 export const ordersPerPage = 10;
 export const preloadedOrderPages = 5;
-export type OrderSearchEntry = { id: string; status: OrderState; source: OrderSource; searchText: string };
+export type OrderSearchEntry = { id: string; status: OrderState; source: OrderSource; searchText: string; customerPhone?: string | null };
 
 export function filterOrderIndex(index: OrderSearchEntry[], search: string, state: OrderState | "ALL", source: OrderSource) {
   const query = search.trim().toLowerCase();
-  return index.filter((order) => order.source === source && (state === "ALL" || order.status === state) && order.searchText.includes(query));
+  const phoneQuery = /^[+\d\s()-]+$/.test(query) ? query.replace(/\D/g, "") : "";
+  return index.filter((order) => order.source === source && (state === "ALL" || order.status === state) && (order.searchText.includes(query) || (phoneQuery.length > 0 && Boolean(order.customerPhone?.replace(/\D/g, "").includes(phoneQuery)))));
 }
 
 export function orderPage(total: number, requestedPage: number) {

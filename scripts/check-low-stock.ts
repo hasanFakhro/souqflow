@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { isLowStock } from "@/lib/stock";
 
 export async function checkLowStock() {
   const startOfDay = new Date();
@@ -9,9 +10,7 @@ export async function checkLowStock() {
 
   const products = await prisma.product.findMany({
     where: {
-      quantity: {
-        lte: 5,
-      },
+      OR: [{ quantity: { lte: 0 } }, { lowStockAt: { not: null } }],
       ownerId: {
         not: null,
       },
@@ -19,6 +18,7 @@ export async function checkLowStock() {
     select: {
       name: true,
       quantity: true,
+      lowStockAt: true,
       ownerId: true,
     },
   });
@@ -26,12 +26,14 @@ export async function checkLowStock() {
   console.log("Products found:", products);
 
   for (const product of products) {
+    if (!isLowStock(product.quantity, product.lowStockAt)) continue;
     const message = `${product.name} is low in stock. Only ${product.quantity} left.`;
 
     const existingNotification =
-      await prisma.notification.findFirst({
+      await prisma.notificationHistory.findFirst({
         where: {
           userId: product.ownerId!,
+          type: "LOW_STOCK",
           message: {
             startsWith: `${product.name} is low in stock.`,
           },

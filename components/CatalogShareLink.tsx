@@ -1,6 +1,7 @@
 "use client";
 
 import { Check, Copy, Link as LinkIcon } from "lucide-react";
+import { toast } from "sonner";
 import { useState } from "react";
 
 type CatalogShareLinkProps = {
@@ -17,6 +18,7 @@ export default function CatalogShareLink({ catalogUrl }: CatalogShareLinkProps) 
       window.setTimeout(() => setIsCopied(false), 1800);
     } catch {
       setIsCopied(false);
+      toast.error("Unable to copy the link. Select and copy it below.");
     }
   }
 
@@ -44,7 +46,7 @@ export default function CatalogShareLink({ catalogUrl }: CatalogShareLinkProps) 
       </div>
 
       <p className="mt-4 break-all rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 font-mono text-sm text-gray-700">
-        {catalogUrl}
+        <a href={catalogUrl} target="_blank" rel="noopener noreferrer" className="underline decoration-gray-300 underline-offset-4 hover:text-blue-600">{catalogUrl}</a>
       </p>
     </section>
   );

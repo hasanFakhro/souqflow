@@ -6,16 +6,16 @@ export interface BuyerProduct {
   imageUrl?: string | null;
   category: { id: string; name: string } | null;
   price: number;
-  costPrice: number;
   stock: number;
   isPopular?: boolean;
 }
 
 interface BuyerProductGridProps {
   products: BuyerProduct[];
+  cartScope: string;
 }
 
-export default function BuyerProductGrid({ products }: BuyerProductGridProps) {
+export default function BuyerProductGrid({ products, cartScope }: BuyerProductGridProps) {
   if (products.length === 0) {
     return (
       <div className="text-center py-16 border border-gray-200 rounded-2xl bg-gray-50">
@@ -41,6 +41,7 @@ export default function BuyerProductGrid({ products }: BuyerProductGridProps) {
             {group.products.map((product) => (
               <ProductCard
                 key={product.id}
+                cartScope={cartScope}
                 hideStockCount
                 allowBeyondStock
                 showPopularBadge={product.isPopular}
@@ -50,7 +51,6 @@ export default function BuyerProductGrid({ products }: BuyerProductGridProps) {
                   imageUrl: product.imageUrl,
                   category: product.category?.name ?? null,
                   sellPrice: product.price,
-                  costPrice: product.costPrice,
                   quantity: product.stock,
                 }}
               />

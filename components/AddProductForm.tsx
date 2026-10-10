@@ -1,4 +1,5 @@
 "use client";
+import { useSiteDialogs } from "@/components/SiteDialogs";
 
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -33,6 +34,7 @@ export default function AddProductForm({
   onCancel,
 }: Props) {
   const router = useRouter();
+  const { alert } = useSiteDialogs();
 
   const currency = useCurrency();
   const rate = useExchangeRate();

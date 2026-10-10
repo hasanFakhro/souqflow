@@ -24,15 +24,15 @@ export default async function CatalogPage({
     },
   });
 
-  if (!seller || !seller.business) {
+  if (!seller) {
     notFound();
   }
 
   return (
     <CatalogClient
       sellerId={seller.id}
-      businessName={seller.business.name}
-      description={seller.business.description ?? undefined}
+      businessName={seller.business?.name ?? seller.name ?? "SouqFlow catalog"}
+      description={seller.business?.description ?? undefined}
       categories={seller.categories.map((category) => ({
         id: category.id,
         name: category.name,
@@ -42,7 +42,6 @@ export default async function CatalogPage({
         name: product.name,
         description: product.description,
         price: product.sellPrice,
-        costPrice: product.costPrice,
         imageUrl: product.imageUrl,
         category: product.category
           ? { id: product.category.id, name: product.category.name }

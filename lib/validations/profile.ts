@@ -21,7 +21,7 @@ export const profileSchema = z
 
     image: z
       .string()
-      .url("Please enter a valid image URL")
+      .refine((value) => !value || /^\/[a-zA-Z0-9/_-]+\.(png|jpg|jpeg|webp|gif)$/.test(value) || /^https?:\/\//.test(value), "Invalid profile image")
       .optional()
       .or(z.literal("")),
 

@@ -42,14 +42,14 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
 
         const matchesStock =
             stockState === null ||
-            (stockState === "out" && product.quantity === 0) ||
+            (stockState === "out" && product.quantity <= 0) ||
             (stockState === "low" &&
                 product.quantity > 0 &&
                 product.lowStockAt !== null &&
                 product.quantity <= product.lowStockAt) ||
             (stockState === "stocked" &&
-                (product.lowStockAt === null ||
-                    product.quantity > product.lowStockAt));
+                (product.quantity > 0 && (product.lowStockAt === null ||
+                    product.quantity > product.lowStockAt)));
 
         return matchesSearch && matchesCategory && matchesStock;
     }), [flatProducts, searchTerm, category, stockState]);

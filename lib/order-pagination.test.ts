@@ -27,3 +27,15 @@ test("request decisions accept only explicit actions and reject extra mutations"
   assert.equal(orderRequestActionSchema.safeParse({ action: "delete" }).success, false);
   assert.equal(orderRequestActionSchema.safeParse({ action: "accept", ownerId: "other" }).success, false);
 });
+
+test("phone search accepts punctuation and partial numbers while respecting tabs and state", () => {
+  const entries: OrderSearchEntry[] = [
+    { ...index[0], customerPhone: "+96170123456" },
+    { ...index[1], customerPhone: "+96170123456" },
+    { ...index[2], customerPhone: null },
+  ];
+  assert.deepEqual(filterOrderIndex(entries, "+961 (70) 123-456", "ALL", "MANUAL").map((order) => order.id), ["manual"]);
+  assert.deepEqual(filterOrderIndex(entries, "70 123", "PENDING", "STOREFRONT").map((order) => order.id), ["request"]);
+  assert.equal(filterOrderIndex(entries, "70123", "DONE", "STOREFRONT").length, 0);
+  assert.equal(filterOrderIndex(entries, "999999", "ALL", "MANUAL").length, 0);
+});

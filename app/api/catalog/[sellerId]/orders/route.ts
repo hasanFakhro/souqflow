@@ -1,3 +1,5 @@
+import { customerSchema } from "@/lib/validations/customer";
+import { getCatalogSellerId } from "@/lib/catalog";
 import { randomUUID } from "crypto";
 
 import prisma from "@/lib/prisma";
@@ -6,19 +8,19 @@ import { OrderSource } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 
-function refreshOrderViews(sellerId: string) {
+function refreshOrderViews() {
   revalidatePath("/orders");
   revalidatePath("/sales");
   revalidatePath("/dashboard");
-  revalidatePath("/inventory");
-  revalidatePath(`/catalog/${sellerId}`);
+  revalidatePath("/catalog/[sellerId]", "page");
 }
 
 export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ sellerId: string }> }
 ) {
-  const { sellerId } = await params;
+  const { sellerId: segment } = await params;
+  const sellerId = getCatalogSellerId(segment);
 
   if (!sellerId) {
     return NextResponse.json({ error: "Invalid store link" }, { status: 400 });
@@ -27,12 +29,13 @@ export async function POST(
   try {
     const body = await request.json();
     const items = body?.items;
-    const customerName =
-      typeof body?.customerName === "string" && body.customerName.trim()
-        ? body.customerName.trim()
-        : null;
+    const customer = customerSchema.safeParse(body);
+    if (!customer.success) {
+      return NextResponse.json({ error: customer.error.issues[0].message }, { status: 400 });
+    }
+    const { customerName, customerAddress, customerPhone } = customer.data;
 
-    if (!Array.isArray(items) || items.length === 0) {
+    if (!Array.isArray(items) || items.length === 0 || items.length > 100) {
       return NextResponse.json({ error: "Cart is empty" }, { status: 400 });
     }
 
@@ -43,7 +46,7 @@ export async function POST(
         !item ||
         typeof item.productId !== "string" ||
         !Number.isInteger(item.quantity) ||
-        item.quantity <= 0
+        item.quantity <= 0 || item.quantity > 10000
       ) {
         return NextResponse.json({ error: "Invalid cart item" }, { status: 400 });
       }
@@ -65,12 +68,6 @@ export async function POST(
         },
         include: { category: { select: { name: true } } },
       });
-console.log("sellerId:", sellerId);
-console.log("productIds:", productIds);
-console.log(
-  "products found:",
-  products.map((product) => product.id)
-);
 
       if (products.length !== productIds.length) {
         throw new Error("One or more cart products are unavailable");
@@ -105,24 +102,13 @@ console.log(
           orderNumber: `ORD-${Date.now()}-${randomUUID().slice(0, 8)}`,
           total,
           customerName,
+          customerAddress,
+          customerPhone,
           source: OrderSource.STOREFRONT,
           items: { create: orderItems },
         },
       });
 
-      for (const item of orderItems) {
-        const updated = await tx.product.updateMany({
-          where: {
-            id: item.productId,
-            ownerId: sellerId,
-          },
-          data: { quantity: { decrement: item.quantity } },
-        });
-
-        if (updated.count === 0) {
-          throw new Error("One or more cart products are unavailable");
-        }
-      }
       await tx.notificationHistory.create({
   data: {
     userId: sellerId,
@@ -146,7 +132,7 @@ console.log(
       return order;
     });
 
-    refreshOrderViews(sellerId);
+    refreshOrderViews();
     return NextResponse.json(
       { message: "Order created successfully" },
       { status: 201 }

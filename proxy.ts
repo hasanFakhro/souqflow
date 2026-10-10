@@ -7,6 +7,7 @@ import {
 } from "@/lib/subscription";
 
 const publicPaths = new Set([
+  "/",
   "/signin",
   "/register",
   "/error",

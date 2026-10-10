@@ -3,12 +3,17 @@ import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
+import { planOrderItems } from "@/lib/order-edit";
+import { acceptOrderRequest } from "@/lib/order-request";
 import { serializeOrder } from "@/lib/orders";
 import { orderEditSchema, orderRequestActionSchema, orderStateSchema, paymentStateSchema } from "@/lib/validations/order";
 
 type Context = { params: Promise<{ id: string }> };
 
 function handleError(error: unknown) {
+  if (error instanceof Error && /^(Not enough stock|Product is unavailable)/.test(error.message)) {
+    return NextResponse.json({ message: error.message }, { status: 409 });
+  }
   if (error instanceof SyntaxError) {
     return NextResponse.json({ message: "Invalid request body" }, { status: 400 });
   }
@@ -23,6 +28,8 @@ function refreshOrders() {
   revalidatePath("/orders");
   revalidatePath("/sales");
   revalidatePath("/dashboard");
+  revalidatePath("/inventory");
+  revalidatePath("/catalog/[sellerId]", "page");
 }
 
 async function getOwnedOrder(id: string, userId: string) {
@@ -54,15 +61,46 @@ export async function PUT(request: Request, { params }: Context) {
       return NextResponse.json({ message: "Order not found" }, { status: 404 });
     }
 
-    const order = await prisma.order.update({
-      where: { id },
-      data: { ...parsed.data, customerName: parsed.data.customerName || null },
-      include: { items: true },
+    const { items, ...details } = parsed.data;
+    const order = await prisma.$transaction(async (tx) => {
+      // Claim this version before adjusting stock so concurrent edits cannot apply twice.
+      const claimed = await tx.order.updateMany({
+        where: { id, ownerId: userId, updatedAt: existingOrder.updatedAt },
+        data: { ...details, customerName: details.customerName || null,
+          ...(details.customerPhone !== undefined && { customerPhone: details.customerPhone || null }),
+          ...(details.customerAddress !== undefined && { customerAddress: details.customerAddress || null }) },
+      });
+      if (!claimed.count) throw new Error("Order changed. Refresh and try again.");
+      if (items) {
+        const products = await tx.product.findMany({
+          where: { ownerId: userId, id: { in: items.flatMap((item) => item.productId ? [item.productId] : []) } },
+          include: { category: true },
+        });
+        const { replacements, deltas, total } = planOrderItems(existingOrder.items, items, products);
+        // Pending requests never reserve or return inventory.
+        for (const [productId, delta] of existingOrder.source === "MANUAL" ? deltas : []) {
+          if (!delta) continue;
+          const result = await tx.product.updateMany({
+            where: { id: productId, ownerId: userId, ...(delta > 0 && { quantity: { gte: delta } }) },
+            data: { quantity: { decrement: delta } },
+          });
+          if (!result.count) throw new Error("Not enough stock or product is unavailable. Refresh and try again.");
+        }
+        await tx.orderItem.deleteMany({ where: { orderId: id } });
+        await tx.order.update({ where: { id }, data: {
+          total,
+          items: { create: replacements },
+        } });
+      }
+      return tx.order.findUniqueOrThrow({ where: { id }, include: { items: { orderBy: { createdAt: "asc" } } } });
     });
 
     refreshOrders();
     return NextResponse.json({ order: serializeOrder(order) });
   } catch (error) {
+    if (error instanceof Error && /^(Order changed|Invalid order item|Product is unavailable|Not enough stock)/.test(error.message)) {
+      return NextResponse.json({ message: error.message }, { status: 409 });
+    }
     return handleError(error);
   }
 }
@@ -84,11 +122,11 @@ export async function PATCH(request: Request, { params }: Context) {
       // Source and ownership are checked atomically so a stale request cannot
       // reject an order that has already been accepted.
       const where = { id, ownerId: userId, source: "STOREFRONT" as const };
-      const result = requestAction.data.action === "accept"
-        ? await prisma.order.updateMany({ where, data: { source: "MANUAL" } })
-        : await prisma.order.deleteMany({ where });
+      const count = requestAction.data.action === "accept"
+        ? Number(await prisma.$transaction((tx) => acceptOrderRequest(tx, id, userId)))
+        : (await prisma.order.deleteMany({ where })).count;
 
-      if (result.count === 0) {
+      if (count === 0) {
         return NextResponse.json({ message: "Request is no longer available. Refresh and try again." }, { status: 409 });
       }
 
@@ -116,27 +154,21 @@ export async function PATCH(request: Request, { params }: Context) {
     }
 
     const { status, previousStatus } = parsed.data;
-    const existingOrder = await getOwnedOrder(id, userId);
-
-    if (!existingOrder) {
-      return NextResponse.json({ message: "Order not found" }, { status: 404 });
-    }
-
-    if (existingOrder.status !== previousStatus) {
+    const updated = await prisma.order.updateMany({
+      where: { id, ownerId: userId, status: previousStatus },
+      data: { status },
+    });
+    if (!updated.count) {
       return NextResponse.json(
         { message: "Order changed. Refresh and try again." },
         { status: 409 }
       );
     }
 
-    const order = await prisma.order.update({
-      where: { id },
-      data: { status },
-      include: { items: true },
-    });
+    const order = await getOwnedOrder(id, userId);
 
     refreshOrders();
-    return NextResponse.json({ order: serializeOrder(order) });
+    return NextResponse.json({ order: order ? serializeOrder(order) : null });
   } catch (error) {
     return handleError(error);
   }

@@ -157,7 +157,7 @@ export default function CatalogProductTable({
           <tbody className="divide-y divide-gray-100">
             {sortedProducts.map((product) => {
               const isLoading = loadingId === product.id;
-              const isOutOfStock = product.quantity === 0;
+              const isOutOfStock = product.quantity <= 0;
 
               return (
                 <tr

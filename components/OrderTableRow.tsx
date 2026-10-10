@@ -1,4 +1,5 @@
 "use client";
+import { useSiteDialogs } from "@/components/SiteDialogs";
 
 import { Fragment, useState, useTransition, memo } from "react";
 import { useRouter } from "next/navigation";
@@ -13,6 +14,7 @@ const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "
 
 function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; isRequest?: boolean }) {
   const router = useRouter();
+  const { confirm } = useSiteDialogs();
   const [busy, setBusy] = useState(false);
   const [refreshing, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -72,6 +74,8 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
         </td>
         <td className="max-w-36 break-words px-2 py-3 text-gray-600">
           {order.customerName || "Guest"}
+          {order.customerPhone && <a href={`tel:${order.customerPhone}`} className="mt-1 block whitespace-nowrap text-xs text-blue-600">{order.customerPhone}</a>}
+          {order.customerAddress && <p className="mt-1 text-xs text-gray-500">{order.customerAddress}</p>}
         </td>
         <td className="min-w-24 px-2 py-3 text-gray-600">
           {order.items.length ? <OrderItemsPopup order={order} /> : "No items"}
@@ -126,7 +130,9 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
                   disabled={disabled}
                   aria-label={`Reject order request ${order.orderNumber}`}
                   title="Reject order request"
-                  onClick={() => void mutate("PATCH", { action: "reject" })}
+                  onClick={async () => {
+                    if (await confirm(`Reject request ${order.orderNumber}? This will remove the customer request. Inventory will stay unchanged.`)) void mutate("PATCH", { action: "reject" });
+                  }}
                   className="shrink-0 rounded-md p-2 text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   <X size={18} aria-hidden="true" />
@@ -148,8 +154,8 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
                 disabled={disabled}
                 aria-label={`Delete order ${order.orderNumber}`}
                 title="Delete order"
-                onClick={() => {
-                  if (window.confirm(`Delete order ${order.orderNumber} and its items? This cannot be undone.`)) void mutate("DELETE");
+                onClick={async () => {
+                  if (await confirm(`Delete order ${order.orderNumber} and its items? This cannot be undone.`)) void mutate("DELETE");
                 }}
                 className="shrink-0 rounded-md p-2 text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
               >

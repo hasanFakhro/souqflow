@@ -343,8 +343,6 @@ export default function OrderCustomerNotification() {
               bottom-0
               top-28
               z-40
-              bg-black/20
-              backdrop-blur-[1px]
               md:hidden
             "
             onClick={handlePackageClick}

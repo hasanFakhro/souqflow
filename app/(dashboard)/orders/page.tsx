@@ -54,6 +54,7 @@ export default async function OrdersPage({
       id: true,
       orderNumber: true,
       customerName: true,
+      customerPhone: true,
       status: true,
       source: true,
       items: {
@@ -73,9 +74,11 @@ export default async function OrdersPage({
     id: order.id,
     status: order.status,
     source: order.source,
+    customerPhone: order.customerPhone,
     searchText: [
       order.orderNumber,
       order.customerName,
+      order.customerPhone,
       ...order.items.flatMap((item) => [
         item.productName,
         item.category,

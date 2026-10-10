@@ -1,4 +1,5 @@
 "use client";
+import { useSiteDialogs } from "@/components/SiteDialogs";
 import { Price } from "@/app/(dashboard)/currency";
 
 import { useState } from "react";
@@ -17,6 +18,7 @@ export default function ProductTable({
   products,
 }: ProductTableProps) {
   const router = useRouter();
+  const { alert, confirm, prompt } = useSiteDialogs();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [category, setCategory] = useState<string | null>(null);
@@ -35,14 +37,14 @@ export default function ProductTable({
 
   const lowStockProducts = products.filter(
     (product) =>
-      product.quantity === 0 ||
+      product.quantity <= 0 ||
       (product.lowStockAt !== null &&
         product.quantity > 0 &&
         product.quantity <= product.lowStockAt)
   );
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
+    const matchesSearch = [product.name, product.sku].filter(Boolean).join(" ")
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
@@ -51,20 +53,20 @@ export default function ProductTable({
 
     const matchesStock =
       stockState === null ||
-      (stockState === "out" && product.quantity === 0) ||
+      (stockState === "out" && product.quantity <= 0) ||
       (stockState === "low" &&
         product.quantity > 0 &&
         product.lowStockAt !== null &&
         product.quantity <= product.lowStockAt) ||
       (stockState === "stocked" &&
-        (product.lowStockAt === null ||
-          product.quantity > product.lowStockAt));
+        (product.quantity > 0 && (product.lowStockAt === null ||
+          product.quantity > product.lowStockAt)));
 
     return matchesSearch && matchesCategory && matchesStock;
   });
 
   async function handleDelete(id: string) {
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       "Are you sure you want to delete this product?"
     );
 
@@ -84,7 +86,7 @@ export default function ProductTable({
 
 
   async function handleRestock(id: string) {
-    const amount = window.prompt("How many units would you like to add?");
+    const amount = await prompt("How many units would you like to add?");
 
     if (amount === null) return;
 
@@ -149,7 +151,7 @@ export default function ProductTable({
           type="search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          placeholder="Search products..."
+          placeholder="Search products or SKU..."
           aria-label="Search products"
           className="w-full min-w-0 rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-primary/40 sm:flex-1"
           />
@@ -266,7 +268,7 @@ export default function ProductTable({
                   {product.name}
                 </td>
 
-                <td className="px-4 py-4 text-gray-600 max-w-[95px] truncate hover:max-w-none hover:overflow-x-auto whitespace-nowrap">
+                <td className="px-4 py-4 text-gray-600 font-mono whitespace-nowrap">
                   {product.sku || "-"}
                 </td>
 
@@ -298,7 +300,7 @@ export default function ProductTable({
                 </td>
 
                 <td className="px-4 py-3">
-                  {product.quantity === 0 ? (
+                  {product.quantity <= 0 ? (
                     <span className="inline-flex rounded-md border border-red-200 bg-red-100 px-3 py-1 text-sm font-medium text-red-700">
                       Out of stock
                     </span>

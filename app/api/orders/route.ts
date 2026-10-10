@@ -1,3 +1,5 @@
+import { customerSchema } from "@/lib/validations/customer";
+import { isLowStock } from "@/lib/stock";
 import { randomUUID } from "crypto";
 
 import { auth } from "@/lib/auth";
@@ -84,27 +86,11 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid cart" }, { status: 400 });
     }
 
-    const customerName =
-      typeof body?.customerName === "string" ? body.customerName.trim() : "";
-    const customerAddress =
-      typeof body?.customerAddress === "string"
-        ? body.customerAddress.trim()
-        : "";
-    const customerPhone =
-      typeof body?.customerPhone === "string" ? body.customerPhone.trim() : "";
-
-    if (
-      !customerName ||
-      customerName.length > 100 ||
-      !customerAddress ||
-      customerAddress.length > 255 ||
-      !/^\+?[0-9\s-]{7,15}$/.test(customerPhone)
-    ) {
-      return NextResponse.json(
-        { error: "Invalid customer details" },
-        { status: 400 },
-      );
+    const customer = customerSchema.safeParse(body);
+    if (!customer.success) {
+      return NextResponse.json({ error: customer.error.issues[0].message }, { status: 400 });
     }
+    const { customerName, customerAddress, customerPhone } = customer.data;
 
     const requestedQuantities = new Map<string, number>();
 
@@ -213,7 +199,7 @@ export async function POST(request: NextRequest) {
 
         const newQuantity = product.quantity - item.quantity;
 
-        if (product.quantity > 5 && newQuantity <= 5) {
+        if (!isLowStock(product.quantity, product.lowStockAt) && isLowStock(newQuantity, product.lowStockAt)) {
           const message = `${product.name} is low in stock. Only ${newQuantity} left.`;
 
           await tx.notification.create({

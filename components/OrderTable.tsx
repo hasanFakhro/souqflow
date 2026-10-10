@@ -232,7 +232,7 @@ export default function OrderTable({
           <input
             type="search"
             aria-label={`Search ${orderLabel}`}
-            placeholder="Search order, customer or product..."
+            placeholder="Search order, customer, phone or product..."
             value={filters.search}
             onChange={(event) =>
               updateFilters({

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { Pencil, X } from "lucide-react";
 import PhoneInput, { isValidPhoneNumber } from "react-phone-number-input";
 import "react-phone-number-input/style.css";
+import type { ProductData } from "@/components/ProductsGrid";
+import { Price } from "@/app/(dashboard)/currency";
 import type { SerializedOrder } from "@/lib/orders";
 
 const inputStyle = "mt-2 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm outline-none focus:border-yellow-400 focus:ring-2 focus:ring-yellow-100 disabled:opacity-60";
@@ -15,6 +17,9 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
   const form = useRef<HTMLFormElement>(null);
   const titleId = useId();
   const phoneId = useId();
+  const [items, setItems] = useState(order.items.map((item) => ({ ...item, id: item.id as string | undefined })));
+  const [products, setProducts] = useState<ProductData[]>([]);
+  const [productsLoading, setProductsLoading] = useState(false);
   const [customerPhone, setCustomerPhone] = useState("");
   const [phoneTouched, setPhoneTouched] = useState(false);
   const [open, setOpen] = useState(false);
@@ -28,6 +33,8 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
     event.preventDefault();
     if (busy) return;
     setError("");
+    if (customerPhone && !isValidPhoneNumber(customerPhone)) { setPhoneTouched(true); return; }
+    if (!items.length) { setError("Add at least one item."); return; }
     const values = new FormData(event.currentTarget);
     const orderedAt = new Date(`${values.get("orderedAt")}${order.orderedAt.slice(10)}`);
     if (Number.isNaN(orderedAt.getTime())) {
@@ -42,6 +49,9 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
         body: JSON.stringify({
           orderNumber: values.get("orderNumber"),
           customerName: values.get("customerName"),
+          customerPhone,
+          customerAddress: values.get("customerAddress"),
+          items: items.map(({ id, productId, quantity, unitPrice }) => ({ id, productId, quantity, unitPrice })),
           orderedAt: orderedAt.toISOString(),
         }),
       });
@@ -65,13 +75,21 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
         aria-label={`Edit order ${order.orderNumber}`}
         aria-haspopup="dialog"
         title="Edit order"
-        onClick={() => {
+        onClick={async () => {
           setError("");
-          setCustomerPhone("");
+          setCustomerPhone(order.customerPhone ?? "");
+          setItems(order.items.map((item) => ({ ...item, id: item.id as string | undefined })));
           setPhoneTouched(false);
           setOpen(true);
           form.current?.reset();
           dialog.current?.showModal();
+          setProductsLoading(true);
+          try {
+            const response = await fetch("/api/products");
+            if (!response.ok || response.redirected) throw new Error("Unable to load products. Close and try again.");
+            setProducts(await response.json());
+          } catch (failure) { setError(failure instanceof Error ? failure.message : "Unable to load products."); }
+          finally { setProductsLoading(false); }
         }}
         className="shrink-0 rounded-md p-2 text-blue-600 transition hover:bg-blue-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 disabled:cursor-not-allowed disabled:opacity-50"
       >
@@ -88,7 +106,7 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
           const bounds = event.currentTarget.getBoundingClientRect();
           if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.current?.close();
         }}
-        className="m-auto max-h-[85vh] w-[calc(100%-2rem)] max-w-lg overflow-y-auto rounded-2xl border border-gray-200 bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm"
+        className="m-auto max-h-[85vh] w-[calc(100%-2rem)] max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white p-0 text-gray-900 shadow-2xl backdrop:bg-slate-900/40 backdrop:backdrop-blur-sm"
       >
         <div className="flex items-center justify-between gap-4 border-b border-gray-100 p-5">
           <div>
@@ -125,9 +143,41 @@ export default function EditOrderPopup({ order, disabled }: { order: SerializedO
               aria-describedby={`${phoneId}-hint${phoneInvalid ? ` ${phoneId}-error` : ""}`}
               className="mt-2 w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition focus-within:border-blue-500 focus-within:ring-4 focus-within:ring-blue-100 [&_.PhoneInputInput]:min-w-0 [&_.PhoneInputInput]:outline-none"
             />}
-            <p id={`${phoneId}-hint`} className="mt-2 text-xs text-gray-500">This number is not saved yet.</p>
+            <p id={`${phoneId}-hint`} className="mt-2 text-xs text-gray-500">Used to contact the customer about this order.</p>
             {phoneInvalid && <p id={`${phoneId}-error`} role="alert" className="mt-2 text-xs text-red-600">Enter a valid phone number.</p>}
           </div>
+          <label className="block text-sm font-medium">
+            Customer address
+            <textarea name="customerAddress" defaultValue={order.customerAddress ?? ""} maxLength={500} rows={2} disabled={busy} className={inputStyle} />
+          </label>
+          <fieldset disabled={busy} className="space-y-3">
+            <legend className="text-sm font-semibold">Order items</legend>
+            {items.map((item, index) => <div key={item.id ?? `new-${index}`} className="rounded-xl border border-gray-200 p-3">
+              <div className="flex items-center justify-between gap-3">
+                <span className="text-sm font-medium">{item.productName}</span>
+                <button type="button" aria-label={`Remove ${item.productName}`} onClick={() => setItems(items.filter((_, i) => i !== index))} className="rounded-lg p-2 text-red-600 hover:bg-red-50"><X size={16} /></button>
+              </div>
+              <div className="mt-2 grid grid-cols-2 gap-3">
+                <label className="text-xs text-gray-600">Quantity
+                  <input type="number" min="1" max="10000" step="1" required value={item.quantity} onChange={(event) => setItems(items.map((row, i) => i === index ? { ...row, quantity: Number(event.target.value) } : row))} className={inputStyle} />
+                </label>
+                <label className="text-xs text-gray-600">Unit price (USD)
+                  <input type="number" min="0" max="100000000" step="0.01" required value={item.unitPrice} onChange={(event) => setItems(items.map((row, i) => i === index ? { ...row, unitPrice: Number(event.target.value) } : row))} className={inputStyle} />
+                </label>
+              </div>
+            </div>)}
+            <select aria-label="Add product to order" value="" disabled={productsLoading} className={inputStyle} onChange={(event) => {
+              const product = products.find((entry) => entry.id === event.target.value);
+              if (!product) return;
+              const existing = items.findIndex((item) => item.productId === product.id);
+              if (existing >= 0) setItems(items.map((item, i) => i === existing ? { ...item, quantity: item.quantity + 1 } : item));
+              else setItems([...items, { id: undefined, orderId: order.id, productId: product.id, productName: product.name, category: product.category?.name ?? null, quantity: 1, unitPrice: product.sellPrice, unitCost: product.costPrice }]);
+            }}>
+              <option value="">{productsLoading ? "Loading products..." : "Add a product..."}</option>
+              {products.map((product) => <option key={product.id} value={product.id}>{product.name} / {product.sku ?? "No SKU"} / {product.quantity} in stock</option>)}
+            </select>
+            <div className="flex justify-between rounded-lg bg-gray-50 p-3 text-sm font-semibold"><span>Total</span><Price amountUsd={items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)} /></div>
+          </fieldset>
           <label className="block text-sm font-medium">
             Ordered at
             <input type="date" name="orderedAt" defaultValue={order.orderedAt.slice(0, 10)} required disabled={busy} className={inputStyle} />

@@ -24,6 +24,7 @@ type ProfileUser = {
 
 export default function ProfileForm({ user }: { user: ProfileUser }) {
   const [isEditing, setIsEditing] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   const { data: session } = useSession();
@@ -65,6 +66,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
       confirmPassword: "",
     });
 
+    setImageFile(null);
     setIsEditing(false);
   };
 
@@ -72,9 +74,11 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
     try {
       setIsSaving(true);
 
-      const response = await axios.put("/api/profile", data);
-
-      console.log(response.data);
+      const payload = new FormData();
+      Object.entries(data).forEach(([key, value]) => { if (value !== undefined) payload.append(key, value); });
+      if (imageFile) payload.set("imageFile", imageFile);
+      const response = await axios.put("/api/profile", payload);
+      setImageFile(null);
 
       setIsEditing(false);
 
@@ -82,7 +86,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        image: data.image,
+        image: response.data.user.image ?? "",
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
@@ -118,6 +122,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
                 alt="Profile"
                 width={80}
                 height={80}
+                unoptimized
                 className="h-full w-full object-cover"
               />
             ) : (
@@ -238,16 +243,27 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
               htmlFor="image"
               className="mb-2 block text-sm font-medium text-gray-700"
             >
-              Profile Image URL
+              Profile image
             </label>
 
             <input
               id="image"
-              type="text"
-              {...register("image")}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null;
+                if (file && (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
+                  toast.error("Choose a JPG, PNG, WebP or GIF under 5 MB.");
+                  event.target.value = "";
+                  setImageFile(null);
+                  return;
+                }
+                setImageFile(file);
+              }}
               className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
 
+            <p className="mt-2 text-xs text-gray-500">JPG, PNG, WebP or GIF. Maximum 5 MB.</p>
             {errors.image && (
               <p className="mt-1 text-sm text-red-500">
                 {errors.image.message}

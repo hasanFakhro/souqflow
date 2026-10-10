@@ -15,7 +15,7 @@ export default async function SalesPage() {
 
   const [orders, products] = await Promise.all([
     prisma.order.findMany({
-      where: { ownerId: userId, status: "DONE" },
+      where: { ownerId: userId, source: "MANUAL", status: "DONE" },
       orderBy: { orderedAt: "asc" },
       select: {
         id: true,

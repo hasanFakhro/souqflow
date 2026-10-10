@@ -1,4 +1,5 @@
 "use client";
+import { useSiteDialogs } from "@/components/SiteDialogs";
 
 import { useState } from "react";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
@@ -10,6 +11,7 @@ type Category = {
 };
 
 export default function ManageCategories() {
+  const { alert, confirm } = useSiteDialogs();
   const [categories, setCategories] = useState<Category[]>([]);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -89,7 +91,7 @@ export default function ManageCategories() {
   };
 
   const handleDeleteCategory = async (id: string) => {
-    const confirmed = window.confirm(
+    const confirmed = await confirm(
       "Are you sure you want to delete this category?"
     );
 

@@ -15,14 +15,21 @@ type CartState = {
 }
 
 
-export const useCartStore = create<CartState>(() => {
-    return {
-        items: []
-    }
-});
+const carts = new Map<string, ReturnType<typeof createCartStore>>();
+function createCartStore() {
+    return create<CartState>(() => ({ items: [] }));
+}
+export function getCartStore(scope = "manual") {
+    let cart = carts.get(scope);
+    if (!cart) { cart = createCartStore(); carts.set(scope, cart); }
+    return cart;
+}
+export function useCartStore<T>(selector: (state: CartState) => T, scope = "manual") {
+    return getCartStore(scope)(selector);
+}
 
-export function addItem(item: Omit<CartItem, "quantity">, { allowBeyondStock = false } = {}) {
-    useCartStore.setState(state => {
+export function addItem(item: Omit<CartItem, "quantity">, { allowBeyondStock = false, scope = "manual" } = {}) {
+    getCartStore(scope).setState(state => {
         const existing = state.items.find(i => i.productId === item.productId);
         if (existing) {
             if (!allowBeyondStock && existing.quantity >= existing.stock) return state;
@@ -37,16 +44,16 @@ export function addItem(item: Omit<CartItem, "quantity">, { allowBeyondStock = f
     });
 }
 
-export function removeItem(productId: string) {
-    useCartStore.setState(state => {
+export function removeItem(productId: string, scope = "manual") {
+    getCartStore(scope).setState(state => {
         return {
             items: state.items.filter(i => i.productId !== productId)
         }
     })
 }
 
-export function incrementQuantity(productId: string, { allowBeyondStock = false } = {}) {
-    useCartStore.setState(state => {
+export function incrementQuantity(productId: string, { allowBeyondStock = false, scope = "manual" } = {}) {
+    getCartStore(scope).setState(state => {
         return {
             items: state.items.map(i =>
                 i.productId === productId
@@ -57,19 +64,19 @@ export function incrementQuantity(productId: string, { allowBeyondStock = false 
     });
 }
 
-export function decrementQuantity(productId: string) {
-    const target = useCartStore.getState().items.find(i => i.productId === productId);
+export function decrementQuantity(productId: string, scope = "manual") {
+    const target = getCartStore(scope).getState().items.find(i => i.productId === productId);
     if (target && target.quantity <= 1) {
-        removeItem(productId);
+        removeItem(productId, scope);
         return;
     }
-    useCartStore.setState(state => ({
+    getCartStore(scope).setState(state => ({
         items: state.items.map(i =>
             i.productId === productId ? { ...i, quantity: i.quantity - 1 } : i
         )
     }));
 }
 
-export function clearCart() {
-    useCartStore.setState({ items: [] });
+export function clearCart(scope = "manual") {
+    getCartStore(scope).setState({ items: [] });
 }

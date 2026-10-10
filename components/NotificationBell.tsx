@@ -160,9 +160,9 @@ export default function NotificationBell() {
       >
         <Bell
           ref={bellRef}
-          strokeWidth={2.5}
+          strokeWidth={2}
           className={`
-            h-7 w-7
+            h-5 w-5
             transition-colors
             ${
               unreadCount > 0
@@ -176,7 +176,7 @@ export default function NotificationBell() {
           <span
             className="
               absolute
-              -right-2 -top-2
+              right-0 top-0
               flex h-5 min-w-5
               items-center justify-center
               rounded-full
@@ -200,8 +200,6 @@ export default function NotificationBell() {
               bottom-0
               top-28
               z-40
-              bg-black/20
-              backdrop-blur-[1px]
               md:hidden
             "
             onClick={handleClose}

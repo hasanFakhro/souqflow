@@ -30,7 +30,8 @@ export default function CatalogClient({
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [priceSort, setPriceSort] = useState<PriceSortOrder>("none");
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const cartItems = useCartStore((state) => state.items);
+  const cartScope = `catalog:${sellerId}`;
+  const cartItems = useCartStore((state) => state.items, cartScope);
 
   const filteredProducts = useMemo(() => {
     let result = products;
@@ -62,10 +63,10 @@ export default function CatalogClient({
           onPriceSortChange={setPriceSort}
         />
         <div className="mt-6">
-          <BuyerProductGrid products={filteredProducts} />
+          <BuyerProductGrid products={filteredProducts} cartScope={cartScope} />
         </div>
       </main>
-      <CustomerCartBar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} sellerId={sellerId} />
+      <CustomerCartBar key={sellerId} isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} sellerId={sellerId} />
     </div>
   );
 }

@@ -13,18 +13,19 @@ type ProductCardProps = {
         imageUrl?: string | null;
         category: string | null;
         sellPrice: number;
-        costPrice: number;
+        costPrice?: number;
         quantity: number;
     };
+    cartScope?: string;
     hideStockCount?: boolean;
     allowBeyondStock?: boolean;
     showPopularBadge?: boolean;
 };
 
-const ProductCard = ({ product, hideStockCount = false, allowBeyondStock = false, showPopularBadge = false }: ProductCardProps) => {
+const ProductCard = ({ product, cartScope = "manual", hideStockCount = false, allowBeyondStock = false, showPopularBadge = false }: ProductCardProps) => {
     const [isPressed, setIsPressed] = useState(false);
     const cartQuantity = useCartStore(
-        (state) => state.items.find((i) => i.productId === product.id)?.quantity ?? 0
+        (state) => state.items.find((i) => i.productId === product.id)?.quantity ?? 0, cartScope
     );
     const remainingQuantity = product.quantity - cartQuantity;
     const isOutOfStock = !allowBeyondStock && remainingQuantity <= 0;
@@ -37,9 +38,9 @@ const ProductCard = ({ product, hideStockCount = false, allowBeyondStock = false
             name: product.name,
             category: product.category,
             unitPrice: product.sellPrice,
-            costPrice: product.costPrice,
+            costPrice: product.costPrice ?? 0,
             stock: product.quantity,
-        }, { allowBeyondStock });
+        }, { allowBeyondStock, scope: cartScope });
 
         setIsPressed(true);
         setTimeout(() => setIsPressed(false), 150);
@@ -47,9 +48,15 @@ const ProductCard = ({ product, hideStockCount = false, allowBeyondStock = false
 
     return (
         <div
+            role="button"
+            tabIndex={isOutOfStock ? -1 : 0}
+            aria-label={`Add ${product.name} to cart`}
+            onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") { event.preventDefault(); handleAdd(); }
+            }}
             onClick={handleAdd}
             aria-disabled={isOutOfStock}
-            className={`relative flex min-w-0 select-none flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-150 ease-out ${isOutOfStock
+            className={`relative flex min-w-0 select-none flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition-all duration-150 ease-out focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 ${isOutOfStock
                 ? "cursor-not-allowed opacity-40"
                 : "cursor-pointer hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
                 } ${isPressed ? "scale-95 shadow-sm" : "scale-100"

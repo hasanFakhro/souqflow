@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
+import PhoneInput from "react-phone-number-input";
+import "react-phone-number-input/style.css";
+import { customerSchema } from "@/lib/validations/customer";
 
 interface OrderDetailsDialogProps {
     isOpen: boolean;
@@ -9,105 +12,54 @@ interface OrderDetailsDialogProps {
     isSubmitting?: boolean;
 }
 
-const OrderDetailsDialog = ({
-    isOpen,
-    onClose,
-    onConfirm,
-    isSubmitting = false,
-}: OrderDetailsDialogProps) => {
+export default function OrderDetailsDialog({ isOpen, onClose, onConfirm, isSubmitting = false }: OrderDetailsDialogProps) {
+    const dialog = useRef<HTMLDialogElement>(null);
+    const titleId = useId();
     const [customerName, setCustomerName] = useState("");
     const [customerAddress, setCustomerAddress] = useState("");
     const [customerPhone, setCustomerPhone] = useState("");
+    const customer = customerSchema.safeParse({ customerName, customerAddress, customerPhone });
+    const inputClass = "mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500";
 
-    if (!isOpen) return null;
-    const phoneRegex = /^\+?[0-9\s-]{7,15}$/;
-    const isPhoneValid = phoneRegex.test(customerPhone.trim());
-    const isValid =
-        customerName.trim().length > 0 &&
-        customerAddress.trim().length > 0 &&
-        isPhoneValid;
+    useEffect(() => {
+        if (isOpen) dialog.current?.showModal();
+        else dialog.current?.close();
+    }, [isOpen]);
 
-    const handleConfirm = () => {
-        if (!isValid) return;
-        onConfirm(customerName.trim(), customerAddress.trim(), customerPhone.trim());
-    };
-
-    return (
-        <>
-            <div
-                onClick={onClose}
-                className="fixed inset-0 bg-black/40 z-[70] transition-opacity duration-200"
-            />
-            <div className="fixed inset-0 z-[80] flex items-center justify-center p-4">
-                <div className="w-full max-w-sm rounded-2xl bg-white shadow-xl p-5 sm:p-6">
-                    <h2 className="text-lg font-semibold text-gray-900">Customer details</h2>
-                    <p className="text-sm text-gray-500 mt-1">
-                        Required to place this order.
-                    </p>
-
-                    <div className="mt-4 space-y-3">
-                        <div>
-                            <label className="text-xs font-medium text-gray-600" htmlFor="customer-name">
-                                Name
-                            </label>
-                            <input
-                                id="customer-name"
-                                type="text"
-                                value={customerName}
-                                onChange={(e) => setCustomerName(e.target.value)}
-                                placeholder="Customer name"
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="text-xs font-medium text-gray-600" htmlFor="customer-address">
-                                Address
-                            </label>
-                            <input
-                                id="customer-address"
-                                type="text"
-                                value={customerAddress}
-                                onChange={(e) => setCustomerAddress(e.target.value)}
-                                placeholder="Delivery address"
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-
-                        <div>
-                            <label className="text-xs font-medium text-gray-600" htmlFor="customer-phone">
-                                Phone
-                            </label>
-                            <input
-                                id="customer-phone"
-                                type="tel"
-                                value={customerPhone}
-                                onChange={(e) => setCustomerPhone(e.target.value)}
-                                placeholder="+961 70 123 456"
-                                className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="mt-5 flex items-center gap-3">
-                        <button
-                            onClick={onClose}
-                            className="flex-1 rounded-lg border border-gray-300 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
-                        >
-                            Cancel
-                        </button>
-                        <button
-                            onClick={handleConfirm}
-                            disabled={!isValid || isSubmitting}
-                            className="flex-1 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 py-2.5 text-sm font-semibold text-white hover:from-blue-700 hover:to-purple-700 transition disabled:opacity-50"
-                        >
-                            {isSubmitting ? "Placing…" : "Confirm order"}
-                        </button>
-                    </div>
-                </div>
+    return <dialog ref={dialog} aria-labelledby={titleId} aria-busy={isSubmitting}
+        onCancel={(event) => { if (isSubmitting) event.preventDefault(); }}
+        onClose={onClose}
+        onClick={(event) => {
+            if (isSubmitting || event.target !== event.currentTarget) return;
+            const bounds = event.currentTarget.getBoundingClientRect();
+            if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) onClose();
+        }}
+        className="m-auto w-[calc(100%-2rem)] max-w-sm max-h-[85vh] overflow-y-auto rounded-2xl border border-gray-200 bg-white p-6 text-gray-900 shadow-xl backdrop:bg-slate-900/40">
+        <form onSubmit={(event) => {
+            event.preventDefault();
+            if (isSubmitting || !customer.success) return;
+            onConfirm(customer.data.customerName, customer.data.customerAddress, customer.data.customerPhone);
+        }}>
+            <h2 id={titleId} className="text-lg font-semibold">Customer details</h2>
+            <p className="mt-1 text-sm text-gray-500">Required to place this order.</p>
+            <fieldset disabled={isSubmitting} className="mt-4 space-y-3">
+                <label className="block text-xs font-medium text-gray-600">
+                    Name
+                    <input type="text" autoComplete="name" required maxLength={100} value={customerName} onChange={(event) => setCustomerName(event.target.value)} placeholder="Customer name" className={inputClass} />
+                </label>
+                <label className="block text-xs font-medium text-gray-600">
+                    Address
+                    <textarea autoComplete="street-address" required maxLength={255} rows={2} value={customerAddress} onChange={(event) => setCustomerAddress(event.target.value)} placeholder="Delivery address" className={inputClass} />
+                </label>
+                <label className="block text-xs font-medium text-gray-600">
+                    Phone
+                    <PhoneInput international defaultCountry="LB" autoComplete="tel" required value={customerPhone} onChange={(value) => setCustomerPhone(value ?? "")} placeholder="Enter phone number" className={`${inputClass} [&_.PhoneInputInput]:min-w-0 [&_.PhoneInputInput]:outline-none`} />
+                </label>
+            </fieldset>
+            <div className="mt-5 flex items-center gap-3">
+                <button type="button" disabled={isSubmitting} onClick={onClose} className="btn-secondary flex-1">Cancel</button>
+                <button type="submit" disabled={!customer.success || isSubmitting} className="btn-primary flex-1">{isSubmitting ? "Placing..." : "Confirm order"}</button>
             </div>
-        </>
-    );
-};
-
-export default OrderDetailsDialog;
+        </form>
+    </dialog>;
+}
