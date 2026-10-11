@@ -19,7 +19,7 @@ const SearchBar = ({ value, onChange }: SearchBarProps) => {
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder="Search products..."
-      className="h-11 w-full rounded-lg border border-gray-200 bg-gray-50/70 pl-10 pr-3 text-sm transition placeholder:text-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
+      className="h-11 w-full min-w-0 rounded-lg border border-gray-200 bg-gray-50/70 pl-10 pr-3 text-base sm:text-sm transition placeholder:text-gray-400 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-100"
     />
     </div>
   );

@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import SearchBar from "./SearchBar";
 import { Prisma } from "@prisma/client";
 import ProductCard from "./ProductCard";
+import FilterSelect from "./FilterSelect";
 
 export type ProductData = Prisma.ProductGetPayload<{ include: { category: true } }>;
 type ProductsGridProps = {
@@ -62,24 +63,24 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                     value={searchTerm}
                     onChange={setSearchTerm}
                 />
-                <select
+                <FilterSelect
                     value={stockState ?? ""}
                     onChange={(e) => setStockState(e.target.value || null)}
                     aria-label="Filter by stock state"
-                    className="h-11 w-full shrink-0 rounded-lg border border-gray-200 bg-white px-3 text-sm text-gray-700 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:w-44"
+                    className="w-full shrink-0 sm:w-44"
                 >
                     <option value="">All stock states</option>
                     <option value="stocked">Stocked</option>
                     <option value="low">Low stock</option>
                     <option value="out">Out of stock</option>
-                </select>
+                </FilterSelect>
               </div>
                 <nav aria-label="Product categories" className="flex gap-2 overflow-x-auto border-t border-gray-100 pt-4 pb-1">
                     <button
                         type="button"
                         aria-pressed={category === null}
                         onClick={() => setCategory(null)}
-                        className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 ${
+                        className={`min-h-11 shrink-0 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 ${
                             category === null
                                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-blue-200 hover:from-blue-700 hover:to-purple-700'
                                 : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
@@ -93,7 +94,7 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                             aria-pressed={category === cat}
                             key={cat}
                             onClick={() => setCategory(cat)}
-                            className={`shrink-0 rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 ${
+                            className={`min-h-11 shrink-0 whitespace-nowrap rounded-lg px-4 py-2 text-sm font-medium cursor-pointer transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500 ${
                                 category === cat
                                     ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md shadow-blue-200 hover:from-blue-700 hover:to-purple-700'
                                     : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
@@ -106,6 +107,11 @@ const ProductsGrid = ({ products }: ProductsGridProps) => {
                 </nav>
             </div>
 
+            {filteredProducts.length === 0 && (
+                <p role="status" className="mt-4 rounded-xl border border-gray-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
+                    No products match your filters.
+                </p>
+            )}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-4 mt-4">
                 {filteredProducts.map((product) => (
                     <ProductCard

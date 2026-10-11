@@ -26,7 +26,7 @@ export default async function InventoryPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-2xl font-bold text-gray-900">Inventory</h1>
 
-        <div className="flex items-center gap-3">
+        <div className="flex max-w-full flex-wrap items-center gap-3">
           <AddProductSection />
           <ManageCategories />
         </div>
