@@ -27,11 +27,12 @@ export default function BuyerFilterBar({
 }: BuyerFilterBarProps) {
   return (
     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 py-4 border-b border-gray-200">
-      <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+      <nav aria-label="Catalog categories" className="flex min-w-0 items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
         <button
           type="button"
           onClick={() => onSelectCategory(null)}
-          className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
+          aria-pressed={selectedCategoryId === null}
+          className={`min-h-11 sm:min-h-0 shrink-0 px-4 py-2 sm:px-3 sm:py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
             selectedCategoryId === null
               ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
               : "bg-gray-100 hover:bg-gray-200 text-gray-500"
@@ -44,7 +45,8 @@ export default function BuyerFilterBar({
             key={cat.id}
             type="button"
             onClick={() => onSelectCategory(cat.id)}
-            className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium whitespace-nowrap transition-colors ${
+            aria-pressed={selectedCategoryId === cat.id}
+            className={`min-h-11 sm:min-h-0 shrink-0 px-4 py-2 sm:px-3 sm:py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition-colors ${
               selectedCategoryId === cat.id
                 ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
                 : "bg-gray-100 hover:bg-gray-200 text-gray-500"
@@ -53,10 +55,10 @@ export default function BuyerFilterBar({
             {cat.name}
           </button>
         ))}
-      </div>
+      </nav>
 
-      <div className="flex items-center gap-2 self-end sm:self-auto shrink-0">
-        <div className="relative inline-flex items-center">
+      <div className="flex w-full min-w-0 items-center gap-2 sm:w-auto shrink-0">
+        <div className="relative inline-flex w-full min-w-0 items-center sm:w-auto">
           <label htmlFor="price-sort" className="sr-only">
             Sort by Price
           </label>
@@ -73,7 +75,7 @@ export default function BuyerFilterBar({
             id="price-sort"
             value={priceSort}
             onChange={(e) => onPriceSortChange(e.target.value as PriceSortOrder)}
-            className="h-9 rounded-lg border border-gray-300 bg-white pl-9 pr-8 text-xs sm:text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm cursor-pointer"
+            className="h-11 sm:h-9 w-full min-w-0 sm:w-auto rounded-lg border border-gray-300 bg-white pl-9 pr-8 text-sm font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-sm cursor-pointer"
           >
             <option value="none">Featured</option>
             <option value="asc">Price: Low to High (Cheapest)</option>

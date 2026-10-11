@@ -21,7 +21,10 @@ export const profileSchema = z
 
     image: z
       .string()
-      .refine((value) => !value || /^\/[a-zA-Z0-9/_-]+\.(png|jpg|jpeg|webp|gif)$/.test(value) || /^https?:\/\//.test(value), "Invalid profile image")
+      .refine((value) => !value || /^\/[a-zA-Z0-9/_-]+\.(png|jpg|jpeg|webp|gif)$/.test(value) || /^https?:\/\//.test(value) || (
+        value.length <= 4 * Math.ceil(5 * 1024 * 1024 / 3) + 32 &&
+        /^data:image\/(jpeg|png|webp|gif);base64,[A-Za-z0-9+/]+={0,2}$/.test(value)
+      ), "Invalid profile image")
       .optional()
       .or(z.literal("")),
 

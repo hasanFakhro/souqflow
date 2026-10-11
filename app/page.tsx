@@ -39,9 +39,9 @@ export default function HomePage() {
         <div className={`${font.className} min-h-screen bg-white text-gray-900`}>
             {/* Navbar */}
             <header className="sticky top-0 z-40 border-b border-gray-100 bg-white/95 backdrop-blur">
-                <nav className="mx-auto flex max-w-6xl items-center justify-between px-5 py-3">
-                    <Logo />
-                    <div className="flex items-center gap-2 sm:gap-3">
+                <nav className="mx-auto flex max-w-6xl items-center justify-between gap-2 px-3 py-3 sm:px-5">
+                    <Logo className="h-6 sm:h-10" />
+                    <div className="flex shrink-0 items-center gap-2 sm:gap-3">
                         <a
                             href="#how"
                             className={`hidden rounded-lg px-3 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 sm:block ${focus}`}
@@ -50,13 +50,13 @@ export default function HomePage() {
                         </a>
                         <Link
                             href="/signin"
-                            className={`rounded-lg px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition ${focus}`}
+                            className={`inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition sm:min-h-0 sm:border-transparent ${focus}`}
                         >
                             Log in
                         </Link>
                         <Link
                             href="/register"
-                            className={`rounded-lg ${gradient} ${gradientHover} px-4 py-2 text-sm font-semibold text-white shadow-sm transition active:scale-[0.98] ${focus}`}
+                            className={`inline-flex min-h-11 items-center justify-center whitespace-nowrap rounded-lg ${gradient} ${gradientHover} px-3 py-2 text-sm font-semibold text-white shadow-sm transition active:scale-[0.98] sm:min-h-0 sm:px-4 ${focus}`}
                         >
                             Sign up
                         </Link>

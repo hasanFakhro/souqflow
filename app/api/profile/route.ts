@@ -2,9 +2,6 @@ import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
-import { writeFile } from "node:fs/promises";
-import path from "node:path";
-import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { profileSchema } from "@/lib/validations/profile";
 
@@ -135,9 +132,10 @@ export async function PUT(request: NextRequest) {
     }
 
     if (imageFile instanceof File && imageFile.size > 0) {
-      const filename = `profile-${randomUUID()}.${extensions[imageFile.type]}`;
-      await writeFile(path.join(process.cwd(), "public", filename), Buffer.from(await imageFile.arrayBuffer()));
-      updateData.image = `/${filename}`;
+      // Deployment filesystems are read-only. Persist the image with the user
+      // so it remains available across requests and deployments.
+      const buffer = Buffer.from(await imageFile.arrayBuffer());
+      updateData.image = `data:${imageFile.type};base64,${buffer.toString("base64")}`;
     }
 
     const updatedUser = await prisma.user.update({

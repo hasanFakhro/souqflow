@@ -84,7 +84,9 @@ export default async function ProfilePage() {
 
       <ProfileForm user={user} />
 
-      <BusinessSection business={business} />
+      <div className="mt-4">
+        <BusinessSection business={business} />
+      </div>
 
       <CatalogShareLink catalogUrl={catalogUrl} />
 
