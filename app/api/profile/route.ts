@@ -4,6 +4,8 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { profileSchema } from "@/lib/validations/profile";
+import { ImageUploadError, uploadImage } from "@/lib/blob-images";
+import { validateImageFile } from "@/lib/image-file";
 
 export async function PUT(request: NextRequest) {
   try {
@@ -20,9 +22,14 @@ export async function PUT(request: NextRequest) {
     const formData = multipart ? await request.formData() : null;
     const body = formData ? Object.fromEntries([...formData.entries()].filter(([key]) => key !== "imageFile")) : await request.json();
     const imageFile = formData?.get("imageFile");
-    const extensions: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp", "image/gif": "gif" };
-    if (imageFile instanceof File && imageFile.size > 0 && (!extensions[imageFile.type] || imageFile.size > 5 * 1024 * 1024)) {
-      return NextResponse.json({ message: "Choose a JPG, PNG, WebP or GIF under 5 MB." }, { status: 400 });
+    if (imageFile && !(imageFile instanceof File)) {
+      return NextResponse.json({ message: "Invalid image file" }, { status: 400 });
+    }
+    if (imageFile instanceof File && imageFile.size > 0) {
+      const validationError = validateImageFile(imageFile);
+      if (validationError) {
+        return NextResponse.json({ message: validationError }, { status: 400 });
+      }
     }
 
     const parsed = profileSchema.safeParse(body);
@@ -132,10 +139,7 @@ export async function PUT(request: NextRequest) {
     }
 
     if (imageFile instanceof File && imageFile.size > 0) {
-      // Deployment filesystems are read-only. Persist the image with the user
-      // so it remains available across requests and deployments.
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      updateData.image = `data:${imageFile.type};base64,${buffer.toString("base64")}`;
+      updateData.image = await uploadImage(imageFile, `profiles/${user.id}`);
     }
 
     const updatedUser = await prisma.user.update({
@@ -162,6 +166,9 @@ export async function PUT(request: NextRequest) {
     );
   } catch (error) {
     console.error("Profile update error:", error);
+    if (error instanceof ImageUploadError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
 
     return NextResponse.json(
       {

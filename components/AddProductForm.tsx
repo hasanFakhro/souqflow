@@ -7,6 +7,7 @@ import MoneyInput from "@/components/MoneyInput";
 import { useCurrency, useExchangeRate } from "@/app/(dashboard)/currency";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { IMAGE_ACCEPT, validateImageFile } from "@/lib/image-file";
 
 import {
   productSchema,
@@ -77,7 +78,6 @@ export default function AddProductForm({
     defaultValues: {
       name: "",
       description: "",
-      imageUrl: "",
       sku: "",
       categoryId: "",
       color: "",
@@ -246,9 +246,18 @@ export default function AddProductForm({
           <input
             id="image"
             type="file"
-            accept="image/*"
+            accept={IMAGE_ACCEPT}
             onChange={(e) => {
               const file = e.target.files?.[0] || null;
+              if (file) {
+                const validationError = validateImageFile(file);
+                if (validationError) {
+                  alert(validationError);
+                  e.target.value = "";
+                  setImageFile(null);
+                  return;
+                }
+              }
               setImageFile(file);
             }}
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900"
@@ -259,6 +268,10 @@ export default function AddProductForm({
               Selected: {imageFile.name}
             </p>
           )}
+          <p className="text-xs text-gray-500">
+            JPEG, PNG, WebP, or GIF. Maximum 4 MB.
+            {initialData ? " Leave empty to keep the current image." : ""}
+          </p>
         </div>
 
         {/* Category */}

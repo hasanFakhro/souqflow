@@ -13,11 +13,6 @@ export const productSchema = z.object({
     .optional()
     .or(z.literal("")),
 
-  imageUrl: z
-    .string()
-    .optional()
-    .or(z.literal("")),
-
   sku: z
     .string()
     .trim()

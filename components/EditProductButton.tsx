@@ -69,7 +69,6 @@ export function EditProductSection({ product }: { product: Product }) {
         initialData={{
           ...product,
           description: product.description ?? "",
-          imageUrl: product.imageUrl ?? "",
           sku: product.sku ?? "",
           categoryId: product.categoryId ?? "",
           color: product.color ?? "",

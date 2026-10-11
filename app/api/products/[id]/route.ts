@@ -1,6 +1,4 @@
-import { writeFile } from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
+import { ImageUploadError, uploadImage } from "@/lib/blob-images";
 
 import { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
@@ -49,7 +47,6 @@ export async function PUT(request: NextRequest, { params }: Context) {
     const productData = {
       name: formData.get("name") as string,
       description: (formData.get("description") as string) || "",
-      imageUrl: existingProduct.imageUrl || "",
       sku: existingProduct.sku || "",
       categoryId: (formData.get("categoryId") as string) || "",
       color: (formData.get("color") as string) || "",
@@ -86,21 +83,7 @@ export async function PUT(request: NextRequest, { params }: Context) {
     let imageUrl = existingProduct.imageUrl;
 
     if (image instanceof File && image.size > 0) {
-      if (!image.type.startsWith("image/")) {
-        return NextResponse.json({ message: "Only image files are allowed" }, { status: 400 });
-      }
-
-      if (image.size > 5 * 1024 * 1024) {
-        return NextResponse.json({ message: "Image must be smaller than 5MB" }, { status: 400 });
-      }
-
-      const extension = image.type.split("/")[1];
-      const fileName = `${randomUUID()}.${extension}`;
-      const filePath = path.join(process.cwd(), "public", fileName);
-      const buffer = Buffer.from(await image.arrayBuffer());
-
-      await writeFile(filePath, buffer);
-      imageUrl = `/${fileName}`;
+      imageUrl = await uploadImage(image, `products/${userId}/${id}`);
     }
 
     const product = await prisma.product.update({
@@ -124,6 +107,9 @@ export async function PUT(request: NextRequest, { params }: Context) {
     refreshProductViews();
     return NextResponse.json({ message: "Product updated successfully", product });
   } catch (error) {
+    if (error instanceof ImageUploadError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return NextResponse.json(
         { message: "A product with this SKU already exists in your inventory." },

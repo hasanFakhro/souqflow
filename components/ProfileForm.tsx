@@ -7,6 +7,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { profileSchema, type ProfileFormData } from "@/lib/validations/profile";
+import { IMAGE_ACCEPT, validateImageFile } from "@/lib/image-file";
 import { FolderUp, Pencil, X } from "lucide-react";
 import { toast } from "sonner";
 import DisableAccount from "./DisableAccount";
@@ -44,7 +45,6 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
       name: user.name ?? "",
       email: user.email,
       phone: user.phone,
-      image: user.image ?? "",
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
@@ -60,7 +60,6 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
       name: user.name ?? "",
       email: user.email,
       phone: user.phone,
-      image: user.image ?? "",
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
@@ -77,7 +76,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
       const payload = new FormData();
       Object.entries(data).forEach(([key, value]) => { if (value !== undefined) payload.append(key, value); });
       if (imageFile) payload.set("imageFile", imageFile);
-      const response = await axios.put("/api/profile", payload);
+      await axios.put("/api/profile", payload);
       setImageFile(null);
 
       setIsEditing(false);
@@ -86,7 +85,6 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        image: response.data.user.image ?? "",
         currentPassword: "",
         newPassword: "",
         confirmPassword: "",
@@ -249,11 +247,12 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
             <input
               id="image"
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif"
+              accept={IMAGE_ACCEPT}
               onChange={(event) => {
                 const file = event.target.files?.[0] ?? null;
-                if (file && (!['image/jpeg', 'image/png', 'image/webp', 'image/gif'].includes(file.type) || file.size > 5 * 1024 * 1024)) {
-                  toast.error("Choose a JPG, PNG, WebP or GIF under 5 MB.");
+                const validationError = file ? validateImageFile(file) : null;
+                if (validationError) {
+                  toast.error(validationError);
                   event.target.value = "";
                   setImageFile(null);
                   return;
@@ -263,7 +262,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
               className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
             />
 
-            <p className="mt-2 text-xs text-gray-500">JPG, PNG, WebP or GIF. Maximum 5 MB.</p>
+            <p className="mt-2 text-xs text-gray-500">JPEG, PNG, WebP, or GIF. Maximum 4 MB.</p>
             {errors.image && (
               <p className="mt-1 text-sm text-red-500">
                 {errors.image.message}

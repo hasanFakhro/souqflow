@@ -1,6 +1,4 @@
-import { writeFile } from "fs/promises";
-import path from "path";
-import { randomUUID } from "crypto";
+import { ImageUploadError, uploadImage } from "@/lib/blob-images";
 
 import { auth } from "@/lib/auth";
 import { productSchema } from "@/lib/validations/product";
@@ -114,7 +112,6 @@ export async function POST(request: NextRequest) {
     const productData = {
       name: formData.get("name") as string,
       description: (formData.get("description") as string) || "",
-      imageUrl: "",
       sku: "",
       categoryId: (formData.get("categoryId") as string) || "",
       color: (formData.get("color") as string) || "",
@@ -176,27 +173,7 @@ export async function POST(request: NextRequest) {
     let imageUrl: string | null = null;
 
     if (image instanceof File && image.size > 0) {
-      if (!image.type.startsWith("image/")) {
-        return NextResponse.json(
-          { message: "Only image files are allowed" },
-          { status: 400 }
-        );
-      }
-
-      if (image.size > 5 * 1024 * 1024) {
-        return NextResponse.json(
-          { message: "Image must be smaller than 5MB" },
-          { status: 400 }
-        );
-      }
-
-      const extension = image.type.split("/")[1];
-      const fileName = `${randomUUID()}.${extension}`;
-      const filePath = path.join(process.cwd(), "public", fileName);
-      const buffer = Buffer.from(await image.arrayBuffer());
-
-      await writeFile(filePath, buffer);
-      imageUrl = `/${fileName}`;
+      imageUrl = await uploadImage(image, `products/${userId}`);
     }
 
     const product = await prisma.product.create({
@@ -225,6 +202,9 @@ export async function POST(request: NextRequest) {
     );
   } catch (error) {
     console.error("Error creating product:", error);
+    if (error instanceof ImageUploadError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
     return NextResponse.json(
       { message: "Failed to create product" },
       { status: 500 }

@@ -4,9 +4,7 @@ import prisma from "@/lib/prisma";
 
 import { NextResponse } from "next/server";
 
-import fs from "fs/promises";
-
-import path from "path";
+import { ImageUploadError, uploadImage } from "@/lib/blob-images";
 
 export async function GET() {
   try {
@@ -75,6 +73,10 @@ export async function PUT(request: Request) {
 
     const logo = formData.get("logo");
 
+    if (logo && !(logo instanceof File)) {
+      return NextResponse.json({ message: "Invalid image file" }, { status: 400 });
+    }
+
     if (!name) {
       return NextResponse.json(
         { message: "Business name is required" },
@@ -85,28 +87,7 @@ export async function PUT(request: Request) {
     let logoPath: string | undefined;
 
     if (logo instanceof File && logo.size > 0) {
-      const bytes = await logo.arrayBuffer();
-
-      const buffer = Buffer.from(bytes);
-
-      const extension = path.extname(logo.name);
-
-      const fileName = `${userId}-${Date.now()}${extension}`;
-
-      const uploadDirectory = path.join(
-        process.cwd(),
-        "public",
-        "uploads",
-        "businesses",
-      );
-
-      await fs.mkdir(uploadDirectory, { recursive: true });
-
-      const filePath = path.join(uploadDirectory, fileName);
-
-      await fs.writeFile(filePath, buffer);
-
-      logoPath = `/uploads/businesses/${fileName}`;
+      logoPath = await uploadImage(logo, `businesses/${userId}`);
     }
 
     const business = await prisma.business.upsert({
@@ -143,6 +124,9 @@ export async function PUT(request: Request) {
     );
   } catch (error) {
     console.error("BUSINESS UPDATE ERROR:", error);
+    if (error instanceof ImageUploadError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
 
     return NextResponse.json(
       { message: "Failed to update business profile" },

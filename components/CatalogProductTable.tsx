@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Image from "next/image";
 import { Eye, EyeOff, ImageOff, Loader2, Star } from "lucide-react";
 import { ProductData } from "./ProductsGrid";
 
@@ -30,7 +31,7 @@ function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium ${badgeTones[tone]}`}
+      className={`inline-flex shrink-0 items-center whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-medium ${badgeTones[tone]}`}
     >
       {children}
     </span>
@@ -64,7 +65,8 @@ export default function CatalogProductTable({
 
   function clearDraft(productId: string) {
     setOrderDrafts((drafts) => {
-      const { [productId]: _removed, ...rest } = drafts;
+      const rest = { ...drafts };
+      delete rest[productId];
       return rest;
     });
   }
@@ -120,7 +122,7 @@ export default function CatalogProductTable({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="min-w-0 space-y-4">
       <div className="flex flex-wrap gap-2 text-sm text-gray-600">
         <Badge tone="gray">{stats.total} products</Badge>
         <Badge tone="green">{stats.visible} visible</Badge>
@@ -169,9 +171,12 @@ export default function CatalogProductTable({
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       {product.imageUrl ? (
-                        <img
+                        <Image
                           src={product.imageUrl}
                           alt={product.name}
+                          width={48}
+                          height={48}
+                          unoptimized
                           className="h-12 w-12 shrink-0 rounded-lg object-cover"
                         />
                       ) : (
@@ -179,7 +184,7 @@ export default function CatalogProductTable({
                           <ImageOff className="h-5 w-5" />
                         </div>
                       )}
-                      <div className="min-w-0">
+                      <div className="w-36 min-w-0 sm:w-48">
                         <p className="truncate font-medium text-gray-900">
                           {product.name}
                         </p>
@@ -190,7 +195,7 @@ export default function CatalogProductTable({
                     </div>
                   </td>
 
-                  <td className="px-4 py-3">
+                  <td className="whitespace-nowrap px-4 py-3">
                     {isOutOfStock ? (
                       <Badge tone="red">Out of stock</Badge>
                     ) : (

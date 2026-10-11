@@ -14,6 +14,7 @@ import {
 } from "@/lib/validations/businessinfo";
 
 import { useBusiness } from "@/context/BusinessContext";
+import { IMAGE_ACCEPT, validateImageFile } from "@/lib/image-file";
 
 type BusinessUser = {
   id: string;
@@ -171,9 +172,18 @@ export default function BusinessForm({
         <input
           id="logo"
           type="file"
-          accept="image/*"
+          accept={IMAGE_ACCEPT}
           onChange={(event) => {
             const file = event.target.files?.[0] ?? null;
+            if (file) {
+              const validationError = validateImageFile(file);
+              if (validationError) {
+                toast.error(validationError);
+                event.target.value = "";
+                setLogoFile(null);
+                return;
+              }
+            }
             setLogoFile(file);
           }}
           className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm"
@@ -184,6 +194,9 @@ export default function BusinessForm({
             Current logo is already uploaded.
           </p>
         )}
+        <p className="mt-2 text-xs text-gray-500">
+          JPEG, PNG, WebP, or GIF. Maximum 4 MB.
+        </p>
       </div>
 
       <div className="border-t border-gray-200 pt-6">
