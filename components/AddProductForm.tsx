@@ -1,4 +1,5 @@
 "use client";
+import { formatSku, getSkuPrefix } from "@/lib/product-sku";
 import { useSiteDialogs } from "@/components/SiteDialogs";
 
 import { useEffect, useState } from "react";
@@ -98,28 +99,8 @@ export default function AddProductForm({
     (category) => category.id === selectedCategoryId
   );
 
-  const getSkuPart = (value?: string) => {
-    if (!value?.trim()) {
-      return "NA";
-    }
-
-    const cleaned = value
-      .trim()
-      .replace(/[^a-zA-Z0-9]/g, "")
-      .toUpperCase();
-
-    if (!cleaned) {
-      return "NA";
-    }
-
-    return cleaned.slice(0, 2).padEnd(2, "X");
-  };
-
-  const skuPreview = initialData?.sku
-    ? initialData.sku
-    : `${getSkuPart(selectedCategory?.name)}-${getSkuPart(
-        color
-      )}-${getSkuPart(size)}-####`;
+  const skuSuffix = initialData?.sku?.match(/(?:^|-)(\d{4})$/)?.[1] ?? "####";
+  const skuPreview = formatSku(getSkuPrefix(selectedCategory?.name, color, size), skuSuffix);
 
   const onSubmit = async (data: ProductFormData) => {
     if (waitingForRate) return;

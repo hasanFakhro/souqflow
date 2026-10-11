@@ -15,7 +15,7 @@ export default async function SalesPage() {
 
   const [orders, products] = await Promise.all([
     prisma.order.findMany({
-      where: { ownerId: userId, source: "MANUAL", status: "DONE" },
+      where: { ownerId: userId, source: "MANUAL", paymentStatus: "PAID" },
       orderBy: { orderedAt: "asc" },
       select: {
         id: true,
@@ -52,7 +52,7 @@ export default async function SalesPage() {
         <p className="text-sm font-semibold text-blue-600">Business intelligence</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight text-slate-900">Sales analytics</h1>
         <p className="mt-2 max-w-2xl text-slate-600">
-          Track revenue, costs, profit, and the products driving your sales.
+          Track revenue, costs, and profit from paid orders, and the products driving your sales.
         </p>
       </div>
       <SalesAnalytics

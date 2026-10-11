@@ -1,3 +1,4 @@
+import { generateUniqueSku } from "@/lib/product-sku-server";
 import { ImageUploadError, uploadImage } from "@/lib/blob-images";
 
 import { Prisma } from "@prisma/client";
@@ -69,17 +70,23 @@ export async function PUT(request: NextRequest, { params }: Context) {
       );
     }
 
+    let categoryName: string | null = null;
     if (parsed.data.categoryId) {
       const category = await prisma.category.findFirst({
         where: { id: parsed.data.categoryId, ownerId: userId },
-        select: { id: true },
+        select: { id: true, name: true },
       });
 
       if (!category) {
         return NextResponse.json({ message: "Category not found" }, { status: 400 });
       }
+      categoryName = category.name;
     }
 
+    const sku = await generateUniqueSku(
+      userId, categoryName, parsed.data.color || null, parsed.data.size || null,
+      existingProduct.id, existingProduct.sku,
+    );
     let imageUrl = existingProduct.imageUrl;
 
     if (image instanceof File && image.size > 0) {
@@ -92,7 +99,7 @@ export async function PUT(request: NextRequest, { params }: Context) {
         name: parsed.data.name.trim(),
         description: parsed.data.description || null,
         imageUrl,
-        sku: existingProduct.sku,
+        sku,
         categoryId: parsed.data.categoryId || null,
         color: parsed.data.color || null,
         size: parsed.data.size || null,

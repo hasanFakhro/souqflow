@@ -1,3 +1,4 @@
+import { generateUniqueSku } from "@/lib/product-sku-server";
 import { ImageUploadError, uploadImage } from "@/lib/blob-images";
 
 import { auth } from "@/lib/auth";
@@ -11,58 +12,6 @@ function refreshProductViews() {
   revalidatePath("/products", "layout");
   revalidatePath("/dashboard");
   revalidatePath("/sales");
-}
-
-function getSkuPart(value?: string | null) {
-  if (!value?.trim()) {
-    return "NA";
-  }
-
-  const cleaned = value
-    .trim()
-    .replace(/[^a-zA-Z0-9]/g, "")
-    .toUpperCase();
-
-  if (!cleaned) {
-    return "NA";
-  }
-
-  return cleaned.slice(0, 2).padEnd(2, "X");
-}
-
-async function generateUniqueSku(
-  ownerId: string,
-  categoryName: string | null,
-  color: string | null,
-  size: string | null
-) {
-  const categoryCode = getSkuPart(categoryName);
-  const colorCode = getSkuPart(color);
-  const sizeCode = getSkuPart(size);
-
-  const prefix = `${categoryCode}-${colorCode}-${sizeCode}`;
-
-  for (let attempt = 0; attempt < 20; attempt++) {
-    const number = Math.floor(1000 + Math.random() * 9000);
-
-    const sku = `${prefix}-${number}`;
-
-    const existingProduct = await prisma.product.findFirst({
-      where: {
-        ownerId,
-        sku,
-      },
-      select: {
-        id: true,
-      },
-    });
-
-    if (!existingProduct) {
-      return sku;
-    }
-  }
-
-  throw new Error("Could not generate a unique SKU");
 }
 
 export async function GET() {
