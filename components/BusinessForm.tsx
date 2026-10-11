@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
@@ -40,10 +41,18 @@ export default function BusinessForm({
   onClose: () => void;
 }) {
   const router = useRouter();
-  const { setBusinessName } = useBusiness();
+  const { setBusinessName, setBusinessLogo } = useBusiness();
 
   const [logoFile, setLogoFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (logoPreview) URL.revokeObjectURL(logoPreview);
+    };
+  }, [logoPreview]);
+  const displayedLogo = logoPreview || business?.logo;
 
   const whatsappPhone = business?.user.phone.replace(/\D/g, "");
 
@@ -95,9 +104,10 @@ export default function BusinessForm({
         formData.append("logo", logoFile);
       }
 
-      await axios.put("/api/business", formData);
+      const response = await axios.put("/api/business", formData);
 
       setBusinessName(data.name);
+      setBusinessLogo(response.data.business.logo ?? null);
 
       toast.success("Business profile updated successfully");
 
@@ -181,21 +191,29 @@ export default function BusinessForm({
                 toast.error(validationError);
                 event.target.value = "";
                 setLogoFile(null);
+                setLogoPreview(null);
                 return;
               }
             }
             setLogoFile(file);
+            setLogoPreview(file ? URL.createObjectURL(file) : null);
           }}
           className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm"
         />
 
-        {business?.logo && (
-          <p className="mt-2 text-xs text-gray-500">
-            Current logo is already uploaded.
-          </p>
+        {displayedLogo && (
+          <Image
+            src={displayedLogo}
+            alt="Business logo preview"
+            width={96}
+            height={96}
+            unoptimized
+            className="mt-3 h-24 w-24 rounded-lg border border-gray-200 bg-white object-contain p-2"
+          />
         )}
         <p className="mt-2 text-xs text-gray-500">
           JPEG, PNG, WebP, or GIF. Maximum 4 MB.
+          {" "}Your saved logo appears on order receipts.
         </p>
       </div>
 

@@ -1,5 +1,6 @@
 "use client";
 import { useSiteDialogs } from "@/components/SiteDialogs";
+import { useBusiness } from "@/context/BusinessContext";
 
 import { Fragment, useState, useTransition, memo } from "react";
 import { useRouter } from "next/navigation";
@@ -15,6 +16,7 @@ const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "
 function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; isRequest?: boolean }) {
   const router = useRouter();
   const { confirm } = useSiteDialogs();
+  const { businessName, businessLogo } = useBusiness();
   const [busy, setBusy] = useState(false);
   const [refreshing, startTransition] = useTransition();
   const [error, setError] = useState("");
@@ -27,11 +29,12 @@ function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; i
     setDownloading(true);
     setError("");
     try {
-      const { createOrderReceipt } = await import("@/lib/order-receipt");
+      const { createOrderReceipt, loadReceiptLogo } = await import("@/lib/order-receipt");
       const response = await fetch("/api/exchangerate", { cache: "no-store" });
       if (!response.ok || response.redirected) throw new Error("Unable to load the exchange rate. Please try again.");
       const { usdToLbp } = await response.json();
-      const receipt = createOrderReceipt(order, usdToLbp);
+      const logo = businessLogo ? await loadReceiptLogo(businessLogo) : undefined;
+      const receipt = createOrderReceipt(order, usdToLbp, businessName, logo);
       const filename = order.orderNumber.replace(/[^a-zA-Z0-9_-]/g, "_") || "order";
       await receipt.save(`receipt-${filename}.pdf`, { returnPromise: true });
     } catch (failure) {

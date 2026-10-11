@@ -1,12 +1,32 @@
 import { jsPDF } from "jspdf";
 import { autoTable } from "jspdf-autotable";
 import type { SerializedOrder } from "@/lib/orders";
-import { orderStateLabels, paymentStateLabels } from "@/lib/order-state";
 
 const money = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" });
 const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
 
-export function createOrderReceipt(order: SerializedOrder, usdToLbp: number) {
+type ReceiptLogo = { dataUrl: string; width: number; height: number };
+
+export async function loadReceiptLogo(src: string): Promise<ReceiptLogo> {
+  const image = new Image();
+  image.crossOrigin = "anonymous";
+  const loaded = new Promise<void>((resolve, reject) => {
+    image.onload = () => resolve();
+    image.onerror = () => reject(new Error("Unable to load the business logo. Please try again."));
+  });
+  image.src = src;
+  await loaded;
+  const scale = Math.min(1, 512 / Math.max(image.naturalWidth, image.naturalHeight));
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+  canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("Unable to prepare the business logo for the receipt.");
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  return { dataUrl: canvas.toDataURL("image/png"), width: canvas.width, height: canvas.height };
+}
+
+export function createOrderReceipt(order: SerializedOrder, usdToLbp: number, businessName: string, logo?: ReceiptLogo) {
   if (!Number.isFinite(usdToLbp) || usdToLbp <= 0) {
     throw new Error("A valid exchange rate is required to generate the receipt.");
   }
@@ -15,14 +35,27 @@ export function createOrderReceipt(order: SerializedOrder, usdToLbp: number) {
   const doc = new jsPDF();
   doc.setFillColor(30, 41, 59);
   doc.rect(0, 0, 210, 42, "F");
+  if (logo) {
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(14, 8, 26, 26, 2, 2, "F");
+    const scale = 22 / Math.max(logo.width, logo.height);
+    const width = logo.width * scale;
+    const height = logo.height * scale;
+    doc.addImage(logo.dataUrl, "PNG", 16 + (22 - width) / 2, 10 + (22 - height) / 2, width, height);
+  }
+  const textX = logo ? 46 : 14;
+  const maxNameWidth = 149 - textX;
   doc.setFont("helvetica", "bold");
   doc.setFontSize(24);
   doc.setTextColor(255, 255, 255);
-  doc.text("SouqFlow", 14, 20);
+  const receiptName = businessName.trim() || "Order receipt";
+  const nameWidth = doc.getTextWidth(receiptName);
+  if (nameWidth > maxNameWidth) doc.setFontSize(24 * maxNameWidth / nameWidth);
+  doc.text(receiptName, textX, 20);
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(203, 213, 225);
-  doc.text("ORDER RECEIPT", 14, 30);
+  doc.text("ORDER RECEIPT", textX, 30);
   doc.text(date.format(new Date(order.orderedAt)), 196, 20, { align: "right" });
   doc.setTextColor(30, 41, 59);
 
@@ -35,11 +68,10 @@ export function createOrderReceipt(order: SerializedOrder, usdToLbp: number) {
       ...(order.customerPhone ? [["Phone", order.customerPhone]] : []),
       ...(order.customerAddress ? [["Address", order.customerAddress]] : []),
       ["Ordered at", date.format(new Date(order.orderedAt))],
-      ["Payment state", paymentStateLabels[order.paymentStatus]],
-      ["Delivery state", orderStateLabels[order.status]],
     ],
     columnStyles: { 0: { cellWidth: 35, fontStyle: "bold" } },
     styles: { fontSize: 10, cellPadding: 3, overflow: "linebreak", textColor: [51, 65, 85] },
+    margin: { bottom: 28 },
   });
 
   const total = order.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
@@ -61,7 +93,7 @@ export function createOrderReceipt(order: SerializedOrder, usdToLbp: number) {
       2: { halign: "right" },
       3: { halign: "right" },
     },
-    margin: { bottom: 20 },
+    margin: { bottom: 28 },
   });
 
   const pages = doc.getNumberOfPages();
@@ -74,6 +106,12 @@ export function createOrderReceipt(order: SerializedOrder, usdToLbp: number) {
     doc.text(`Exchange rate: USD 1 = LL ${lbp.format(usdToLbp)}`, 14, 282);
     doc.text("Thank you for your order.", 14, 288);
     doc.text(`Page ${page} of ${pages}`, 196, 287, { align: "right" });
+    doc.text(`© ${new Date().getFullYear()}. All rights reserved.`, 14, 293);
+    const credit = "Powered by SouqFlow";
+    doc.setTextColor(79, 70, 229);
+    doc.textWithLink(credit, 196 - doc.getTextWidth(credit), 293, {
+      url: "https://tech-talk-souq-flow.vercel.app/",
+    });
   }
   return doc;
 }

@@ -13,7 +13,7 @@ export async function GET(_request: Request, { params }: Context) {
     select: {
       id: true,
       name: true,
-      image: true,
+      business: { select: { name: true, logo: true } },
     },
   });
 
@@ -37,8 +37,8 @@ export async function GET(_request: Request, { params }: Context) {
 
   return NextResponse.json({
     catalog: {
-      name: user.name ?? "SouqFlow catalog",
-      logo: user.image,
+      name: user.business?.name ?? user.name ?? "SouqFlow catalog",
+      logo: user.business?.logo ?? null,
     },
     products: products.map((product) => ({
       id: product.id,

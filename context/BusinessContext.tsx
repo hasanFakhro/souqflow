@@ -9,6 +9,8 @@ import {
 type BusinessContextType = {
   businessName: string;
   setBusinessName: (name: string) => void;
+  businessLogo: string | null;
+  setBusinessLogo: (logo: string | null) => void;
 };
 
 const BusinessContext = createContext<
@@ -18,18 +20,23 @@ const BusinessContext = createContext<
 export function BusinessProvider({
   children,
   initialBusinessName = "SouqFlow",
+  initialBusinessLogo = null,
 }: {
   children: React.ReactNode;
   initialBusinessName?: string;
+  initialBusinessLogo?: string | null;
 }) {
   const [businessName, setBusinessName] =
     useState(initialBusinessName);
+  const [businessLogo, setBusinessLogo] = useState(initialBusinessLogo);
 
   return (
     <BusinessContext.Provider
       value={{
         businessName,
         setBusinessName,
+        businessLogo,
+        setBusinessLogo,
       }}
     >
       {children}

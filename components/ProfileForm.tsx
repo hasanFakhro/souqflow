@@ -1,13 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { profileSchema, type ProfileFormData } from "@/lib/validations/profile";
-import { IMAGE_ACCEPT, validateImageFile } from "@/lib/image-file";
 import { FolderUp, Pencil, X } from "lucide-react";
 import { toast } from "sonner";
 import DisableAccount from "./DisableAccount";
@@ -20,12 +18,10 @@ type ProfileUser = {
   name: string | null;
   email: string;
   phone: string;
-  image: string | null;
 };
 
 export default function ProfileForm({ user }: { user: ProfileUser }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
   const { data: session } = useSession();
@@ -65,7 +61,6 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
       confirmPassword: "",
     });
 
-    setImageFile(null);
     setIsEditing(false);
   };
 
@@ -75,9 +70,7 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
 
       const payload = new FormData();
       Object.entries(data).forEach(([key, value]) => { if (value !== undefined) payload.append(key, value); });
-      if (imageFile) payload.set("imageFile", imageFile);
       await axios.put("/api/profile", payload);
-      setImageFile(null);
 
       setIsEditing(false);
 
@@ -113,23 +106,6 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
     >
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full bg-gray-100">
-            {user.image ? (
-              <Image
-                src={user.image}
-                alt="Profile"
-                width={80}
-                height={80}
-                unoptimized
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="text-2xl font-semibold text-gray-400">
-                {user.name?.charAt(0).toUpperCase() ?? "U"}
-              </span>
-            )}
-          </div>
-
           <div>
             <h2 className="text-lg font-semibold text-gray-900">
               Personal Information
@@ -236,39 +212,6 @@ export default function ProfileForm({ user }: { user: ProfileUser }) {
             )}
           </div>
 
-          <div>
-            <label
-              htmlFor="image"
-              className="mb-2 block text-sm font-medium text-gray-700"
-            >
-              Profile image
-            </label>
-
-            <input
-              id="image"
-              type="file"
-              accept={IMAGE_ACCEPT}
-              onChange={(event) => {
-                const file = event.target.files?.[0] ?? null;
-                const validationError = file ? validateImageFile(file) : null;
-                if (validationError) {
-                  toast.error(validationError);
-                  event.target.value = "";
-                  setImageFile(null);
-                  return;
-                }
-                setImageFile(file);
-              }}
-              className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-primary focus:ring-2 focus:ring-primary/10"
-            />
-
-            <p className="mt-2 text-xs text-gray-500">JPEG, PNG, WebP, or GIF. Maximum 4 MB.</p>
-            {errors.image && (
-              <p className="mt-1 text-sm text-red-500">
-                {errors.image.message}
-              </p>
-            )}
-          </div>
         </div>
       )}
 

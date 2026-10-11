@@ -25,11 +25,12 @@ export default async function DashboardLayout({
     },
     select: {
       name: true,
+      logo: true,
     },
   });
 
   return (
-    <BusinessProvider initialBusinessName={business?.name ?? "SouqFlow"}>
+    <BusinessProvider initialBusinessName={business?.name ?? "SouqFlow"} initialBusinessLogo={business?.logo ?? null}>
       <div className="dashboard-shell min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 md:flex">
         <Sidebar />
 

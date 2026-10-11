@@ -4,8 +4,6 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
 import { profileSchema } from "@/lib/validations/profile";
-import { ImageUploadError, uploadImage } from "@/lib/blob-images";
-import { validateImageFile } from "@/lib/image-file";
 
 export async function PUT(request: NextRequest) {
   try {
@@ -21,16 +19,6 @@ export async function PUT(request: NextRequest) {
     const multipart = request.headers.get("content-type")?.includes("multipart/form-data");
     const formData = multipart ? await request.formData() : null;
     const body = formData ? Object.fromEntries([...formData.entries()].filter(([key]) => key !== "imageFile")) : await request.json();
-    const imageFile = formData?.get("imageFile");
-    if (imageFile && !(imageFile instanceof File)) {
-      return NextResponse.json({ message: "Invalid image file" }, { status: 400 });
-    }
-    if (imageFile instanceof File && imageFile.size > 0) {
-      const validationError = validateImageFile(imageFile);
-      if (validationError) {
-        return NextResponse.json({ message: validationError }, { status: 400 });
-      }
-    }
 
     const parsed = profileSchema.safeParse(body);
 
@@ -101,13 +89,11 @@ export async function PUT(request: NextRequest) {
       name: string;
       email: string;
       phone: string;
-      image: string | null;
       password?: string;
     } = {
       name,
       email,
       phone,
-      image: user.image,
     };
 
     if (newPassword) {
@@ -138,10 +124,6 @@ export async function PUT(request: NextRequest) {
       updateData.password = hashedPassword;
     }
 
-    if (imageFile instanceof File && imageFile.size > 0) {
-      updateData.image = await uploadImage(imageFile, `profiles/${user.id}`);
-    }
-
     const updatedUser = await prisma.user.update({
       where: {
         id: user.id,
@@ -152,7 +134,6 @@ export async function PUT(request: NextRequest) {
         name: true,
         email: true,
         phone: true,
-        image: true,
       },
     });
 
@@ -166,9 +147,6 @@ export async function PUT(request: NextRequest) {
     );
   } catch (error) {
     console.error("Profile update error:", error);
-    if (error instanceof ImageUploadError) {
-      return NextResponse.json({ message: error.message }, { status: error.status });
-    }
 
     return NextResponse.json(
       {
