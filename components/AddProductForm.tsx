@@ -100,7 +100,7 @@ export default function AddProductForm({
   );
 
   const skuSuffix = initialData?.sku?.match(/(?:^|-)(\d{4})$/)?.[1] ?? "####";
-  const skuPreview = formatSku(getSkuPrefix(selectedCategory?.name, color, size, categories.map((category) => category.name)), skuSuffix);
+  const skuPreview = formatSku(getSkuPrefix(selectedCategory?.name, color, size), skuSuffix);
 
   const onSubmit = async (data: ProductFormData) => {
     if (waitingForRate) return;
