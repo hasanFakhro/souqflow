@@ -1,8 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
-import { Eye, EyeOff, ImageOff, Loader2, Star } from "lucide-react";
+import ProductImage from "./ProductImage";
+import { Eye, EyeOff, Loader2, Star } from "lucide-react";
 import { ProductData } from "./ProductsGrid";
 
 type CatalogProductTableProps = {
@@ -170,20 +170,13 @@ export default function CatalogProductTable({
                 >
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      {product.imageUrl ? (
-                        <Image
+                        <ProductImage
                           src={product.imageUrl}
                           alt={product.name}
                           width={48}
                           height={48}
-                          unoptimized
                           className="h-12 w-12 shrink-0 rounded-lg object-cover"
                         />
-                      ) : (
-                        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-gray-100 text-gray-400">
-                          <ImageOff className="h-5 w-5" />
-                        </div>
-                      )}
                       <div className="w-36 min-w-0 sm:w-48">
                         <p className="truncate font-medium text-gray-900">
                           {product.name}

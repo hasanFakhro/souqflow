@@ -1,9 +1,8 @@
 "use client";
 import { Price } from "@/app/(dashboard)/currency";
 
-import Image from "next/image"
+import ProductImage from "./ProductImage";
 import { useState } from "react";
-import ProductImageFallback from "./ProductImageFallback";
 import { addItem, useCartStore } from "@/stores/cartStore";
 
 type ProductCardProps = {
@@ -74,18 +73,13 @@ const ProductCard = ({ product, cartScope = "manual", hideStockCount = false, al
             )}
 
             <div className="relative w-full h-24 sm:h-32 lg:h-40 bg-gray-100">
-                {product.imageUrl ?
-                    <Image
+                    <ProductImage
                         src={product.imageUrl}
                         alt={product.name}
-                        unoptimized
                         sizes="(max-width: 640px) 50vw, 25vw"
                         fill
                         className="object-contain"
                     />
-                    :
-                    <ProductImageFallback />
-                }
             </div>
             <div className="p-2 sm:p-4 flex flex-col gap-1 sm:gap-2">
                 <div className="text-sm sm:text-base font-medium truncate">

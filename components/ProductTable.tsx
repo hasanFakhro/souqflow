@@ -9,6 +9,7 @@ import { RefreshCw, Trash2 } from "lucide-react";
 import { EditProductSection } from "./EditProductButton";
 import { ProductData } from "./ProductsGrid";
 import FilterSelect from "./FilterSelect";
+import ProductImage from "./ProductImage";
 
 
 type ProductTableProps = {
@@ -250,17 +251,13 @@ export default function ProductTable({
                 className="table-row-hover border-b border-gray-100 transition-colors hover:bg-gray-50"
               >
                 <td className="px-4 py-3">
-                  {product.imageUrl ? (
-                    <img
+                    <ProductImage
                       src={product.imageUrl}
                       alt={product.name}
+                      width={48}
+                      height={48}
                       className="h-12 w-12 rounded-lg object-cover"
                     />
-                  ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gray-100 text-xs text-gray-400">
-                      No image
-                    </div>
-                  )}
                 </td>
 
                 <td className="px-4 py-4 font-medium text-gray-900">
