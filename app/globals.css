@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Prevent iPhone Safari from zooming when a small form control gains focus. */
+@media (max-width: 767px), (hover: none) and (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="button"]):not([type="submit"]):not([type="reset"]):not([type="hidden"]),
+  select,
+  textarea {
+    /* Override compact text utilities used throughout the forms. */
+    font-size: 16px !important;
+  }
+}
+
 :root,
 [data-theme="light"] {
   color-scheme: light;
