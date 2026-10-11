@@ -95,7 +95,12 @@ className="
           <ThemeToggle variant="ghost" />
           <button
             type="button"
-            onClick={() => setMobileMenuPath(isMobileMenuOpen ? null : pathname)}
+            onClick={() => {
+              setMobileMenuPath(isMobileMenuOpen ? null : pathname);
+              if (!isMobileMenuOpen) {
+                window.scrollTo({ top: 0, behavior: "instant" });
+              }
+            }}
             aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
             className="rounded-lg p-2 text-gray-600 transition hover:bg-blue-50 hover:text-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-blue-500"
           >

@@ -9,7 +9,11 @@ export async function generateUniqueSku(
   productId?: string,
   currentSku?: string | null,
 ) {
-  const prefix = getSkuPrefix(category, color, size);
+  const categories = await prisma.category.findMany({
+    where: { ownerId },
+    select: { name: true },
+  });
+  const prefix = getSkuPrefix(category, color, size, categories.map((item) => item.name));
   const currentSuffix = currentSku?.match(/(?:^|-)(\d{4})$/)?.[1];
   for (let attempt = 0; attempt < 20; attempt++) {
     const suffix = attempt === 0 && currentSuffix
