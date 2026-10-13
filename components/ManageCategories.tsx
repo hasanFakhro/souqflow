@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 
 type Category = {
@@ -12,253 +12,233 @@ type Category = {
 export default function ManageCategories() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [isOpen, setIsOpen] = useState(false);
-
   const [categoryName, setCategoryName] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
-
   const [loading, setLoading] = useState(false);
-
+  const [error, setError] = useState("");
 
   async function fetchCategories() {
     try {
       const response = await fetch("/api/categories");
 
       if (!response.ok) {
-        throw new Error("Failed to fetch categories");
+        throw new Error("Failed to load categories.");
       }
 
       const data = await response.json();
       setCategories(data);
-    } catch (error) {
-      console.error("Error fetching categories:", error);
+    } catch {
+      setError("Could not load categories.");
     }
   }
 
-  const handleOpen = () => {
-    setIsOpen(true);
-    void fetchCategories();
-  };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  const handleSaveCategory = async () => {
+  function resetForm() {
+    setCategoryName("");
+    setEditingId(null);
+    setError("");
+  }
+
+  function startEditing(category: Category) {
+    setEditingId(category.id);
+    setCategoryName(category.name);
+    setError("");
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+
     const name = categoryName.trim();
 
     if (!name) {
+      setError("Please enter a category name.");
       return;
     }
 
     setLoading(true);
+    setError("");
 
     try {
-      const url = editingId
-        ? `/api/categories/${editingId}`
-        : "/api/categories";
+      const response = await fetch(
+        editingId ? `/api/categories/${editingId}` : "/api/categories",
+        {
+          method: editingId ? "PUT" : "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name }),
+        }
+      );
 
-      const method = editingId ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name,
-        }),
-      });
-
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to save category");
+        throw new Error(data?.error || "Failed to save category.");
       }
 
-      setCategoryName("");
-      setEditingId(null);
-
+      resetForm();
       await fetchCategories();
-    } catch (error) {
-      console.error("Error saving category:", error);
-      alert(error instanceof Error ? error.message : "Something went wrong");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Something went wrong."
+      );
     } finally {
       setLoading(false);
     }
-  };
+  }
 
-  const handleEditCategory = (category: Category) => {
-    setEditingId(category.id);
-    setCategoryName(category.name);
-  };
-
-  const handleDeleteCategory = async (id: string) => {
+  async function handleDelete(category: Category) {
     const confirmed = window.confirm(
-      "Are you sure you want to delete this category?"
+      `Are you sure you want to delete "${category.name}"?`
     );
 
-    if (!confirmed) {
-      return;
-    }
+    if (!confirmed) return;
+
+    setError("");
 
     try {
-      const response = await fetch(`/api/categories/${id}`, {
+      const response = await fetch(`/api/categories/${category.id}`, {
         method: "DELETE",
       });
 
-      const data = await response.json();
+      const data = await response.json().catch(() => null);
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to delete category");
+        throw new Error(data?.error || "Failed to delete category.");
+      }
+
+      if (editingId === category.id) {
+        resetForm();
       }
 
       await fetchCategories();
-    } catch (error) {
-      console.error("Error deleting category:", error);
-      alert(error instanceof Error ? error.message : "Something went wrong");
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Something went wrong."
+      );
     }
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setCategoryName("");
-  };
+  }
 
   return (
     <>
       <button
-        onClick={handleOpen}
-        className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2.5 text-sm font-semibold text-white shadow-md shadow-blue-200 transition hover:from-blue-700 hover:to-purple-700"
+        type="button"
+        onClick={() => {
+          setIsOpen(true);
+          setError("");
+        }}
+        className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
       >
         Manage Categories
       </button>
 
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-bold">Manage Categories</h2>
+            <div className="mb-5 flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Manage Categories
+              </h2>
 
               <button
+                type="button"
                 onClick={() => {
                   setIsOpen(false);
-                  handleCancelEdit();
+                  resetForm();
                 }}
-                className="rounded-md p-2 text-gray-500 hover:bg-gray-100"
+                className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-gray-700"
+                aria-label="Close"
               >
                 <X size={20} />
               </button>
             </div>
 
-            <div className="mb-6">
+            <form onSubmit={handleSubmit} className="mb-5">
+              <label
+                htmlFor="categoryName"
+                className="mb-2 block text-sm font-medium text-gray-700"
+              >
+                {editingId ? "Edit category" : "New category"}
+              </label>
+
               <div className="flex gap-2">
                 <input
+                  id="categoryName"
                   type="text"
                   value={categoryName}
                   onChange={(e) => setCategoryName(e.target.value)}
-                  placeholder="Category name"
-                  className="flex-1 rounded-lg border px-3 py-2 outline-none focus:ring-2"
+                  placeholder="Enter category name"
+                  className="min-w-0 flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                 />
 
                 <button
-                  onClick={handleSaveCategory}
+                  type="submit"
                   disabled={loading}
-                  className="flex items-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-white disabled:opacity-50"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  <Plus size={18} />
-
-                  {editingId ? "Update" : "Add"}
+                  {editingId ? (
+                    "Save"
+                  ) : (
+                    <>
+                      <Plus size={16} />
+                      Add
+                    </>
+                  )}
                 </button>
               </div>
 
               {editingId && (
                 <button
-                  onClick={handleCancelEdit}
-                  className="mt-2 text-sm text-gray-500 hover:underline"
+                  type="button"
+                  onClick={resetForm}
+                  className="mt-2 text-sm text-gray-500 hover:text-gray-700"
                 >
                   Cancel editing
                 </button>
               )}
-            </div>
+            </form>
 
-            <div className="space-y-2">
+            {error && (
+              <p className="mb-4 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+                {error}
+              </p>
+            )}
+
+            <div className="max-h-72 space-y-2 overflow-y-auto">
               {categories.length === 0 ? (
-                <p className="py-6 text-center text-gray-500">
+                <p className="py-4 text-center text-sm text-gray-500">
                   No categories yet.
                 </p>
               ) : (
                 categories.map((category) => (
                   <div
                     key={category.id}
-                    className="flex items-center justify-between rounded-lg border p-3"
+                    className="flex items-center justify-between gap-3 rounded-lg border border-gray-200 px-3 py-3"
                   >
-                    <div className="flex items-center gap-3">
-                      <span className="font-medium">{category.name}</span>
+                    <span className="min-w-0 flex-1 break-words text-sm font-medium text-gray-800">
+                      {category.name}
+                    </span>
 
-                      <input
-                        type="number"
-                        min="1"
-                        value={category.catalogOrder || ""}
-                        onChange={(e) => {
-                          const value = Number(e.target.value);
-
-                          setCategories((currentCategories) =>
-                            currentCategories.map((item) =>
-                              item.id === category.id
-                                ? { ...item, catalogOrder: value }
-                                : item
-                            )
-                          );
-                        }}
-                        onBlur={async (e) => {
-                          const value = Number(e.target.value);
-
-                          if (!Number.isInteger(value) || value < 1) {
-                            return;
-                          }
-
-                          try {
-                            const response = await fetch(`/api/categories/${category.id}`, {
-                              method: "PATCH",
-                              headers: {
-                                "Content-Type": "application/json",
-                              },
-                              body: JSON.stringify({
-                                catalogOrder: value,
-                              }),
-                            });
-
-                            const data = await response.json();
-
-                            if (!response.ok) {
-                              throw new Error(
-                                data.message || "Failed to update category order"
-                              );
-                            }
-                          } catch (error) {
-                            console.error("Error updating category order:", error);
-                            alert(
-                              error instanceof Error
-                                ? error.message
-                                : "Something went wrong"
-                            );
-                          }
-                        }}
-                        className="w-20 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                    </div>
-
-                    <div className="flex items-center gap-1">
+                    <div className="flex shrink-0 items-center gap-1">
                       <button
-                        onClick={() => handleEditCategory(category)}
-                        title="Edit category"
-                        className="rounded-md p-2 text-blue-600 hover:bg-blue-50"
+                        type="button"
+                        onClick={() => startEditing(category)}
+                        className="rounded-lg p-2 text-gray-500 transition hover:bg-gray-100 hover:text-blue-600"
+                        aria-label={`Edit ${category.name}`}
                       >
-                        <Pencil size={18} />
+                        <Pencil size={16} />
                       </button>
 
                       <button
-                        onClick={() => handleDeleteCategory(category.id)}
-                        title="Delete category"
-                        className="rounded-md p-2 text-red-600 hover:bg-red-50"
+                        type="button"
+                        onClick={() => handleDelete(category)}
+                        className="rounded-lg p-2 text-gray-500 transition hover:bg-red-50 hover:text-red-600"
+                        aria-label={`Delete ${category.name}`}
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
@@ -266,15 +246,18 @@ export default function ManageCategories() {
               )}
             </div>
 
-            <button
-              onClick={() => {
-                setIsOpen(false);
-                handleCancelEdit();
-              }}
-              className="mt-6 w-full rounded-lg border px-4 py-2 font-medium hover:bg-gray-100"
-            >
-              Close
-            </button>
+            <div className="mt-5 flex justify-end">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsOpen(false);
+                  resetForm();
+                }}
+                className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}
