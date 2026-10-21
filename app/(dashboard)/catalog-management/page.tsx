@@ -41,7 +41,7 @@ export default async function CatalogManagementPage() {
         </h1>
 
         <Link
-          href={`/catalog/${createCatalogPathSegment(session.user.name, userId)}`}
+          href={`/catalog/${createCatalogPathSegment(session?.user?.name, userId)}`}
           className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
         >
           Go to Catalog
