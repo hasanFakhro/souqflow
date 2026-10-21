@@ -12,7 +12,6 @@ type CatalogProductTableProps = {
 type ProductUpdate = {
   isHidden?: boolean;
   isPopular?: boolean;
-  catalogOrder?: number;
 };
 
 const badgeTones = {
@@ -44,7 +43,6 @@ export default function CatalogProductTable({
   const [productList, setProductList] = useState(products);
   const [loadingId, setLoadingId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [orderDrafts, setOrderDrafts] = useState<Record<string, string>>({});
 
   const sortedProducts = useMemo(
     () =>
@@ -62,14 +60,6 @@ export default function CatalogProductTable({
     hidden: productList.filter((p) => p.isHidden).length,
     popular: productList.filter((p) => p.isPopular).length,
   };
-
-  function clearDraft(productId: string) {
-    setOrderDrafts((drafts) => {
-      const rest = { ...drafts };
-      delete rest[productId];
-      return rest;
-    });
-  }
 
   async function updateProduct(productId: string, update: ProductUpdate) {
     try {
@@ -99,26 +89,7 @@ export default function CatalogProductTable({
       setError("Something went wrong. Please try again.");
     } finally {
       setLoadingId(null);
-      clearDraft(productId);
     }
-  }
-
-  function handleOrderBlur(product: ProductData) {
-    const draft = orderDrafts[product.id];
-    if (draft === undefined) return;
-
-    const value = Number(draft);
-
-    if (
-      !Number.isInteger(value) ||
-      value < 1 ||
-      value === product.catalogOrder
-    ) {
-      clearDraft(product.id);
-      return;
-    }
-
-    updateProduct(product.id, { catalogOrder: value });
   }
 
   return (
@@ -151,7 +122,6 @@ export default function CatalogProductTable({
               <th className="px-4 py-3 font-semibold">Stock</th>
               <th className="px-4 py-3 font-semibold">Visibility</th>
               <th className="px-4 py-3 font-semibold">Popular</th>
-              <th className="px-4 py-3 font-semibold">Order</th>
               <th className="px-4 py-3 text-right font-semibold">Actions</th>
             </tr>
           </thead>
@@ -214,29 +184,6 @@ export default function CatalogProductTable({
                       aria-label={
                         product.isPopular ? "Popular" : "Not popular"
                       }
-                    />
-                  </td>
-
-                  <td className="px-4 py-3">
-                    <input
-                      type="number"
-                      min="1"
-                      disabled={isLoading}
-                      value={
-                        orderDrafts[product.id] ??
-                        (product.catalogOrder ? String(product.catalogOrder) : "")
-                      }
-                      onChange={(e) =>
-                        setOrderDrafts((drafts) => ({
-                          ...drafts,
-                          [product.id]: e.target.value,
-                        }))
-                      }
-                      onBlur={() => handleOrderBlur(product)}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") e.currentTarget.blur();
-                      }}
-                      className="w-20 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-700 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-50"
                     />
                   </td>
 

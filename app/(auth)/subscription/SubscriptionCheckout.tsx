@@ -88,10 +88,9 @@ export default function SubscriptionCheckout({
 
         if (onComplete) {
           onComplete();
-        } else {
-          router.replace("/");
-          router.refresh();
         }
+        router.replace("/dashboard");
+        router.refresh();
         return;
       }
 
