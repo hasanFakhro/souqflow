@@ -38,9 +38,7 @@ export default function SignInPage() {
 
             const session = await getSession();
 
-            const user = session?.user as {
-                role?: string;
-                subscriptionActive?: boolean;
+            const user = session?.user as {role?: string; subscriptionActive?: boolean;
             };
 
             if (!user) {
