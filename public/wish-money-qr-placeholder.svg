@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">Wish Money QR code placeholder</title>
+  <desc id="desc">Placeholder to be replaced with the Wish Money payment QR code.</desc>
+  <rect width="256" height="256" rx="20" fill="#ffffff"/>
+  <g fill="#1f2937">
+    <rect x="24" y="24" width="62" height="62" rx="5"/>
+    <rect x="34" y="34" width="42" height="42" fill="#ffffff"/>
+    <rect x="44" y="44" width="22" height="22"/>
+    <rect x="170" y="24" width="62" height="62" rx="5"/>
+    <rect x="180" y="34" width="42" height="42" fill="#ffffff"/>
+    <rect x="190" y="44" width="22" height="22"/>
+    <rect x="24" y="170" width="62" height="62" rx="5"/>
+    <rect x="34" y="180" width="42" height="42" fill="#ffffff"/>
+    <rect x="44" y="190" width="22" height="22"/>
+    <path d="M108 30h12v12h-12zm18 0h12v12h-12zm18 0h12v12h-12zm-36 18h12v12h-12zm36 0h12v12h-12zm-36 18h12v12h-12zm18 0h12v12h-12zm18 0h12v12h-12zm-36 42h12v12h-12zm18 0h12v12h-12zm18 0h12v12h-12zm18 0h12v12h-12zm-54 18h12v12h-12zm36 0h12v12h-12zm36 0h12v12h-12zm-72 18h12v12h-12zm18 0h12v12h-12zm36 0h12v12h-12zm18 0h12v12h-12zm36 0h12v12h-12zm-108 18h12v12h-12zm36 0h12v12h-12zm18 0h12v12h-12zm36 0h12v12h-12zm18 0h12v12h-12zm-72 18h12v12h-12zm18 0h12v12h-12zm36 0h12v12h-12zm36 0h12v12h-12zm-72 18h12v12h-12zm18 0h12v12h-12zm18 0h12v12h-12zm36 0h12v12h-12z"/>
+  </g>
+  <text x="128" y="248" fill="#6b7280" font-family="Arial, sans-serif" font-size="10" text-anchor="middle">WISH MONEY QR PLACEHOLDER</text>
+</svg>

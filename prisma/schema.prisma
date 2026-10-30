@@ -7,38 +7,225 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  USER
-  ADMIN
-  SUPERADMIN
-}
-
 model User {
   id        String   @id @default(cuid())
   name      String?
   email     String   @unique
   password  String
+  phone     String   @unique
   image     String?
   role      Role     @default(USER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Relations
-  subscription Subscription?
+  subscription  Subscription?
+  products      Product[]      @relation("UserProducts")
+  orders        Order[]        @relation("UserOrders")
+  categories    Category[]     @relation("UserCategories")
+  business      Business?
+  notifications Notification[]
+  notificationHistory NotificationHistory[]
 
   @@map("users")
 }
 
+model Business {
+  id          String  @id @default(cuid())
+  name        String
+  logo        String?
+  userId      String  @unique
+  description String?
+  facebook    String?
+  instagram   String?
+  tiktok      String?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("businesses")
+}
+
 model Subscription {
-  id        String   @id @default(cuid())
-  userId    String   @unique
-  startDate DateTime @default(now())
+  id        String    @id @default(cuid())
+  userId    String    @unique
+  startDate DateTime  @default(now())
   endDate   DateTime?
-  isActive  Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isActive  Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("subscription")
+}
+
+model Product {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  imageUrl    String?
+  sku         String?
+
+  // Nullable only for records that existed before ownership was introduced.
+  // New products are always created with an ownerId by the API.
+  ownerId String?
+  owner   User?   @relation("UserProducts", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  categoryId String?
+  category   Category? @relation(fields: [categoryId], references: [id])
+
+  color String?
+  size  String?
+
+  costPrice  Float
+  sellPrice  Float
+  quantity   Int   @default(0)
+  lowStockAt Int?
+
+  isHidden     Boolean @default(false)
+  isPopular    Boolean @default(false)
+  catalogOrder Int     @default(0)
+
+  orderItems OrderItem[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ownerId, sku])
+  @@index([categoryId])
+  @@index([ownerId, createdAt])
+  @@map("products")
+}
+
+model Category {
+  id   String @id @default(cuid())
+  name String
+
+  // Nullable only for records that existed before ownership was introduced.
+  ownerId String?
+  owner   User?   @relation("UserCategories", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  products Product[]
+
+  catalogOrder Int @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([ownerId, name])
+  @@index([ownerId, name])
+  @@map("categories")
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  orderNumber  String      @unique
+  customerName String?
+  customerAddress String?
+  customerPhone   String?
+  status       OrderStatus @default(PENDING)
+  source       OrderSource @default(MANUAL)
+  paymentStatus PaymentStatus @default(UNPAID)
+
+  // Nullable only for records that existed before ownership was introduced.
+  ownerId String?
+  owner   User?   @relation("UserOrders", fields: [ownerId], references: [id], onDelete: Cascade)
+
+  total     Float    @default(0)
+  orderedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  items OrderItem[]
+
+  @@index([ownerId, orderedAt])
+  @@index([orderedAt, status])
+  @@map("orders")
+}
+
+model OrderItem {
+  id      String @id @default(cuid())
+  orderId String
+  order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId String?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  productName String
+  category    String?
+  quantity    Int
+  unitCost    Float
+  unitPrice   Float
+  createdAt   DateTime @default(now())
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([category])
+  @@map("order_items")
+}
+
+model ExchangeRate {
+  id        String   @id @default(cuid())
+  usdToLbp  Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("exchange_rates")
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  message   String
+  type      NotificationType
+  isRead    Boolean   @default(false)
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model NotificationHistory {
+  id        String           @id @default(cuid())
+  userId    String
+  type      NotificationType
+  message   String
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("notification_history")
+}
+
+enum NotificationType {
+  LOW_STOCK
+  ORDER
+  SUBSCRIPTION
+}
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  DONE       @map("COMPLETED")
+  PROBLEM    @map("CANCELED")
+  DELIVERING
+}
+
+enum OrderSource {
+  STOREFRONT
+  MANUAL
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  REFUNDED
 }

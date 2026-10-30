@@ -1,0 +1,291 @@
+import { generateUniqueSku } from "@/lib/product-sku-server";
+import { ImageUploadError, uploadImage } from "@/lib/blob-images";
+
+import { Prisma } from "@prisma/client";
+import { auth } from "@/lib/auth";
+import { productSchema } from "@/lib/validations/product";
+import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+type Context = { params: Promise<{ id: string }> };
+
+function refreshProductViews() {
+  revalidatePath("/inventory");
+  revalidatePath("/products", "layout");
+  revalidatePath("/dashboard");
+  revalidatePath("/catalog/[sellerId]", "page");
+  revalidatePath("/sales");
+}
+
+async function getOwnedProduct(id: string, userId: string) {
+  return prisma.product.findFirst({ where: { id, ownerId: userId } });
+}
+
+export async function PUT(request: NextRequest, { params }: Context) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+    const existingProduct = await getOwnedProduct(id, userId);
+
+    if (!existingProduct) {
+      return NextResponse.json({ message: "Product not found" }, { status: 404 });
+    }
+
+    const formData = await request.formData();
+    const image = formData.get("image");
+
+    if (image && !(image instanceof File)) {
+      return NextResponse.json({ message: "Invalid image file" }, { status: 400 });
+    }
+
+    const productData = {
+      name: formData.get("name") as string,
+      description: (formData.get("description") as string) || "",
+      sku: existingProduct.sku || "",
+      categoryId: (formData.get("categoryId") as string) || "",
+      color: (formData.get("color") as string) || "",
+      size: (formData.get("size") as string) || "",
+      costPrice: Number(formData.get("costPrice")),
+      sellPrice: Number(formData.get("sellPrice")),
+      quantity: Number(formData.get("quantity")),
+      lowStockAt:
+        formData.get("lowStockAt") !== ""
+          ? Number(formData.get("lowStockAt"))
+          : undefined,
+    };
+
+    const parsed = productSchema.safeParse(productData);
+
+    if (!parsed.success) {
+      return NextResponse.json(
+        { message: parsed.error.issues[0].message },
+        { status: 400 }
+      );
+    }
+
+    let categoryName: string | null = null;
+    if (parsed.data.categoryId) {
+      const category = await prisma.category.findFirst({
+        where: { id: parsed.data.categoryId, ownerId: userId },
+        select: { id: true, name: true },
+      });
+
+      if (!category) {
+        return NextResponse.json({ message: "Category not found" }, { status: 400 });
+      }
+      categoryName = category.name;
+    }
+
+    const sku = await generateUniqueSku(
+      userId, categoryName, parsed.data.color || null, parsed.data.size || null,
+      existingProduct.id, existingProduct.sku,
+    );
+    let imageUrl = existingProduct.imageUrl;
+
+    if (image instanceof File && image.size > 0) {
+      imageUrl = await uploadImage(image, `products/${userId}/${id}`);
+    }
+
+    const product = await prisma.product.update({
+      where: { id },
+      data: {
+        name: parsed.data.name.trim(),
+        description: parsed.data.description || null,
+        imageUrl,
+        sku,
+        categoryId: parsed.data.categoryId || null,
+        color: parsed.data.color || null,
+        size: parsed.data.size || null,
+        costPrice: parsed.data.costPrice,
+        sellPrice: parsed.data.sellPrice,
+        quantity: parsed.data.quantity,
+        lowStockAt: parsed.data.lowStockAt ?? null,
+      },
+      include: { category: true },
+    });
+
+    refreshProductViews();
+    return NextResponse.json({ message: "Product updated successfully", product });
+  } catch (error) {
+    if (error instanceof ImageUploadError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+      return NextResponse.json(
+        { message: "A product with this SKU already exists in your inventory." },
+        { status: 409 }
+      );
+    }
+
+    console.error("Error updating product:", error);
+    return NextResponse.json({ message: "Failed to update product" }, { status: 500 });
+  }
+}
+
+export async function PATCH(request: NextRequest, { params }: Context) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+    const body = await request.json();
+
+    const existingProduct = await getOwnedProduct(id, userId);
+
+    if (!existingProduct) {
+      return NextResponse.json(
+        { message: "Product not found" },
+        { status: 404 }
+      );
+    }
+
+    if (body.amount !== undefined) {
+      const amount = Number(body.amount);
+
+      if (!Number.isInteger(amount) || amount <= 0) {
+        return NextResponse.json(
+          { message: "Restock amount must be a positive whole number" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          quantity: { increment: amount },
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: "Product restocked successfully",
+        product,
+      });
+    }
+
+    if (body.isHidden !== undefined) {
+      if (typeof body.isHidden !== "boolean") {
+        return NextResponse.json(
+          { message: "isHidden must be a boolean" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          isHidden: body.isHidden,
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: body.isHidden
+          ? "Product hidden successfully"
+          : "Product is visible again",
+        product,
+      });
+    }
+
+    if (body.isPopular !== undefined) {
+      if (typeof body.isPopular !== "boolean") {
+        return NextResponse.json(
+          { message: "isPopular must be a boolean" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          isPopular: body.isPopular,
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: body.isPopular
+          ? "Product marked as popular"
+          : "Product removed from popular products",
+        product,
+      });
+    }
+
+    if (body.catalogOrder !== undefined) {
+      const catalogOrder = Number(body.catalogOrder);
+
+      if (!Number.isInteger(catalogOrder) || catalogOrder < 1) {
+        return NextResponse.json(
+          { message: "Catalog order must be a non-negative whole number" },
+          { status: 400 }
+        );
+      }
+
+      const product = await prisma.product.update({
+        where: { id },
+        data: {
+          catalogOrder,
+        },
+      });
+
+      refreshProductViews();
+
+      return NextResponse.json({
+        message: "Catalog order updated successfully",
+        product,
+      });
+    }
+
+    return NextResponse.json(
+      { message: "No valid update provided" },
+      { status: 400 }
+    );
+  } catch (error) {
+    console.error("Error updating product:", error);
+
+    return NextResponse.json(
+      { message: "Failed to update product" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(_request: NextRequest, { params }: Context) {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  if (!userId) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const { id } = await params;
+    const existingProduct = await getOwnedProduct(id, userId);
+
+    if (!existingProduct) {
+      return NextResponse.json({ message: "Product not found" }, { status: 404 });
+    }
+
+    await prisma.product.delete({ where: { id } });
+    refreshProductViews();
+
+    return NextResponse.json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return NextResponse.json({ message: "Failed to delete product" }, { status: 500 });
+  }
+}

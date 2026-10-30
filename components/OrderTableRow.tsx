@@ -1,0 +1,176 @@
+"use client";
+import { useSiteDialogs } from "@/components/SiteDialogs";
+import { useBusiness } from "@/context/BusinessContext";
+
+import { Fragment, useState, useTransition, memo } from "react";
+import { useRouter } from "next/navigation";
+import { Check, X, Download, ChevronDown, Trash2 } from "lucide-react";
+import EditOrderPopup from "@/components/EditOrderPopup";
+import OrderItemsPopup from "@/components/OrderItemsPopup";
+import { Price } from "@/app/(dashboard)/currency";
+import type { SerializedOrder } from "@/lib/orders";
+import { paymentStates, paymentStateLabels, orderStateLabels, orderStates, type OrderState } from "@/lib/order-state";
+
+const date = new Intl.DateTimeFormat("en-GB", { dateStyle: "medium", timeZone: "UTC" });
+
+function OrderTableRow({ order, isRequest = false }: { order: SerializedOrder; isRequest?: boolean }) {
+  const router = useRouter();
+  const { confirm } = useSiteDialogs();
+  const { businessName, businessLogo } = useBusiness();
+  const [busy, setBusy] = useState(false);
+  const [refreshing, startTransition] = useTransition();
+  const [error, setError] = useState("");
+  const [downloading, setDownloading] = useState(false);
+  const disabled = busy || refreshing;
+  const total = order.items.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
+
+  async function downloadReceipt() {
+    if (downloading) return;
+    setDownloading(true);
+    setError("");
+    try {
+      const { createOrderReceipt, loadReceiptLogo } = await import("@/lib/order-receipt");
+      const response = await fetch("/api/exchangerate", { cache: "no-store" });
+      if (!response.ok || response.redirected) throw new Error("Unable to load the exchange rate. Please try again.");
+      const { usdToLbp } = await response.json();
+      const logo = businessLogo ? await loadReceiptLogo(businessLogo) : undefined;
+      const receipt = createOrderReceipt(order, usdToLbp, businessName, logo);
+      const filename = order.orderNumber.replace(/[^a-zA-Z0-9_-]/g, "_") || "order";
+      await receipt.save(`receipt-${filename}.pdf`, { returnPromise: true });
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "Unable to download the receipt. Please try again.");
+    } finally {
+      setDownloading(false);
+    }
+  }
+
+  async function mutate(method: "PATCH" | "DELETE", body?: object) {
+    if (disabled) return;
+    setBusy(true);
+    setError("");
+    try {
+      const response = await fetch(`/api/orders/${encodeURIComponent(order.id)}`, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: body ? JSON.stringify(body) : undefined,
+      });
+      if (response.redirected) throw new Error("Your session expired. Refresh the page and sign in again.");
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Unable to save changes.");
+      startTransition(() => router.refresh());
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : "Unable to save changes. Please try again.");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function changeState(status: OrderState) {
+    void mutate("PATCH", { status, previousStatus: order.status });
+  }
+
+  return (
+    <Fragment>
+      <tr className="table-row-hover border-b border-gray-100 align-top transition-colors hover:bg-gray-50/60" aria-busy={disabled}>
+        <td className="max-w-36 break-words px-2 py-3 font-medium text-gray-900">
+          {order.orderNumber}
+        </td>
+        <td className="max-w-36 break-words px-2 py-3 text-gray-600">
+          {order.customerName || "Guest"}
+          {order.customerPhone && <a href={`tel:${order.customerPhone}`} className="mt-1 block whitespace-nowrap text-xs text-blue-600">{order.customerPhone}</a>}
+          {order.customerAddress && <p className="mt-1 text-xs text-gray-500">{order.customerAddress}</p>}
+        </td>
+        <td className="min-w-24 px-2 py-3 text-gray-600">
+          {order.items.length ? <OrderItemsPopup order={order} /> : "No items"}
+        </td>
+        <td className="whitespace-nowrap px-2 py-3 font-medium"><Price amountUsd={total} /></td>
+        <td className="whitespace-nowrap px-2 py-3 text-gray-600">
+          <time dateTime={order.orderedAt}>{date.format(new Date(order.orderedAt))}</time>
+        </td>
+        <td className="min-w-32 px-2 py-3">
+            <select
+              aria-label={`Payment state for order ${order.orderNumber}`}
+              value={order.paymentStatus}
+              disabled={disabled}
+              onChange={(event) => void mutate("PATCH", { paymentStatus: event.target.value, previousPaymentStatus: order.paymentStatus })}
+              className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs font-semibold disabled:opacity-60"
+            >
+              {paymentStates.map((state) => <option key={state} value={state}>{paymentStateLabels[state]}</option>)}
+            </select>
+        </td>
+        <td className="min-w-36 px-2 py-3">
+          <div className="relative">
+            <select
+              aria-label={`Delivery state for order ${order.orderNumber}`}
+              value={order.status}
+              disabled={disabled}
+              title="Change delivery state"
+              onChange={(event) => changeState(event.target.value as OrderState)}
+              className={`w-full cursor-pointer appearance-none rounded-lg border border-gray-200 bg-white py-2 pl-3 pr-9 text-gray-900 text-xs font-semibold outline-none focus:ring-2 focus:ring-gray-200 disabled:cursor-default ${disabled ? "opacity-60" : ""}`}
+            >
+              {orderStates.map((status) => (
+                <option key={status} value={status}>{orderStateLabels[status]}</option>
+              ))}
+            </select>
+            <ChevronDown size={14} aria-hidden="true" className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          </div>
+        </td>
+        <td className="px-2 py-3">
+            <div className="flex gap-1">
+              {isRequest ? <>
+                <button
+                  type="button"
+                  disabled={disabled}
+                  aria-label={`Accept order request ${order.orderNumber}`}
+                  title="Accept order request"
+                  onClick={() => void mutate("PATCH", { action: "accept" })}
+                  className="shrink-0 rounded-md p-2 text-green-600 transition hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-500 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Check size={18} aria-hidden="true" />
+                </button>
+                <button
+                  type="button"
+                  disabled={disabled}
+                  aria-label={`Reject order request ${order.orderNumber}`}
+                  title="Reject order request"
+                  onClick={async () => {
+                    if (await confirm(`Reject request ${order.orderNumber}? This will remove the customer request. Inventory will stay unchanged.`)) void mutate("PATCH", { action: "reject" });
+                  }}
+                  className="shrink-0 rounded-md p-2 text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <X size={18} aria-hidden="true" />
+                </button>
+              </> : <>
+              <button
+                type="button"
+                disabled={disabled || downloading}
+                aria-label={`Download PDF receipt for order ${order.orderNumber}`}
+                title="Download PDF receipt"
+                onClick={() => void downloadReceipt()}
+                className="shrink-0 rounded-md p-2 text-green-600 transition hover:bg-green-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-500 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Download size={18} aria-hidden="true" />
+              </button>
+              <EditOrderPopup order={order} disabled={disabled} />
+              <button
+                type="button"
+                disabled={disabled}
+                aria-label={`Delete order ${order.orderNumber}`}
+                title="Delete order"
+                onClick={async () => {
+                  if (await confirm(`Delete order ${order.orderNumber} and its items? This cannot be undone.`)) void mutate("DELETE");
+                }}
+                className="shrink-0 rounded-md p-2 text-red-600 transition hover:bg-red-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Trash2 size={18} aria-hidden="true" />
+              </button>
+              </>}
+            </div>
+        </td>
+      </tr>
+      {error && <tr><td colSpan={8} className="px-4 py-3 text-sm text-red-600" role="alert">{error}</td></tr>}
+    </Fragment>
+  );
+}
+
+export default memo(OrderTableRow);
